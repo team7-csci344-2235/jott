@@ -1,0 +1,17 @@
+#this will pass phase 3
+
+Def foo[]:Integer{
+    Integer x;
+    x = 5;
+    If[x > 5]{
+        x = x - 1;
+        Return x;
+    }
+    Else{
+        Return x;
+    }
+}
+
+def main[]:Void{
+    ::foo[];
+}

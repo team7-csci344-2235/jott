@@ -1,0 +1,17 @@
+#this will pass phase 2 but fail phase 3 for missing return;
+
+Def foo[]:Integer{
+    Integer x;
+    x = 5;
+    If[x > 5]{
+        x = x - 1;
+    }
+    Else{
+        Return x;
+    }
+}
+
+Def main[]:Void{
+    Integer y;
+    y = ::foo[];
+}

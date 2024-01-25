@@ -1,0 +1,7 @@
+#this will pass phase 2 but fail phase 3 for foo not being defined
+
+Def main[]:Void{
+    Integer x;
+    x = ::foo[5];
+	::print[x];
+}

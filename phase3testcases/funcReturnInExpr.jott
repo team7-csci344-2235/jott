@@ -1,0 +1,16 @@
+#this will pass phase 2 but fail phase 3
+#<i_expr> <rel_op> <d_expr>
+#does not know the return off foo until phase 3
+
+Def foo[x:Integer]:Integer{
+    Return x + 1;
+}
+
+Def main[]:Void{
+    Integer x;
+    x = 0;
+	While[::foo[x]<10.0]{
+	    x = ::foo[x];
+		::print[x];
+	}
+}

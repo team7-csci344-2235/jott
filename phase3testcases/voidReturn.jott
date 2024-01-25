@@ -1,0 +1,15 @@
+#this will fail phase 3 for void function with a return.
+
+Def foo[x:Integer]:Void{
+    Return x + 1;
+}
+
+Def main[]:Void{
+    Integer x;
+    x = 0;
+	While[x<10]{
+	    ::foo[x];
+		::print[x];
+		x = x + 1;
+	}
+}

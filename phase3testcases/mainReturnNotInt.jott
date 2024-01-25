@@ -1,0 +1,16 @@
+#this will pass phase 2 and fail phase 3
+#main's return must be Void
+
+Def foo[x:Integer]:Integer{
+    Return x + 1;
+}
+
+Def main[]:Double{
+    Integer x;
+    x = 0;
+	While[x<10]{
+	    x = ::foo[x];
+		::print[x];
+	}
+	Return x;
+}

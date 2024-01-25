@@ -1,0 +1,17 @@
+#this will fail phase 3 for no return
+#the loop does not have to run.
+
+Def foo[]:Integer{
+    Integer x;
+    x = 0;
+	While[x<10]{
+		::print[x];
+		Return x;
+	}
+}
+
+Def main[]:Void{
+    Integer y;
+    y = ::foo[];
+}
+

@@ -1,0 +1,7 @@
+#this should fail phase 2
+#param order swapped
+#Error: Expected <id> got <type>
+
+Def main[Integer:x]:Double{
+    Return 5;
+}

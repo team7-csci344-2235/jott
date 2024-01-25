@@ -1,0 +1,12 @@
+#this will pass phase 2 but fail phase 3 for foo param type not matching
+
+Def foo[y:Double]:Integer{
+    ::print[y];
+	Return 3;
+}
+
+Def main[]:Void{
+    Integer x;
+    x = ::foo[5];
+	::print[x];
+}

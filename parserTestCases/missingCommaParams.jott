@@ -1,0 +1,8 @@
+#should fail phase 2
+#missing comma in params
+#Error: Expected <comma> or ] got <id>
+
+Def foo[x:Integer y:Double]:Double
+{
+    Return x + y;
+}

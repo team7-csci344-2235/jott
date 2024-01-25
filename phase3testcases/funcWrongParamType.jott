@@ -1,0 +1,14 @@
+#this will fail phase 3 for wrong type of return in function call.
+
+Def foo[x:Double]:Integer{
+    Return x + 1.0;
+}
+
+Def main[]:Void{
+    Double x;
+    x = 0.1;
+	While[x<10.0]{
+	    x = ::foo[x];
+		::print[x];
+	}
+}

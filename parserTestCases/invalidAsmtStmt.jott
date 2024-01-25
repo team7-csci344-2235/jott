@@ -1,0 +1,8 @@
+#this will fail phase 2
+#should be a op of end_stmt
+#Error: Unexpected token <string> after <int>
+
+Def main[]:Void{
+    Integer x;
+    x = 5 "foo";
+}
