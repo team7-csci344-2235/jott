@@ -1,3 +1,12 @@
+Currently, as we work on phase 1, all of our code is in the `provided`
+package. The professor said that code he created must remain there in
+order to work with the test cases. For future phases he said we can
+organize our code however we want.
+
+---
+
+From the professor:
+
 This file contains provided code, testers, and test cases.
 
 provided shouls be a top level package in your src directory
