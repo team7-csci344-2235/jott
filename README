@@ -1,3 +1,21 @@
+This is the code for Team 7's Jott implementation (CSCI-344-03).
+
+Code that we have written -- including code copied from the `provided`
+package -- has been copied into a new `team7jott` package. Source files
+and the test files have been modified to pull from this package instead
+of provided.
+
+To run the tokenizer (phase 1) tests:
+
+- Be in the root directory of the repository.
+- Compile the tokenizer with `javac JottTokenizerTester.java`. This
+  should also compile the code that file depends on in `team7jott`.
+- Run the tests with `java testers.JottTokenizerTester`
+
+Below the original content of the README.
+
+---
+
 This file contains provided code, testers, and test cases.
 
 provided shouls be a top level package in your src directory

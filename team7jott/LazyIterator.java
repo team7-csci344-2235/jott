@@ -1,3 +1,5 @@
+package team7jott;
+
 import java.util.Iterator;
 
 public class LazyIterator implements Iterable<Character> {

@@ -1,5 +1,7 @@
-import provided.Token;
-import provided.TokenType;
+package team7jott;
+
+import team7jott.Token;    // XXX: need to import if in same package?
+import team7jott.TokenType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
