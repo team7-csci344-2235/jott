@@ -12,7 +12,7 @@ package testers;
  */
 
 import java.util.ArrayList;
-import team7jott.*;
+import provided.*;
 
 public class JottTokenizerTester {
 

@@ -1,10 +1,5 @@
-package team7jott;
-
-/**
- * This class is responsible for tokenizing Jott code.
- *
- * @author Ethan Hartman <ehh4525@rit.edu>
- **/
+import provided.Token;
+import provided.TokenType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
