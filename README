@@ -3,6 +3,22 @@ package. The professor said that code he created must remain there in
 order to work with the test cases. For future phases he said we can
 organize our code however we want.
 
+Here is how to run the phase 1 unit tests.
+
+From the main directory, build the `JottTokenizerTester` class with
+
+        javac testers/JottTokenizerTester.java
+
+This will compile into a bunch of .class files, and also automatically
+compiles all the files that that test relies on to work.
+
+To run the test, run
+
+        java testers.JottTokenizerTester
+
+Note that we must be in the root directory of the repository so that
+`testers.JottTokenizerTester` has access to the test cases in
+`tokenizerTestCases/`.
 ---
 
 From the professor:
