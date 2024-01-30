@@ -1,7 +1,10 @@
 package team7jott;
 
-import team7jott.Token;    // XXX: need to import if in same package?
-import team7jott.TokenType;
+/**
+ * This class is responsible for tokenizing Jott code.
+ *
+ * @author Ethan Hartman <ehh4525@rit.edu>
+ **/
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +14,12 @@ import java.util.Scanner;
 public class JottTokenizer {
     private final static String INVALID_CHARACTER = "Invalid character '%s' in file '%s' on line %s.\n";
 
+    /**
+     * Takes in a filename and tokenizes that file into Tokens
+     * based on the rules of the Jott Language
+     * @param filename the name of the file to tokenize; can be relative or absolute path
+     * @return an ArrayList of Jott Tokens
+     */
     public static ArrayList<Token> tokenize(String filename){
         ArrayList<Token> tokens = null;
         try (Scanner scanner = new Scanner(new File(filename))) { // Automatic resource management file scanner
