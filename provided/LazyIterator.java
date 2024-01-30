@@ -1,3 +1,7 @@
+// XXX: reorganize to not make it look like prof. provided this or add
+// javadoc with @author tag
+package provided;
+
 import java.util.Iterator;
 
 public class LazyIterator implements Iterable<Character> {
