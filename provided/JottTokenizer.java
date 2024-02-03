@@ -2,7 +2,7 @@ package provided;
 
 /**
  * This class is responsible for tokenizing Jott code.
- * 
+ *
  * @author Ethan Hartman <ehh4525@rit.edu>
  * @author Sebastian LaVine <sml1040@rit.edu>
  **/
@@ -15,7 +15,6 @@ import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 // TODO: documentation (JavaDoc even) throughout.
 public class JottTokenizer extends PushbackReader {
@@ -38,7 +37,7 @@ public class JottTokenizer extends PushbackReader {
         (int) ';', TokenType.SEMICOLON
     );
 
-    private String filename;
+    private final String filename;
     private int lineNumber;
 
     public JottTokenizer(String filename) throws FileNotFoundException {
@@ -56,14 +55,15 @@ public class JottTokenizer extends PushbackReader {
     // TODO: this is just verbatim one of the example syntax errors that
     // the professor listed. We might want more general syntax errors too.
     // Can deal with that later, maybe.
-    public class SyntaxException extends Exception {
+    public static class SyntaxException extends Exception {
         public SyntaxException(String filename, int lineNumber,
                 int found, String... expected) {
             // TODO: known: This will look weird if expected.length == 0
             super(String.format(
-                    "Syntax Error:\n" +
-                    "Invalid token %s. Expected %s\n" +
-                    "%s:%d",
+                    """
+                    Syntax Error:
+                    Invalid token %s. Expected %s
+                    %s:%d""",
                     (Character.isValidCodePoint(found)
                      ? "\"%c\"".formatted(found) : Integer.toString(found)),
                     // Turns the expected chars into something like
@@ -130,13 +130,13 @@ public class JottTokenizer extends PushbackReader {
                     }
 	            }
 	        }
-	        else if (this.simpleTokens.containsKey(c))
+	        else if (simpleTokens.containsKey(c))
 	        {
 	            // A handful of simple, one-character long tokens.
                 // ',', ']', '[', '}', '{', '/', '+', '-', '*', and ';'.
 	            // See map definition at top of file.
 	            String tok = Character.toString(c);
-	            return this.tokenFrom(tok, this.simpleTokens.get(c));
+	            return this.tokenFrom(tok, simpleTokens.get(c));
 	        }
 	        else if (Character.isLetter(c))
 	        {
@@ -171,14 +171,26 @@ public class JottTokenizer extends PushbackReader {
                     }
 	            }
 	        }
-	        // TODO: In between these: the branches for the rest of the
+            else if (c == ':')
+            {
+                // colon | fcHeader
+                String tok = Character.toString(c);
+                int nc = this.read();
+                if (nc == ':') // Add another colon if there's one after or unread.
+                    tok += Character.toString(nc);
+                else
+                    this.unread(nc);
+
+                return this.tokenFrom(tok, nc == ':' ?  TokenType.FC_HEADER : TokenType.COLON);
+            }
+            // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
 	        else
 	        {
                 // An invalid character was found.
                 throw new SyntaxException(this.filename, this.lineNumber, c,
-                    "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
-                    "-", "*", ";", ".", "[0-9]", "[a-zA-z]", ":", "!", "\""
+                        "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
+                        "-", "*", ";", ".", "[0-9]", "[a-zA-z]", ":", "!", "\""
                 );
 	        }
 	    }
@@ -196,7 +208,7 @@ public class JottTokenizer extends PushbackReader {
     public static ArrayList<Token> tokenize(String filename) {
         try (JottTokenizer tokenizer = new JottTokenizer(filename))
         {
-            ArrayList<Token> tokens = new ArrayList<Token>();
+            ArrayList<Token> tokens = new ArrayList<>();
             Token t;
 
             while ((t = tokenizer.start()) != null) {
@@ -220,7 +232,7 @@ public class JottTokenizer extends PushbackReader {
         var tokens = tokenize("test_stuff.txt");
         if (tokens != null) {
             System.out.println(String.join(" ",
-                tokens.stream().map(t -> t.getToken()).toList())
+                tokens.stream().map(Token::getToken).toList())
             );
         }
     }
