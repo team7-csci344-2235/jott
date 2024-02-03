@@ -4,15 +4,188 @@ package provided;
  * This class is responsible for tokenizing Jott code.
  * 
  * @author Ethan Hartman <ehh4525@rit.edu>
+ * @author Sebastian LaVine <sml1040@rit.edu>
  **/
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PushbackReader;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class JottTokenizer {
-    private final static String INVALID_CHARACTER = "Invalid character '%s' in file '%s' on line %s.\n";
+// TODO: documentation (JavaDoc even) throughout.
+public class JottTokenizer extends PushbackReader {
+    // Some tokens only ever consist of one character, and no other token
+    // contains that character. This map simply (and quickly) maps between
+    // those single characters and their corresponding TokenType values.
+    //
+    // The `int` cast is required for the key check in start() to work with
+    // an `int` from read().
+    private static final Map<Integer, TokenType> simpleTokens = Map.of(
+        (int) ',', TokenType.COMMA,
+        (int) ']', TokenType.R_BRACKET,
+        (int) '[', TokenType.L_BRACKET,
+        (int) '}', TokenType.R_BRACE,
+        (int) '{', TokenType.L_BRACE,
+        (int) '/', TokenType.MATH_OP,
+        (int) '+', TokenType.MATH_OP,
+        (int) '-', TokenType.MATH_OP,
+        (int) '*', TokenType.MATH_OP,
+        (int) ';', TokenType.SEMICOLON
+    );
+
+    private String filename;
+    private int lineNumber;
+
+    public JottTokenizer(String filename) throws FileNotFoundException {
+        // Worried that the BufferedReader and FileReader need to be closed,
+        // but we're not saving a reference to them? I was too. But it looks
+        // like PushbackReader::close will automatically close the underlying
+        // reader, as is the case with BufferedReader::close. So I think we're
+        // fine here.
+        super(new BufferedReader(new FileReader(filename)));
+
+        this.filename = filename;
+        this.lineNumber = 1;
+    }
+
+    // TODO: this is just verbatim one of the example syntax errors that
+    // the professor listed. We might want more general syntax errors too.
+    // Can deal with that later, maybe.
+    public class SyntaxException extends Exception {
+        public SyntaxException(String filename, int lineNumber,
+                int found, String... expected) {
+            // TODO: known: This will look weird if expected.length == 0
+            super(String.format(
+                    "Syntax Error:\n" +
+                    "Invalid token %s. Expected %s\n" +
+                    "%s:%d",
+                    (Character.isValidCodePoint(found)
+                     ? "\"%c\"".formatted(found) : Integer.toString(found)),
+                    // Turns the expected chars into something like
+                    // ` "+", "-", "/", "*" `
+                    String.join(", ",
+                        Arrays.stream(expected)
+                        .map(s -> "\"" + s + "\"").toList()),
+                    filename, lineNumber
+                )
+            );
+        }
+    }
+
+    /**
+     * Calls PushbackReader::read, but also handles internal data (like
+     * line number) depending on the character that is read.
+     */
+    @Override
+    public int read() throws IOException {
+        int c = super.read();
+        if (c == '\n') {
+            this.lineNumber++;
+        }
+        return c;
+    }
+
+	/**
+	 * Calls PushbackReader::unread, but also handles internal data (like
+	 * line number) depending on the character that is read.
+	 */
+	@Override
+	public void unread(int c) throws IOException {
+	    if (c == '\n') {
+	        this.lineNumber--;
+	    }
+	    super.unread(c);
+	}
+
+    private Token tokenFrom(String s, TokenType type) {
+        return new Token(s, this.filename, this.lineNumber, type);
+    }
+
+	private Token start() throws IOException, SyntaxException {
+	    // Note that many of these paths return early.
+	    // EOF is not the only way to leave this loop.
+	    for (int c = this.read(); c != -1 /* EOF */; c = this.read())
+	    {
+	        if (Character.isWhitespace(c))
+	        {
+	            continue;
+	        }
+	        else if (c == '#')
+	        {
+	            // Line comment.
+	            for (;;) {
+                    int nc = this.read();
+                    if (nc == -1)
+                    {
+                        return null; // EOF -- no token found.
+                    }
+                    else if (nc == '\n')
+                    {
+                        break; // Newline -- end of comment.
+                    }
+	            }
+	        }
+	        else if (this.simpleTokens.containsKey(c))
+	        {
+	            // A handful of simple, one-character long tokens.
+                // ',', ']', '[', '}', '{', '/', '+', '-', '*', and ';'.
+	            // See map definition at top of file.
+	            String tok = Character.toString(c);
+	            return this.tokenFrom(tok, this.simpleTokens.get(c));
+	        }
+	        else if (Character.isLetter(c))
+	        {
+	            // id/keyword. We must lex the longest possible token.
+	            String tok = Character.toString(c);
+	            for (;;) {
+                    int nc = this.read();
+                    if (Character.isLetterOrDigit(nc))
+                    {
+                        // We've found more of the token! Let's keep going.
+                        tok += Character.toString(nc);
+                    }
+                    else
+                    {
+                        if (nc != -1) {
+                            // If we haven't reached the end of the file,
+                            // then we'll be seeing this character again.
+                            // Let's not forget about it.
+                            this.unread(nc);
+                        }
+                        // This token's not getting any longer.
+                        //
+                        // By the way, don't worry about returning to
+                        // tokenize() only to call start() and then call read()
+                        // again. It'll keep returning -1 after the first time
+                        // it does -- no IOException or anything. A bit
+                        // inefficient, but it'd be a hassle to create a
+                        // superclass to contain a value that indicates that
+                        // this is the /last/ token that's going to be read,
+                        // etc... this way works.
+                        return this.tokenFrom(tok, TokenType.ID_KEYWORD);
+                    }
+	            }
+	        }
+	        // TODO: In between these: the branches for the rest of the
+	        // tokens we need to lex.
+	        else
+	        {
+                // An invalid character was found.
+                throw new SyntaxException(this.filename, this.lineNumber, c,
+                    "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
+                    "-", "*", ";", ".", "[0-9]", "[a-zA-z]", ":", "!", "\""
+                );
+	        }
+	    }
+
+	    // EOF was found before a token could be found.
+	    return null;
+	}
 
 	/**
      * Takes in a filename and tokenizes that file into Tokens
@@ -20,62 +193,35 @@ public class JottTokenizer {
      * @param filename the name of the file to tokenize; can be relative or absolute path
      * @return an ArrayList of Jott Tokens
      */
-    public static ArrayList<Token> tokenize(String filename){
-        ArrayList<Token> tokens = null;
-        try (Scanner scanner = new Scanner(new File(filename))) { // Automatic resource management file scanner
-            int lineNum = 1;
-            tokens = new ArrayList<>();
-            while (scanner.hasNextLine())
-                start(tokens, new LazyIterator(scanner.nextLine(), filename, lineNum++));
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not tokenize file '" + filename + "' since it was not found.");
-        }
+    public static ArrayList<Token> tokenize(String filename) {
+        try (JottTokenizer tokenizer = new JottTokenizer(filename))
+        {
+            ArrayList<Token> tokens = new ArrayList<Token>();
+            Token t;
 
-        return tokens;
-    }
-
-    private static void start(ArrayList<Token> tokens, LazyIterator iterator) {
-        for (char c : iterator) {
-            Token token = null;
-            switch (c) {
-                case ' ':
-                    continue; // Whitespace, ignore the rest of the iteration.
-                case ',', '[', ']', '{', '}':
-                    // start to standalone could be done in this line tbh...
-                    break;
-                case ';':
-                    break;
-                default:
-                    if (Character.isLetter(c)) {
-                        token = startToLetter(iterator, c);
-                    } else if (Character.isDigit(c)) {
-                        // Do digit processing here
-                    }
+            while ((t = tokenizer.start()) != null) {
+                tokens.add(t);
             }
 
-            if (token != null)
-                tokens.add(token);
-            else
-                System.out.printf(INVALID_CHARACTER, c, iterator.getFilePath(), iterator.getLineNum()); // Probably throw an error in the future
+            return tokens;
+        }
+        catch (FileNotFoundException ex) {
+            System.err.printf("Error opening '%s': %s\n", filename, ex);
+            return null;
+        } catch (IOException | SyntaxException ex) {
+            System.err.println(ex.getMessage());
+            return null;
         }
     }
 
-    private static Token startToLetter(LazyIterator iterator, char prevLetter) {
-        StringBuilder builder = new StringBuilder().append(prevLetter);
-        for (char c : iterator) {
-            if (Character.isLetter(c) || Character.isDigit(c))
-                builder.append(c);
-            else {
-                iterator.back(); // Go back because we have encountered a character for something else
-                break;
-            }
-        }
-
-        return new Token(builder.toString(), iterator.getFilePath(), iterator.getLineNum(), TokenType.ID_KEYWORD);
-    }
-
+    // TODO: Once further along on this, we should remove this and rely on the
+    // test suite from the professor. Maybe.
     public static void main(String[] args) {
-        for (Token t : tokenize("test_stuff.txt"))
-            System.out.println(t.getToken());
+        var tokens = tokenize("test_stuff.txt");
+        if (tokens != null) {
+            System.out.println(String.join(" ",
+                tokens.stream().map(t -> t.getToken()).toList())
+            );
+        }
     }
 }
