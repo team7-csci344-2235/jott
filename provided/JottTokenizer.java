@@ -206,7 +206,7 @@ public class JottTokenizer extends PushbackReader {
             return tokens;
         }
         catch (FileNotFoundException ex) {
-            System.err.printf("Error opening '%s': %s\n", filename, ex);
+            System.err.printf("Error opening file: %s\n", ex.getMessage());
             return null;
         } catch (IOException | SyntaxException ex) {
             System.err.println(ex.getMessage());
