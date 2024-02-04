@@ -173,15 +173,21 @@ public class JottTokenizer extends PushbackReader {
 	        }
             else if (c == ':')
             {
-                // colon | fcHeader
-                String tok = Character.toString(c);
+                // colon or fcHeader. Let's find out.
                 int nc = this.read();
-                if (nc == ':') // Add another colon if there's one after or unread.
-                    tok += Character.toString(nc);
-                else if (nc != -1)
-                    this.unread(nc);
-
-                return this.tokenFrom(tok, nc == ':' ?  TokenType.FC_HEADER : TokenType.COLON);
+                if (nc == ':')
+                {
+                    // "::" => fcHeader.
+                    return this.tokenFrom("::", TokenType.FC_HEADER);
+                }
+                else
+                {
+                    // Just one ":" => colon.
+                    if (nc != -1) {
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom(":", TokenType.COLON);
+                }
             }
             // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
