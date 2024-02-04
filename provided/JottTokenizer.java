@@ -141,32 +141,26 @@ public class JottTokenizer extends PushbackReader {
 	        else if (Character.isLetter(c))
 	        {
 	            // id/keyword. We must lex the longest possible token.
-	            String tok = Character.toString(c);
+	            StringBuffer sb = new StringBuffer();
+	            sb.appendCodePoint(c);
 	            for (;;) {
                     int nc = this.read();
                     if (Character.isLetterOrDigit(nc))
                     {
                         // We've found more of the token! Let's keep going.
-                        tok += Character.toString(nc);
+	                    sb.appendCodePoint(nc);
                     }
                     else
                     {
                         if (nc != -1) {
                             // If we haven't reached the end of the file,
                             // then we'll be seeing this character again.
-                            // Let's not forget about it.
+                            // It's important that we actually *don't* pass
+                            // -1 to unread, by the way -- see commit 502e294.
                             this.unread(nc);
                         }
                         // This token's not getting any longer.
-                        //
-                        // By the way, don't worry about returning to
-                        // tokenize() only to call start() and then call read()
-                        // again. It'll keep returning -1 after the first time
-                        // it does -- no IOException or anything. A bit
-                        // inefficient, but it'd be a hassle to create a
-                        // superclass to contain a value that indicates that
-                        // this is the /last/ token that's going to be read,
-                        // etc... this way works.
+                        String tok = sb.toString();
                         return this.tokenFrom(tok, TokenType.ID_KEYWORD);
                     }
 	            }
