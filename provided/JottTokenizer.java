@@ -178,7 +178,7 @@ public class JottTokenizer extends PushbackReader {
                 int nc = this.read();
                 if (nc == ':') // Add another colon if there's one after or unread.
                     tok += Character.toString(nc);
-                else
+                else if (nc != -1)
                     this.unread(nc);
 
                 return this.tokenFrom(tok, nc == ':' ?  TokenType.FC_HEADER : TokenType.COLON);
