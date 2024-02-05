@@ -5,6 +5,7 @@ package provided;
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  * @author Sebastian LaVine <sml1040@rit.edu>
+ * @author Lianna Pottgen <lrp2755@rit.edu>
  **/
 
 import java.io.BufferedReader;
@@ -111,10 +112,12 @@ public class JottTokenizer extends PushbackReader {
 	    // EOF is not the only way to leave this loop.
 	    for (int c = this.read(); c != -1 /* EOF */; c = this.read())
 	    {
+            //whitespace
 	        if (Character.isWhitespace(c))
 	        {
 	            continue;
 	        }
+            //comment
 	        else if (c == '#')
 	        {
 	            // Line comment.
@@ -185,6 +188,61 @@ public class JottTokenizer extends PushbackReader {
             }
             // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
+            
+            //lee code
+            else if(c == '='){
+                int nc = this.read();
+                if(nc == '='){
+                    //we have ==, which means we have an relOp
+                    return this.tokenFrom("==", TokenType.REL_OP);
+                }
+                else{
+                    //we have =, which means we have assign
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom(":", TokenType.ASSIGN);
+                }
+            }
+
+            else if(c == '<'){
+                int nc = this.read();
+                if(nc == '>'){
+                    //we have <>, which means we have a relOp
+                    int nnc = nc.read();
+                    if(nnc == '='){
+                        return this.tokenFrom("<>=", TokenType.REL_OP);
+                    }
+                    else{
+                        if(nnc != -1){
+                            nc.unread(nnc);
+                        }
+                        return this.tokenFrom("<>", TokenType.REL_OP);
+                    }
+                }
+                else{
+                    //we have an error??????
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    //QUESTION HERE FOR ERROR???
+                }
+            }
+
+            else if(c == '!'){
+                int nc = this.read();
+                if(nc == '='){
+                    return this.tokenFrom("!=", TokenType.REL_OP);
+                }
+                else{
+                    //we have an error??????
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    //QUESTION HERE FOR ERROR???
+                }
+            }
+
 	        else
 	        {
                 // An invalid character was found.
