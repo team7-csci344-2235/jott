@@ -201,31 +201,37 @@ public class JottTokenizer extends PushbackReader {
                     if(nc != -1){
                         this.unread(nc);
                     }
-                    return this.tokenFrom(":", TokenType.ASSIGN);
+                    return this.tokenFrom("=", TokenType.ASSIGN);
                 }
             }
 
             else if(c == '<'){
                 int nc = this.read();
-                if(nc == '>'){
-                    //we have <>, which means we have a relOp
-                    int nnc = nc.read();
-                    if(nnc == '='){
-                        return this.tokenFrom("<>=", TokenType.REL_OP);
-                    }
-                    else{
-                        if(nnc != -1){
-                            nc.unread(nnc);
-                        }
-                        return this.tokenFrom("<>", TokenType.REL_OP);
-                    }
+                if(nc == '='){
+                    //we have <=, which means we have an relOp
+                    return this.tokenFrom("<=", TokenType.REL_OP);
                 }
                 else{
-                    //we have an error??????
+                    //we have < we have an error
                     if(nc != -1){
                         this.unread(nc);
                     }
-                    //QUESTION HERE FOR ERROR???
+                    return this.tokenFrom("<", TokenType.REL_OP);
+                }
+            }
+
+            else if(c == '>'){
+                int nc = this.read();
+                if(nc == '='){
+                    //we have <=, which means we have an relOp
+                    return this.tokenFrom(">=", TokenType.REL_OP);
+                }
+                else{
+                    //we have < we have an error
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom(">", TokenType.REL_OP);
                 }
             }
 
@@ -239,7 +245,7 @@ public class JottTokenizer extends PushbackReader {
                     if(nc != -1){
                         this.unread(nc);
                     }
-                    //QUESTION HERE FOR ERROR???
+                    throw new SyntaxException(this.filename, this.lineNumber, c, "!");
                 }
             }
 
