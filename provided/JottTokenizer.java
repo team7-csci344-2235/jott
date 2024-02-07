@@ -185,7 +185,87 @@ public class JottTokenizer extends PushbackReader {
             }
             // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
-	        else
+            else if (c == '\"') {
+                // string. We must lex the longest possible token.
+                StringBuffer sb = new StringBuffer();
+                sb.appendCodePoint(c);
+                for (;;) {
+                    int nc = this.read();
+                    if (Character.isLetter(nc)) {
+                        // We've found more of the token! Let's keep going.
+                        sb.appendCodePoint(nc);
+                    } else if (nc == '\"') {
+                        sb.appendCodePoint(nc);
+                        // This token's not getting any longer.
+                        String tok = sb.toString();
+                        return this.tokenFrom(tok, TokenType.ID_KEYWORD);
+                    } else {
+                        throw new SyntaxException(this.filename, this.lineNumber, nc,
+                                "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
+                                "-", "*", ";", ".", "[0-9]", ":", "!"
+                        );
+                    }
+                }
+            }
+            //lee code
+            else if(c == '='){
+                int nc = this.read();
+                if(nc == '='){
+                    //we have ==, which means we have an relOp
+                    return this.tokenFrom("==", TokenType.REL_OP);
+                }
+                else{
+                    //we have =, which means we have assign
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom("=", TokenType.ASSIGN);
+                }
+            }
+
+            else if(c == '<'){
+                int nc = this.read();
+                if(nc == '='){
+                    //we have <=, which means we have an relOp
+                    return this.tokenFrom("<=", TokenType.REL_OP);
+                }
+                else{
+                    //we have < we have an error
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom("<", TokenType.REL_OP);
+                }
+            }
+
+            else if(c == '>'){
+                int nc = this.read();
+                if(nc == '='){
+                    //we have <=, which means we have an relOp
+                    return this.tokenFrom(">=", TokenType.REL_OP);
+                }
+                else{
+                    //we have < we have an error
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    return this.tokenFrom(">", TokenType.REL_OP);
+                }
+            }
+
+            else if(c == '!'){
+                int nc = this.read();
+                if(nc == '='){
+                    return this.tokenFrom("!=", TokenType.REL_OP);
+                }
+                else{
+                    //we have an error??????
+                    if(nc != -1){
+                        this.unread(nc);
+                    }
+                    throw new SyntaxException(this.filename, this.lineNumber, c, "!");
+                }
+            } else
 	        {
                 // An invalid character was found.
                 throw new SyntaxException(this.filename, this.lineNumber, c,
