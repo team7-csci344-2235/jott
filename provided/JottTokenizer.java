@@ -201,8 +201,7 @@ public class JottTokenizer extends PushbackReader {
                         return this.tokenFrom(tok, TokenType.ID_KEYWORD);
                     } else {
                         throw new SyntaxException(this.filename, this.lineNumber, nc,
-                                "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
-                                "-", "*", ";", ".", "[0-9]", ":", "!"
+                                "[a-zA-z]", "\""
                         );
                     }
                 }
