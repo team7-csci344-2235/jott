@@ -1,11 +1,11 @@
 package provided;
 
-/**
+/*
  * This class is responsible for tokenizing Jott code.
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  * @author Sebastian LaVine <sml1040@rit.edu>
- **/
+ */
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -185,9 +185,80 @@ public class JottTokenizer extends PushbackReader {
             }
             // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
+            else if (Character.isDigit(c)){
+                //number. We must lex the longest possible token.
+                StringBuffer sb = new StringBuffer();
+                sb.appendCodePoint(c);
+                //We need to be sure that there is only one period.
+                int nb_period = 0;
+                for (;;) {
+                    int nc = this.read();
+                    if (Character.isDigit(nc))
+                    {
+                        // We've found more of the token! Let's keep going.
+                        sb.appendCodePoint(nc);
+                    }
+                    else if (nc == '.' && nb_period < 2) {
+                        nb_period ++;
+                        // We've found more of the token! Let's keep going.
+                        sb.appendCodePoint(nc);
+                    }
+                    else
+                    {
+                        if (nc != -1) {
+                            // If we haven't reached the end of the file,
+                            // then we'll be seeing this character again.
+                            // It's important that we actually *don't* pass
+                            // -1 to unread, by the way -- see commit 502e294.
+                            this.unread(nc);
+                        }
+                        // This token's not getting any longer.
+                        String tok = sb.toString();
+                        return this.tokenFrom(tok, TokenType.NUMBER);
+                    }
+                }
+            }
+            else if (c == '.') {
+                //We first need to check if it is going to be a number or an error.
+                int n = this.read();
+                this.unread(n);
+                if (Character.isDigit(n)) {
+                    //number. We must lex the longest possible token.
+                    StringBuffer sb = new StringBuffer();
+                    sb.appendCodePoint(c);
+                    for (;;) {
+                        int nc = this.read();
+                        if (Character.isDigit(nc))
+                        {
+                            // We've found more of the token! Let's keep going.
+                            sb.appendCodePoint(nc);
+                        }
+                        else
+                        {
+                            if (nc != -1) {
+                                // If we haven't reached the end of the file,
+                                // then we'll be seeing this character again.
+                                // It's important that we actually *don't* pass
+                                // -1 to unread, by the way -- see commit 502e294.
+                                this.unread(nc);
+                            }
+                            // This token's not getting any longer.
+                            String tok = sb.toString();
+                            return this.tokenFrom(tok, TokenType.NUMBER);
+                        }
+                    }
+                }
+                else
+                {
+                    // Not a number.
+                    throw new SyntaxException(this.filename, this.lineNumber, c,
+                            "[0-9]"
+                    );
+                }
+            }
             else if (c == '\"') {
                 // string. We must lex the longest possible token.
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.appendCodePoint(c);
                 for (;;) {
                     int nc = this.read();
@@ -198,6 +269,7 @@ public class JottTokenizer extends PushbackReader {
                         sb.appendCodePoint(nc);
                         // This token's not getting any longer.
                         String tok = sb.toString();
+                        System.out.println("token : " + tok);
                         return this.tokenFrom(tok, TokenType.ID_KEYWORD);
                     } else {
                         throw new SyntaxException(this.filename, this.lineNumber, nc,
