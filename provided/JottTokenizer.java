@@ -262,7 +262,11 @@ public class JottTokenizer extends PushbackReader {
                 sb.appendCodePoint(c);
                 for (;;) {
                     int nc = this.read();
-                    if (Character.isLetter(nc)) {
+                    if(nc == '\n'){
+                        throw new SyntaxException(this.filename, this.lineNumber, nc,
+                                "[a-zA-z]", "\""
+                        );
+                    } else if (Character.isLetterOrDigit(nc) || Character.isWhitespace(nc)) {
                         // We've found more of the token! Let's keep going.
                         sb.appendCodePoint(nc);
                     } else if (nc == '\"') {
@@ -270,7 +274,7 @@ public class JottTokenizer extends PushbackReader {
                         // This token's not getting any longer.
                         String tok = sb.toString();
                         System.out.println("token : " + tok);
-                        return this.tokenFrom(tok, TokenType.ID_KEYWORD);
+                        return this.tokenFrom(tok, TokenType.STRING);
                     } else {
                         throw new SyntaxException(this.filename, this.lineNumber, nc,
                                 "[a-zA-z]", "\""
