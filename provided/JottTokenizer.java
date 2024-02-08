@@ -6,6 +6,7 @@ package provided;
  * @author Ethan Hartman <ehh4525@rit.edu>
  * @author Sebastian LaVine <sml1040@rit.edu>
  * @author Lianna Pottgen <lrp2755@rit.edu>
+ * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 
 import java.io.BufferedReader;
@@ -186,8 +187,6 @@ public class JottTokenizer extends PushbackReader {
                     return this.tokenFrom(":", TokenType.COLON);
                 }
             }
-            // TODO: In between these: the branches for the rest of the
-	        // tokens we need to lex.
             else if (Character.isDigit(c)){
                 //number. We must lex the longest possible token.
                 StringBuffer sb = new StringBuffer();
