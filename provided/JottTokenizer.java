@@ -189,7 +189,6 @@ public class JottTokenizer extends PushbackReader {
             // TODO: In between these: the branches for the rest of the
 	        // tokens we need to lex.
             
-            //lee code
             else if(c == '='){
                 int nc = this.read();
                 if(nc == '='){
@@ -245,7 +244,7 @@ public class JottTokenizer extends PushbackReader {
                     if(nc != -1){
                         this.unread(nc);
                     }
-                    throw new SyntaxException(this.filename, this.lineNumber, c, "!");
+                    throw new SyntaxException(this.filename, this.lineNumber, c, "=");
                 }
             }
 
