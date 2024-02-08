@@ -3,10 +3,11 @@ package provided;
 /*
  * This class is responsible for tokenizing Jott code.
  *
- * @author Ethan Hartman <ehh4525@rit.edu>
- * @author Sebastian LaVine <sml1040@rit.edu>
- * @author Lianna Pottgen <lrp2755@rit.edu>
  * @author Adrienne Ressy <amr3032@rit.edu>
+ * @author Ethan Hartman <ehh4525@rit.edu>
+ * @author Ewen Cazuc <ec1291@rit.edu>
+ * @author Lianna Pottgen <lrp2755@rit.edu>
+ * @author Sebastian LaVine <sml1040@rit.edu>
  **/
 
 import java.io.BufferedReader;
