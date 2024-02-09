@@ -307,7 +307,6 @@ public class JottTokenizer extends PushbackReader {
                         sb.appendCodePoint(nc);
                         // This token's not getting any longer.
                         String tok = sb.toString();
-                        System.out.println("token : " + tok);
                         return this.tokenFrom(tok, TokenType.STRING);
                     } else {
                         throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
