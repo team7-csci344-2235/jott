@@ -312,7 +312,7 @@ public class JottTokenizer extends PushbackReader {
                     }
                     else
                     {
-                        throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
+                        throw this.syntaxExcFrom(nc, "[a-zA-Z]", "[0-9]", "\"");
                     }
                 }
             }
