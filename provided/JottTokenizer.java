@@ -78,6 +78,7 @@ public class JottTokenizer extends PushbackReader {
                     Invalid token %s. Expected %s
                     %s:%d""",
                     (Character.isValidCodePoint(found)
+                     && !Character.isISOControl(found)
                      ? "\"%c\"".formatted(found) : Integer.toString(found)),
                     // Turns the expected chars into something like
                     // ` "+", "-", "/", "*" `
