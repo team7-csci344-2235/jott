@@ -1,15 +1,5 @@
 package provided;
 
-/*
- * This class is responsible for tokenizing Jott code.
- *
- * @author Adrienne Ressy <amr3032@rit.edu>
- * @author Ethan Hartman <ehh4525@rit.edu>
- * @author Ewen Cazuc <ec1291@rit.edu>
- * @author Lianna Pottgen <lrp2755@rit.edu>
- * @author Sebastian LaVine <sml1040@rit.edu>
- **/
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -19,7 +9,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-// TODO: documentation (JavaDoc even) throughout.
+/**
+ * This class is responsible for tokenizing Jott code.
+ *
+ * @author Adrienne Ressy <amr3032@rit.edu>
+ * @author Ethan Hartman <ehh4525@rit.edu>
+ * @author Ewen Cazuc <ec1291@rit.edu>
+ * @author Lianna Pottgen <lrp2755@rit.edu>
+ * @author Sebastian LaVine <sml1040@rit.edu>
+ **/
 public class JottTokenizer extends PushbackReader {
     // Some tokens only ever consist of one character, and no other token
     // contains that character. This map simply (and quickly) maps between
@@ -43,6 +41,11 @@ public class JottTokenizer extends PushbackReader {
     private final String filename;
     private int lineNumber;
 
+    /**
+     * Constructs a new JottTokenizer.
+     * @param filename path to Jott source file to read from
+     * @return a new JottTokenizer
+     */
     public JottTokenizer(String filename) throws FileNotFoundException {
         // Worried that the BufferedReader and FileReader need to be closed,
         // but we're not saving a reference to them? I was too. But it looks
@@ -55,7 +58,17 @@ public class JottTokenizer extends PushbackReader {
         this.lineNumber = 1;
     }
 
+    /**
+     * An Exception that represents syntax errors.
+     */
     public static class SyntaxException extends Exception {
+        /**
+         * Constructs a new SyntaxException.
+         * @param filename name of the file of the syntax error
+         * @param lineNumber line number in filename of the syntax error
+         * @param found the character that was read to cause the error
+         * @param expected strings representing valid characters for the token
+         */
         public SyntaxException(String filename, int lineNumber,
                 int found, String... expected) {
             // TODO: known: This will look weird if expected.length == 0
@@ -117,6 +130,13 @@ public class JottTokenizer extends PushbackReader {
 	    super.unread(c);
 	}
 
+    /**
+     * Constructs a Token from the parameters as well as the object's internal
+     * state.
+     * @param s string representation of the token
+     * @param type type of the token
+     * @return a new token
+     */
     private Token tokenFrom(String s, TokenType type) {
         return new Token(s, this.filename, this.lineNumber, type);
     }
@@ -144,6 +164,10 @@ public class JottTokenizer extends PushbackReader {
         return this.tokenFrom(tok, TokenType.NUMBER);
     }
 
+	/**
+	 * The first state representing the tokenization DFA.
+	 * @return the next token in the file
+	 */
 	private Token start() throws IOException, SyntaxException {
 	    // Note that many of these paths return early.
 	    // EOF is not the only way to leave this loop.
@@ -389,8 +413,9 @@ public class JottTokenizer extends PushbackReader {
         }
     }
 
-    // TODO: Once further along on this, we should remove this and rely on the
-    // test suite from the professor. Maybe.
+    /**
+     * Simple tokenization smoke test using this class.
+     */
     public static void main(String[] args) {
         var tokens = tokenize("test_stuff.txt");
         if (tokens != null) {
