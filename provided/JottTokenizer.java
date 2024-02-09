@@ -298,9 +298,7 @@ public class JottTokenizer extends PushbackReader {
                 sb.appendCodePoint(c);
                 for (;;) {
                     int nc = this.read();
-                    if(nc == '\n'){
-                        throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
-                    } else if (Character.isLetterOrDigit(nc) || Character.isWhitespace(nc)) {
+                    if (Character.isLetterOrDigit(nc) || nc == ' ') {
                         // We've found more of the token! Let's keep going.
                         sb.appendCodePoint(nc);
                     } else if (nc == '\"') {
