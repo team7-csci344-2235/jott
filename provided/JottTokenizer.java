@@ -317,62 +317,71 @@ public class JottTokenizer extends PushbackReader {
                     }
                 }
             }
-            else if(c == '='){
+            else if (c == '=')
+            {
+                // assign or relOp (equality).
                 int nc = this.read();
-                if(nc == '='){
-                    //we have ==, which means we have an relOp
+                if (nc == '=')
+                {
+                    // "==" => relOp (equality).
                     return this.tokenFrom("==", TokenType.REL_OP);
                 }
-                else{
-                    //we have =, which means we have assign
-                    if(nc != -1){
+                else
+                {
+                    // Just one "=" => assign.
+                    if (nc != -1) {
                         this.unread(nc);
                     }
                     return this.tokenFrom("=", TokenType.ASSIGN);
                 }
             }
-
-            else if(c == '<'){
+            else if (c == '<')
+            {
+                // relOp: less-than or less-than-or-equal-to.
                 int nc = this.read();
-                if(nc == '='){
-                    //we have <=, which means we have an relOp
+                if (nc == '=')
+                {
+                    // "<=" => less-than-or-equal-to.
                     return this.tokenFrom("<=", TokenType.REL_OP);
                 }
-                else{
-                    //we have < we have an error
-                    if(nc != -1){
+                else
+                {
+                    // "<" => less-than.
+                    if (nc != -1) {
                         this.unread(nc);
                     }
                     return this.tokenFrom("<", TokenType.REL_OP);
                 }
             }
-
-            else if(c == '>'){
+            else if (c == '>')
+            {
+                // relOp: greater-than or greater-than-or-equal-to.
                 int nc = this.read();
-                if(nc == '='){
-                    //we have <=, which means we have an relOp
+                if (nc == '=')
+                {
+                    // ">=" => greater-than-or-equal-to.
                     return this.tokenFrom(">=", TokenType.REL_OP);
                 }
-                else{
-                    //we have < we have an error
-                    if(nc != -1){
+                else
+                {
+                    // ">" => greater-than.
+                    if (nc != -1) {
                         this.unread(nc);
                     }
                     return this.tokenFrom(">", TokenType.REL_OP);
                 }
             }
-
-            else if(c == '!'){
+            else if (c == '!')
+            {
+                // relOp (not-equal).
                 int nc = this.read();
-                if(nc == '='){
+                if (nc == '=')
+                {
                     return this.tokenFrom("!=", TokenType.REL_OP);
                 }
-                else{
-                    //we have an error??????
-                    if(nc != -1){
-                        this.unread(nc);
-                    }
-                    throw this.syntaxExcFrom(c, "=");
+                else
+                {
+                    throw this.syntaxExcFrom(nc, "=");
                 }
             }
 	        else
