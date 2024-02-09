@@ -262,7 +262,7 @@ public class JottTokenizer extends PushbackReader {
                 else
                 {
                     // Not a number.
-                    throw this.syntaxExcFrom(c, "[0-9]");
+                    throw this.syntaxExcFrom(nc, "[0-9]");
                 }
             }
             else if (Character.isDigit(c))
