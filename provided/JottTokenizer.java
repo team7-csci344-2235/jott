@@ -292,21 +292,26 @@ public class JottTokenizer extends PushbackReader {
                     }
                 }
             }
-            else if (c == '\"') {
-                // string. We must lex the longest possible token.
+            else if (c == '\"')
+            {
+                // string.
                 StringBuilder sb = new StringBuilder();
                 sb.appendCodePoint(c);
                 for (;;) {
                     int nc = this.read();
-                    if (Character.isLetterOrDigit(nc) || nc == ' ') {
-                        // We've found more of the token! Let's keep going.
+                    if (Character.isLetterOrDigit(nc) || nc == ' ')
+                    {
                         sb.appendCodePoint(nc);
-                    } else if (nc == '\"') {
-                        sb.appendCodePoint(nc);
-                        // This token's not getting any longer.
+                    }
+                    else if (nc == '\"')
+                    {
+                        // End of the string.
+                        sb.appendCodePoint('\"');
                         String tok = sb.toString();
                         return this.tokenFrom(tok, TokenType.STRING);
-                    } else {
+                    }
+                    else
+                    {
                         throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
                     }
                 }
