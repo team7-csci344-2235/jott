@@ -55,9 +55,6 @@ public class JottTokenizer extends PushbackReader {
         this.lineNumber = 1;
     }
 
-    // TODO: this is just verbatim one of the example syntax errors that
-    // the professor listed. We might want more general syntax errors too.
-    // Can deal with that later, maybe.
     public static class SyntaxException extends Exception {
         public SyntaxException(String filename, int lineNumber,
                 int found, String... expected) {
@@ -83,6 +80,7 @@ public class JottTokenizer extends PushbackReader {
     /**
      * Calls PushbackReader::read, but also handles internal data (like
      * line number) depending on the character that is read.
+     * @return a character read, or -1 on EOF
      */
     @Override
     public int read() throws IOException {
@@ -96,6 +94,7 @@ public class JottTokenizer extends PushbackReader {
 	/**
 	 * Calls PushbackReader::unread, but also handles internal data (like
 	 * line number) depending on the character that is read.
+	 * @param c character to unread
 	 */
 	@Override
 	public void unread(int c) throws IOException {
@@ -114,12 +113,11 @@ public class JottTokenizer extends PushbackReader {
 	    // EOF is not the only way to leave this loop.
 	    for (int c = this.read(); c != -1 /* EOF */; c = this.read())
 	    {
-            //whitespace
 	        if (Character.isWhitespace(c))
 	        {
+	            // All whitespace is ignored.
 	            continue;
 	        }
-            //comment
 	        else if (c == '#')
 	        {
 	            // Line comment.
