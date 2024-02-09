@@ -78,6 +78,19 @@ public class JottTokenizer extends PushbackReader {
     }
 
     /**
+     * Constructs a SyntaxException from the parameters as well as the
+     * object's internal state.
+     *
+     * @param found the invalid character that was read
+     * @param expected strings describing characters that would have been valid
+     * @return a new SyntaxException
+     */
+    private SyntaxException syntaxExcFrom(int found, String... expected) {
+        return new SyntaxException(this.filename, this.lineNumber,
+                found, expected);
+    }
+
+    /**
      * Calls PushbackReader::read, but also handles internal data (like
      * line number) depending on the character that is read.
      * @return a character read, or -1 on EOF
@@ -225,9 +238,7 @@ public class JottTokenizer extends PushbackReader {
                 else
                 {
                     // Not a number.
-                    throw new SyntaxException(this.filename, this.lineNumber, c,
-                            "[0-9]"
-                    );
+                    throw this.syntaxExcFrom(c, "[0-9]");
                 }
             }
             else if (Character.isDigit(c))
@@ -264,9 +275,7 @@ public class JottTokenizer extends PushbackReader {
                 for (;;) {
                     int nc = this.read();
                     if(nc == '\n'){
-                        throw new SyntaxException(this.filename, this.lineNumber, nc,
-                                "[a-zA-z]", "\""
-                        );
+                        throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
                     } else if (Character.isLetterOrDigit(nc) || Character.isWhitespace(nc)) {
                         // We've found more of the token! Let's keep going.
                         sb.appendCodePoint(nc);
@@ -277,9 +286,7 @@ public class JottTokenizer extends PushbackReader {
                         System.out.println("token : " + tok);
                         return this.tokenFrom(tok, TokenType.STRING);
                     } else {
-                        throw new SyntaxException(this.filename, this.lineNumber, nc,
-                                "[a-zA-z]", "\""
-                        );
+                        throw this.syntaxExcFrom(nc, "[a-zA-Z]", "\"");
                     }
                 }
             }
@@ -338,15 +345,15 @@ public class JottTokenizer extends PushbackReader {
                     if(nc != -1){
                         this.unread(nc);
                     }
-                    throw new SyntaxException(this.filename, this.lineNumber, c, "=");
+                    throw this.syntaxExcFrom(c, "=");
                 }
             }
 	        else
 	        {
                 // An invalid character was found.
-                throw new SyntaxException(this.filename, this.lineNumber, c,
-                        "#...", ",", "]", "[", "}", "{", "=", "<", ">", "/", "+",
-                        "-", "*", ";", ".", "[0-9]", "[a-zA-z]", ":", "!", "\""
+                throw this.syntaxExcFrom(c, "#...", ",", "]", "[", "}", "{",
+                        "=", "<", ">", "/", "+", "-", "*", ";", ".", "[0-9]",
+                        "[a-zA-z]", ":", "!", "\""
                 );
 	        }
 	    }
