@@ -167,7 +167,7 @@ public class JottTokenizer extends PushbackReader {
 	        else if (Character.isLetter(c))
 	        {
 	            // id/keyword. We must lex the longest possible token.
-	            StringBuffer sb = new StringBuffer();
+	            StringBuilder sb = new StringBuilder();
 	            sb.appendCodePoint(c);
 	            for (;;) {
                     int nc = this.read();
