@@ -131,6 +131,17 @@ public class JottTokenizer extends PushbackReader {
 	}
 
     /**
+     * Calls unread with a check that c is not -1.
+     * PushbackReader::unread will treat -1 as U+FFFF, breaking future reads.
+     * @param c character to unread
+     */
+    public void safeUnread(int c) throws IOException {
+        if (c != -1) {
+            this.unread(c);
+        }
+    }
+
+    /**
      * Constructs a Token from the parameters as well as the object's internal
      * state.
      * @param s string representation of the token
@@ -157,9 +168,7 @@ public class JottTokenizer extends PushbackReader {
             // We've found more number.
             sb.appendCodePoint(c);
         }
-        if (c != -1) {
-            this.unread(c);
-        }
+        this.safeUnread(c);
         String tok = sb.toString();
         return this.tokenFrom(tok, TokenType.NUMBER);
     }
@@ -215,13 +224,7 @@ public class JottTokenizer extends PushbackReader {
                     }
                     else
                     {
-                        if (nc != -1) {
-                            // If we haven't reached the end of the file,
-                            // then we'll be seeing this character again.
-                            // It's important that we actually *don't* pass
-                            // -1 to unread, by the way -- see commit 502e294.
-                            this.unread(nc);
-                        }
+                        this.safeUnread(nc);
                         // This token's not getting any longer.
                         String tok = sb.toString();
                         return this.tokenFrom(tok, TokenType.ID_KEYWORD);
@@ -239,10 +242,7 @@ public class JottTokenizer extends PushbackReader {
                 }
                 else
                 {
-                    // Just one ":" => colon.
-                    if (nc != -1) {
-                        this.unread(nc);
-                    }
+                    this.safeUnread(nc);
                     return this.tokenFrom(":", TokenType.COLON);
                 }
             }
@@ -284,9 +284,7 @@ public class JottTokenizer extends PushbackReader {
                     }
                     else
                     {
-                        if (nc != -1) {
-                            this.unread(nc);
-                        }
+                        this.safeUnread(nc);
                         String tok = sb.toString();
                         return this.tokenFrom(tok, TokenType.NUMBER);
                     }
@@ -329,9 +327,7 @@ public class JottTokenizer extends PushbackReader {
                 else
                 {
                     // Just one "=" => assign.
-                    if (nc != -1) {
-                        this.unread(nc);
-                    }
+                    this.safeUnread(nc);
                     return this.tokenFrom("=", TokenType.ASSIGN);
                 }
             }
@@ -347,9 +343,7 @@ public class JottTokenizer extends PushbackReader {
                 else
                 {
                     // "<" => less-than.
-                    if (nc != -1) {
-                        this.unread(nc);
-                    }
+                    this.safeUnread(nc);
                     return this.tokenFrom("<", TokenType.REL_OP);
                 }
             }
@@ -365,9 +359,7 @@ public class JottTokenizer extends PushbackReader {
                 else
                 {
                     // ">" => greater-than.
-                    if (nc != -1) {
-                        this.unread(nc);
-                    }
+                    this.safeUnread(nc);
                     return this.tokenFrom(">", TokenType.REL_OP);
                 }
             }
