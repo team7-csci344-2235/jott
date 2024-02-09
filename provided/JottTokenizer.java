@@ -175,7 +175,8 @@ public class JottTokenizer extends PushbackReader {
     }
 
 	/**
-	 * The first state representing the tokenization DFA.
+	 * The first state representing the tokenization DFA, and branches that
+	 * follow.
 	 * @return the next token in the file
 	 */
 	private Token start() throws IOException, SyntaxException {
