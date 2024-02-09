@@ -75,11 +75,11 @@ public class JottTokenizer extends PushbackReader {
             super(String.format(
                     """
                     Syntax Error:
-                    Invalid token %s. Expected %s
+                    Invalid input %s. Expected %s
                     %s:%d""",
                     (Character.isValidCodePoint(found)
                      && !Character.isISOControl(found)
-                     ? "\"%c\"".formatted(found) : Integer.toString(found)),
+                     ? "'%c'".formatted(found) : Integer.toString(found)),
                     // Turns the expected chars into something like
                     // ` "+", "-", "/", "*" `
                     String.join(", ",
