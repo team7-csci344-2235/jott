@@ -108,6 +108,29 @@ public class JottTokenizer extends PushbackReader {
         return new Token(s, this.filename, this.lineNumber, type);
     }
 
+    /**
+     * Determines whether a state is a valid number after reading a period.
+     * Note that this is not the only state that can return a valid number.
+     * See the number branch in the main loop in start() below.
+     *
+     * @param sb Contains the data that has been read from the token so far
+     * @return a number token
+     */
+    private Token numberFromPeriod(StringBuilder sb)
+            throws IOException, SyntaxException {
+        int c;
+        for (c = this.read(); Character.isDigit(c); c = this.read())
+        {
+            // We've found more number.
+            sb.appendCodePoint(c);
+        }
+        if (c != -1) {
+            this.unread(c);
+        }
+        String tok = sb.toString();
+        return this.tokenFrom(tok, TokenType.NUMBER);
+    }
+
 	private Token start() throws IOException, SyntaxException {
 	    // Note that many of these paths return early.
 	    // EOF is not the only way to leave this loop.
@@ -186,68 +209,18 @@ public class JottTokenizer extends PushbackReader {
                     return this.tokenFrom(":", TokenType.COLON);
                 }
             }
-            else if (Character.isDigit(c)){
-                //number. We must lex the longest possible token.
-                StringBuffer sb = new StringBuffer();
-                sb.appendCodePoint(c);
-                //We need to be sure that there is only one period.
-                int nb_period = 0;
-                for (;;) {
-                    int nc = this.read();
-                    if (Character.isDigit(nc))
-                    {
-                        // We've found more of the token! Let's keep going.
-                        sb.appendCodePoint(nc);
-                    }
-                    else if (nc == '.' && nb_period < 2) {
-                        nb_period ++;
-                        // We've found more of the token! Let's keep going.
-                        sb.appendCodePoint(nc);
-                    }
-                    else
-                    {
-                        if (nc != -1) {
-                            // If we haven't reached the end of the file,
-                            // then we'll be seeing this character again.
-                            // It's important that we actually *don't* pass
-                            // -1 to unread, by the way -- see commit 502e294.
-                            this.unread(nc);
-                        }
-                        // This token's not getting any longer.
-                        String tok = sb.toString();
-                        return this.tokenFrom(tok, TokenType.NUMBER);
-                    }
-                }
-            }
-            else if (c == '.') {
-                //We first need to check if it is going to be a number or an error.
-                int n = this.read();
-                this.unread(n);
-                if (Character.isDigit(n)) {
-                    //number. We must lex the longest possible token.
-                    StringBuffer sb = new StringBuffer();
-                    sb.appendCodePoint(c);
-                    for (;;) {
-                        int nc = this.read();
-                        if (Character.isDigit(nc))
-                        {
-                            // We've found more of the token! Let's keep going.
-                            sb.appendCodePoint(nc);
-                        }
-                        else
-                        {
-                            if (nc != -1) {
-                                // If we haven't reached the end of the file,
-                                // then we'll be seeing this character again.
-                                // It's important that we actually *don't* pass
-                                // -1 to unread, by the way -- see commit 502e294.
-                                this.unread(nc);
-                            }
-                            // This token's not getting any longer.
-                            String tok = sb.toString();
-                            return this.tokenFrom(tok, TokenType.NUMBER);
-                        }
-                    }
+            else if (c == '.')
+            {
+                // number (with a leading decimal point).
+                // To be a valid token, the next character must be a digit.
+                int nc = this.read();
+                if (Character.isDigit(nc))
+                {
+                    // Continue reading digits.
+                    StringBuilder sb = new StringBuilder();
+                    sb.appendCodePoint('.');
+                    sb.appendCodePoint(nc);
+                    return this.numberFromPeriod(sb);
                 }
                 else
                 {
@@ -255,6 +228,33 @@ public class JottTokenizer extends PushbackReader {
                     throw new SyntaxException(this.filename, this.lineNumber, c,
                             "[0-9]"
                     );
+                }
+            }
+            else if (Character.isDigit(c))
+            {
+                // number.
+                StringBuilder sb = new StringBuilder();
+                sb.appendCodePoint(c);
+                for (;;) {
+                    int nc = this.read();
+                    if (nc == '.')
+                    {
+                        // We can read more numbers, but not another period.
+                        sb.appendCodePoint('.');
+                        return this.numberFromPeriod(sb);
+                    }
+                    else if (Character.isDigit(nc))
+                    {
+                        sb.appendCodePoint(nc);
+                    }
+                    else
+                    {
+                        if (nc != -1) {
+                            this.unread(nc);
+                        }
+                        String tok = sb.toString();
+                        return this.tokenFrom(tok, TokenType.NUMBER);
+                    }
                 }
             }
             else if (c == '\"') {
