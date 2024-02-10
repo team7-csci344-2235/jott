@@ -118,18 +118,18 @@ public class JottTokenizer extends PushbackReader {
         return c;
     }
 
-	/**
-	 * Calls PushbackReader::unread, but also handles internal data (like
-	 * line number) depending on the character that is read.
-	 * @param c character to unread
-	 */
-	@Override
-	public void unread(int c) throws IOException {
-	    if (c == '\n') {
-	        this.lineNumber--;
-	    }
-	    super.unread(c);
-	}
+    /**
+     * Calls PushbackReader::unread, but also handles internal data (like
+     * line number) depending on the character that is read.
+     * @param c character to unread
+     */
+    @Override
+    public void unread(int c) throws IOException {
+        if (c == '\n') {
+            this.lineNumber--;
+        }
+        super.unread(c);
+    }
 
     /**
      * Calls unread with a check that c is not -1.
@@ -174,25 +174,25 @@ public class JottTokenizer extends PushbackReader {
         return this.tokenFrom(tok, TokenType.NUMBER);
     }
 
-	/**
-	 * The first state representing the tokenization DFA, and branches that
-	 * follow.
-	 * @return the next token in the file
-	 */
-	private Token start() throws IOException, SyntaxException {
-	    // Note that many of these paths return early.
-	    // EOF is not the only way to leave this loop.
-	    for (int c = this.read(); c != -1 /* EOF */; c = this.read())
-	    {
-	        if (Character.isWhitespace(c))
-	        {
-	            // All whitespace is ignored.
-	            continue;
-	        }
-	        else if (c == '#')
-	        {
-	            // Line comment.
-	            for (;;) {
+    /**
+     * The first state representing the tokenization DFA, and branches that
+     * follow.
+     * @return the next token in the file
+     */
+    private Token start() throws IOException, SyntaxException {
+        // Note that many of these paths return early.
+        // EOF is not the only way to leave this loop.
+        for (int c = this.read(); c != -1 /* EOF */; c = this.read())
+        {
+            if (Character.isWhitespace(c))
+            {
+                // All whitespace is ignored.
+                continue;
+            }
+            else if (c == '#')
+            {
+                // Line comment.
+                for (;;) {
                     int nc = this.read();
                     if (nc == -1)
                     {
@@ -202,27 +202,27 @@ public class JottTokenizer extends PushbackReader {
                     {
                         break; // Newline -- end of comment.
                     }
-	            }
-	        }
-	        else if (simpleTokens.containsKey(c))
-	        {
-	            // A handful of simple, one-character long tokens.
+                }
+            }
+            else if (simpleTokens.containsKey(c))
+            {
+                // A handful of simple, one-character long tokens.
                 // ',', ']', '[', '}', '{', '/', '+', '-', '*', and ';'.
-	            // See map definition at top of file.
-	            String tok = Character.toString(c);
-	            return this.tokenFrom(tok, simpleTokens.get(c));
-	        }
-	        else if (Character.isLetter(c))
-	        {
-	            // id/keyword. We must lex the longest possible token.
-	            StringBuilder sb = new StringBuilder();
-	            sb.appendCodePoint(c);
-	            for (;;) {
+                // See map definition at top of file.
+                String tok = Character.toString(c);
+                return this.tokenFrom(tok, simpleTokens.get(c));
+            }
+            else if (Character.isLetter(c))
+            {
+                // id/keyword. We must lex the longest possible token.
+                StringBuilder sb = new StringBuilder();
+                sb.appendCodePoint(c);
+                for (;;) {
                     int nc = this.read();
                     if (Character.isLetterOrDigit(nc))
                     {
                         // We've found more of the token! Let's keep going.
-	                    sb.appendCodePoint(nc);
+                        sb.appendCodePoint(nc);
                     }
                     else
                     {
@@ -231,8 +231,8 @@ public class JottTokenizer extends PushbackReader {
                         String tok = sb.toString();
                         return this.tokenFrom(tok, TokenType.ID_KEYWORD);
                     }
-	            }
-	        }
+                }
+            }
             else if (c == ':')
             {
                 // colon or fcHeader. Let's find out.
@@ -378,21 +378,21 @@ public class JottTokenizer extends PushbackReader {
                     throw this.syntaxExcFrom(nc, "=");
                 }
             }
-	        else
-	        {
+            else
+            {
                 // An invalid character was found.
                 throw this.syntaxExcFrom(c, "#...", ",", "]", "[", "}", "{",
                         "=", "<", ">", "/", "+", "-", "*", ";", ".", "[0-9]",
                         "[a-zA-z]", ":", "!", "\""
                 );
-	        }
-	    }
+            }
+        }
 
-	    // EOF was found before a token could be found.
-	    return null;
-	}
+        // EOF was found before a token could be found.
+        return null;
+    }
 
-	/**
+    /**
      * Takes in a filename and tokenizes that file into Tokens
      * based on the rules of the Jott Language
      * @param filename the name of the file to tokenize; can be relative or absolute path
