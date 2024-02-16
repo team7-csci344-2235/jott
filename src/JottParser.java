@@ -1,9 +1,6 @@
 package src;
 
-import src.nodes.FunctionCallNode;
-import src.nodes.OperandNode;
-import src.nodes.ParamsNode;
-import src.nodes.SimpleNode;
+import src.nodes.*;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -15,7 +12,6 @@ import java.util.Set;
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
 public class JottParser {
-    public final static String LIST_SEP = ", ";
     private final static Set<String>
             BOOLEANS = Set.of("True", "False"),
             VAR_TYPES = Set.of("Double", "Integer", "String", "Boolean");
@@ -32,13 +28,28 @@ public class JottParser {
 
     /**
      * Parses the parser's ArrayList of Jott tokens into a Jott Parse Tree.
+     * < function_def >* < EOF >
+     *
      * @return the root of the Jott Parse Tree represented by the tokens.
      *         or null upon an error in parsing.
      */
-    public JottTree parse() {
-        // TODO
+    public JottTree parseProgram() {
+        ArrayList<JottTree> functionDefs = parseFunctionDefs();
+
+        // Ensure that the parsing reached the end of the input
+        if (currentIndex < tokens.size()) {
+            // Handle syntax error: Unexpected tokens after function definitions
+            // ...
+        }
+
+        return new ProgramNode(functionDefs);
+    }
+
+    private ArrayList<JottTree> parseFunctionDefs() {
+        // TODO create FunctionDefNode, finish implementation.
         return null;
     }
+
 
     // Parse simple objects such as: variable types, booleans
     private JottTree parseSimple(TokenType desiredType, Set<String> validStrings) {

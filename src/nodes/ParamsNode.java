@@ -2,7 +2,6 @@ package src.nodes;
 
 import src.JottTree;
 import java.util.ArrayList;
-import static src.JottParser.LIST_SEP;
 
 /**
  * Class for function call nodes
@@ -20,16 +19,7 @@ public class ParamsNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        StringBuilder result = new StringBuilder();
-
-        // Convert expressions to Jott representation
-        if (expressions != null && !expressions.isEmpty())
-            for (int i = 0; i < expressions.size(); i++) {
-                if (i > 0) result.append(LIST_SEP);
-                result.append(expressions.get(i).convertToJott());
-            }
-
-        return result.toString();
+        return ProgramNode.arrListToJott(expressions);
     }
 
     @Override
