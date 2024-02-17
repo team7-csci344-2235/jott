@@ -54,7 +54,7 @@ public class JottParser {
     // Parse simple objects such as: variable types, booleans
     private JottTree parseSimple(TokenType desiredType, Set<String> validStrings) {
         // Check if the current token represents a valid type
-        if (currentIndex < tokens.size() && isValidSimpleToken(0, desiredType, validStrings)) {
+        if (currentIndex < tokens.size() && isValidSimpleToken(desiredType, validStrings, 0)) {
             return new SimpleNode(tokens.get(currentIndex++).getToken());
         } else {
             // Handle syntax error: Invalid type
@@ -72,7 +72,7 @@ public class JottParser {
         ArrayList<JottTree> paramsTail = new ArrayList<>();
 
         // Parse additional expressions (if any) separated by commas
-        while (currentIndex < tokens.size() && isCurTokenType(0, TokenType.COMMA)) {
+        while (currentIndex < tokens.size() && isCurTokenType(TokenType.COMMA, 0)) {
             // Consume comma
             currentIndex++;
 
@@ -105,9 +105,9 @@ public class JottParser {
 
     private FunctionCallNode parseFunctionCall() {
         if (currentIndex + 2 < tokens.size() &&
-                isCurTokenType(0, TokenType.FC_HEADER) &&
-                isCurTokenType(1, TokenType.L_BRACKET) &&
-                isCurTokenType(2, TokenType.ID_KEYWORD)) {
+                isCurTokenType(TokenType.FC_HEADER, 0) &&
+                isCurTokenType(TokenType.L_BRACKET, 1) &&
+                isCurTokenType(TokenType.ID_KEYWORD, 2)) {
 
             currentIndex += 2; // Skip colons, left bracket and move to identifier
 
@@ -117,7 +117,7 @@ public class JottParser {
             ParamsNode parameters = parseParameters();
 
             // Ensure that the closing square bracket is present
-            if (currentIndex < tokens.size() && isCurTokenType(0, TokenType.R_BRACKET)) {
+            if (currentIndex < tokens.size() && isCurTokenType(TokenType.R_BRACKET, 0)) {
                 currentIndex++;
                 return new FunctionCallNode(functionName, parameters);
             } else {
@@ -135,20 +135,20 @@ public class JottParser {
         boolean isNegative = false;
 
         // Check for negative sign
-        if (currentIndex < tokens.size() && isValidSimpleToken(0, TokenType.MATH_OP, "-")) {
+        if (currentIndex < tokens.size() && isValidSimpleToken(TokenType.MATH_OP, "-", 0)) {
             isNegative = true;
             currentIndex++;
         }
 
         if (currentIndex < tokens.size()) {
             // Check if the operand is a number or identifier
-            if (isCurTokenType(0, TokenType.NUMBER) || isCurTokenType(0, TokenType.ID_KEYWORD))
+            if (isCurTokenType(TokenType.NUMBER, 0) || isCurTokenType(TokenType.ID_KEYWORD, 0))
                 return new OperandNode(tokens.get(currentIndex++).getToken(), isNegative);
 
             // Check if the operand is a function call
             if (currentIndex + 1 < tokens.size() &&
-                    isCurTokenType(1, TokenType.ID_KEYWORD) &&
-                    isCurTokenType(0, TokenType.FC_HEADER))
+                    isCurTokenType(TokenType.ID_KEYWORD, 1) &&
+                    isCurTokenType(TokenType.FC_HEADER, 0))
                 return new OperandNode(parseFunctionCall());
         }
 
@@ -159,17 +159,17 @@ public class JottParser {
     }
 
     // Check if the token at (current index + offset) is a certain type
-    private boolean isCurTokenType(int tokenIdxOffset, TokenType desiredType) {
+    private boolean isCurTokenType(TokenType desiredType, int tokenIdxOffset) {
         return tokens.get(tokenIdxOffset).getTokenType().equals(desiredType);
     }
 
     // Check if the token at (current index + offset) is a certain type and token is contained within validStrings
-    private boolean isValidSimpleToken(int tokenIdxOffset, TokenType desiredType, Set<String> validStrings)  {
-        return isCurTokenType(tokenIdxOffset, desiredType) && validStrings.contains(tokens.get(currentIndex + tokenIdxOffset).getToken());
+    private boolean isValidSimpleToken(TokenType desiredType, Set<String> validStrings, int tokenIdxOffset)  {
+        return isCurTokenType(desiredType, tokenIdxOffset) && validStrings.contains(tokens.get(currentIndex + tokenIdxOffset).getToken());
     }
 
     // Check if the token at (current index + offset) is a certain type and token is equal to the validString
-    private boolean isValidSimpleToken(int tokenIdxOffset, TokenType desiredType, String validString)  {
-        return isCurTokenType(tokenIdxOffset, desiredType) && validString.equals(tokens.get(currentIndex + tokenIdxOffset).getToken());
+    private boolean isValidSimpleToken(TokenType desiredType, String validString, int tokenIdxOffset)  {
+        return isCurTokenType(desiredType, tokenIdxOffset) && validString.equals(tokens.get(currentIndex + tokenIdxOffset).getToken());
     }
 }
