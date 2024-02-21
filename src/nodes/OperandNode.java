@@ -1,60 +1,46 @@
 package src.nodes;
 
 import src.JottTree;
+import src.TokenDequeue;
+import src.TokenType;
+
+import java.util.NoSuchElementException;
 
 /**
- * Class for operand nodes
- * < operand > -> <id > | <num > | < func_call > | -< num >
+ * Interface for operand nodes
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
-public class OperandNode implements JottTree {
-    private String value;
-    private boolean isNegative;
-    private FunctionCallNode functionCallNode;
+public interface OperandNode extends JottTree {
+    /**
+     * Parses an operand node from the given tokens
+     * @param tokens the tokens to parse
+     * @return the parsed operand node
+     * @throws NodeParseException if the tokens do not form a valid operand node
+     */
+    static OperandNode parseOperandNode(TokenDequeue tokens) throws NodeParseException {
+        switch (tokens.getFirst().getTokenType()) {
+            case TokenType.ID_KEYWORD -> { return IDNode.parseIDNode(tokens); }
+            case TokenType.NUMBER -> { return NumNode.parseNumNode(tokens, false); }
+            case TokenType.FC_HEADER -> { return FunctionCallNode.parseFunctionCallNode(tokens); }
+            case TokenType.MATH_OP -> {
+                if (tokens.getFirst().getToken().equals("-")) {
+                    try {
+                        if (tokens.isFirstOfType(TokenType.NUMBER)) {
+                            tokens.removeFirst();
+                            return NumNode.parseNumNode(tokens, true);
+                        } else {
+                            throw new NodeParseException(tokens.getFirst(), TokenType.NUMBER);
+                        }
+                    } catch (NoSuchElementException e) {
+                        throw new NodeParseException(tokens.getLastRemoved().getLineNum(), TokenType.NUMBER);
+                    }
+                } else {
+                    throw new NodeParseException(tokens.getFirst(), "-");
+                }
+            }
+        }
 
-    // Constructor for identifiers and numbers
-    public OperandNode(String value, boolean isNegative) {
-        this.value = value;
-        this.isNegative = isNegative;
-    }
-
-    // Constructor for function calls
-    public OperandNode(FunctionCallNode functionCallNode) {
-        this.functionCallNode = functionCallNode;
-    }
-
-    @Override
-    public String convertToJott() {
-        StringBuilder result = new StringBuilder();
-
-        if (isNegative)
-            result.append("-");
-
-        if (value != null)
-            result.append(value);
-        else if (functionCallNode != null)
-            result.append(functionCallNode.convertToJott());
-
-        return result.toString();
-    }
-    @Override
-    public String convertToJava(String className) {
         return null;
-    }
-
-    @Override
-    public String convertToC() {
-        return null;
-    }
-
-    @Override
-    public String convertToPython() {
-        return null;
-    }
-
-    @Override
-    public boolean validateTree() {
-        return false;
     }
 }

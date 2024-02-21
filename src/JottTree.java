@@ -1,11 +1,44 @@
 package src;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Interface for all Jott parse tree nodes
  *
  * @author Scott C Johnson
  */
 public interface JottTree {
+    /**
+     * Exception for when a node is parsed incorrectly
+     *
+     * @author Ethan Hartman <ehh4525@rit.edu>
+     */
+    class NodeParseException extends Exception {
+        public NodeParseException(Token got, String... expected) {
+            super("Parsing Error at line " + got.getLineNum() +
+                    ": Expected " + String.join(" or ", expected) +
+                    " but got '" + got.getToken() + "' instead.");
+        }
+
+        public NodeParseException(int previousLine, String... expected) {
+            super("Parsing Error after line " + previousLine +
+                    ": Expected " + String.join(" or ", expected) +
+                    " but got nothing instead.");
+        }
+
+        public NodeParseException(Token got, TokenType... expected) {
+            super("Parsing Error at line " + got.getLineNum() +
+                    ": Expected token types " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
+                    " but got token type '" + got.getTokenType() + "' instead.");
+        }
+
+        public NodeParseException(int previousLine, TokenType... expected) {
+            super("Parsing Error after line " + previousLine +
+                    ": Expected token types " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
+                    " but got nothing instead.");
+        }
+    }
 
     /**
      * Will output a string of this tree in Jott

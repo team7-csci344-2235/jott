@@ -1,41 +1,51 @@
 package src.nodes;
 
 import src.JottTree;
+import src.TokenDequeue;
 
 import java.util.ArrayList;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+/**
+ * Class for Program nodes
+ *
+ * @author Ethan Hartman <ehh4525@rit.edu>
+ */
 public class ProgramNode implements JottTree {
-    private final static String LIST_SEP = ", ";
+    public final static Collector<CharSequence, ?, String> JOTT_LIST_COLLECTOR = Collectors.joining(", ");
 
-    // TODO probably change functionDefs to be arraylist of FunctionDefNode
-    private final ArrayList<JottTree> functionDefNodes;
+    private final ArrayList<FunctionDefNode> functionDefNodes;
 
-    public ProgramNode(ArrayList<JottTree> functionDefNodes) {
+    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes) {
         this.functionDefNodes = functionDefNodes;
     }
 
-    /**
-     * Often times, we may convert a list of JottTree, lets set this as our method to reduce code copies.
-     * @param list of tree nodes to convert to Jott.
-     * @return Jott String representation of the JottTree list.
-     */
-    public static String arrListToJott(ArrayList<JottTree> list) {
-        if (list != null && !list.isEmpty()) {
-            StringBuilder result = new StringBuilder();
-            // Convert expressions to Jott representation
-            for (int i = 0; i < list.size(); i++) {
-                if (i > 0) result.append(LIST_SEP);
-                result.append(list.get(i).convertToJott());
-            }
+    private ProgramNode() {
+        this.functionDefNodes = null;
+    }
 
-            return result.toString();
-        }
-        return "";
+    /**
+     * Parses CircularBuffer of tokens into a ProgramNode.
+     *
+     * @param tokens: Current set of tokens
+     * @return the root of the Jott Parse Tree represented by the tokens.
+     */
+    public static ProgramNode parseProgramNode(TokenDequeue tokens) throws NodeParseException {
+        if (tokens.isEmpty())
+            return new ProgramNode();
+
+        ArrayList<FunctionDefNode> functionDefNodes = new ArrayList<>();
+        while (!tokens.isEmpty())
+            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens));
+
+        return new ProgramNode(functionDefNodes);
     }
 
     @Override
     public String convertToJott() {
-        return arrListToJott(functionDefNodes);
+        if (functionDefNodes == null) return "";
+        return functionDefNodes.stream().map(FunctionDefNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
     }
 
     @Override
