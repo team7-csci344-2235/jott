@@ -1,5 +1,6 @@
 package src.nodes;
 
+import org.w3c.dom.Node;
 import src.JottTree;
 import src.TokenDeque;
 import src.TokenType;
@@ -19,6 +20,8 @@ public interface OperandNode extends JottTree {
      * @throws NodeParseException if the tokens do not form a valid operand node
      */
     static OperandNode parseOperandNode(TokenDeque tokens) throws NodeParseException {
+        // Ensure first is of one of the following tokens.
+        tokens.validateFirst(TokenType.ID_KEYWORD, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.MATH_OP);
         switch (tokens.getFirst().getTokenType()) {
             case TokenType.ID_KEYWORD -> { return IDNode.parseIDNode(tokens); }
             case TokenType.NUMBER -> { return NumNode.parseNumNode(tokens, false); }

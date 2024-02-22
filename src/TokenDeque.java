@@ -24,27 +24,31 @@ public class TokenDeque {
     }
 
     /**
-     * Checks if the first token otherType equals the other and handles exceptions
-     * @param otherType the TokenType to compare to
+     * Checks if the first token otherType equals one of the other and handles exceptions
+     * @param otherTypes the other TokenType(s) to compare to
      * @throws JottTree.NodeParseException if the TokenList is empty or the first token otherType does not equal the other
      */
-    public void validateFirst(TokenType otherType) throws JottTree.NodeParseException {
-        if (tokens.isEmpty())
-            throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherType);
-        else if (tokens.getFirst().getTokenType() != otherType)
-            throw new JottTree.NodeParseException(tokens.getFirst(), otherType);
+    public void validateFirst(TokenType... otherTypes) throws JottTree.NodeParseException {
+        for (TokenType otherType: otherTypes)
+            if (tokens.isEmpty())
+                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherTypes);
+            else if (tokens.getFirst().getTokenType() == otherType)
+                return;
+        throw new JottTree.NodeParseException(tokens.getFirst(), otherTypes);
     }
 
     /**
-     * Checks if the first token string equals the other and handles exceptions
-     * @param otherStr the other string to compare the first token's token to
+     * Checks if the first token string equals one of the other and handles exceptions
+     * @param otherStrs the other string(s) to compare the first token's token to
      * @throws JottTree.NodeParseException if the TokenList is empty or the first token's string does not equal the other string
      */
-    public void validateFirst(String otherStr) throws JottTree.NodeParseException {
-        if (tokens.isEmpty())
-            throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherStr);
-        else if (!tokens.getFirst().getToken().equals(otherStr))
-            throw new JottTree.NodeParseException(tokens.getFirst(), otherStr);
+    public void validateFirst(String... otherStrs) throws JottTree.NodeParseException {
+        for (String otherStr : otherStrs)
+            if (tokens.isEmpty())
+                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherStrs);
+            else if (tokens.getFirst().getToken().equals(otherStr))
+                return;
+        throw new JottTree.NodeParseException(tokens.getFirst(), otherStrs);
     }
 
     /**

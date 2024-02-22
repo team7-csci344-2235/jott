@@ -28,6 +28,7 @@ public class FunctionCallNode implements OperandNode {
         tokens.validateFirst(TokenType.ID_KEYWORD);
         IDNode idNode = IDNode.parseIDNode(tokens);
         tokens.validateFirst(TokenType.L_BRACKET);
+        tokens.removeFirst(); // Remove L bracket
         ParamsNode parameters = ParamsNode.parseParamsNode(tokens);
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
