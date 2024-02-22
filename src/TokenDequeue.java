@@ -24,13 +24,55 @@ public class TokenDequeue {
     }
 
     /**
-     * Checks if the first token type equals the other
-     * @param type the TokenType to compare to
-     * @return the first element's TokenType in the TokenList
-     * @throws java.util.NoSuchElementException if the TokenList is empty
+     * Checks if the first token otherType equals the other and handles exceptions
+     * @param otherType the TokenType to compare to
+     * @throws JottTree.NodeParseException if the TokenList is empty or the first token otherType does not equal the other
      */
-    public boolean isFirstOfType(TokenType type) {
-        return tokens.getFirst().getTokenType() == type;
+    public void validateFirst(TokenType otherType) throws JottTree.NodeParseException {
+        if (tokens.isEmpty())
+            throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherType);
+        else if (tokens.getFirst().getTokenType() != otherType)
+            throw new JottTree.NodeParseException(tokens.getFirst(), otherType);
+    }
+
+    /**
+     * Checks if the first token string equals the other and handles exceptions
+     * @param otherStr the other string to compare the first token's token to
+     * @throws JottTree.NodeParseException if the TokenList is empty or the first token's string does not equal the other string
+     */
+    public void validateFirst(String otherStr) throws JottTree.NodeParseException {
+        if (tokens.isEmpty())
+            throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherStr);
+        else if (!tokens.getFirst().getToken().equals(otherStr))
+            throw new JottTree.NodeParseException(tokens.getFirst(), otherStr);
+    }
+
+    /**
+     * Checks if the first token's TokenType is one of the given types.
+     * If there is no first, returns false.
+     * @param types the types to check for
+     * @return true if the first token's TokenType is one of the given types, false otherwise
+     */
+    public boolean isFirstOf(TokenType... types) {
+        if (!tokens.isEmpty())
+            for (TokenType type : types)
+                if (tokens.getFirst().getTokenType() == type)
+                    return true;
+        return false;
+    }
+
+    /**
+     * Checks if the first token's string is one of the given strings.
+     * If there is no first, returns false.
+     * @param strings the strings to check for
+     * @return true if the first token's string is one of the given strings, false otherwise
+     */
+    public boolean isFirstOf(String... strings) {
+        if (!tokens.isEmpty())
+            for (String string : strings)
+                if (tokens.getFirst().getToken().equals(string))
+                    return true;
+        return false;
     }
 
     /**

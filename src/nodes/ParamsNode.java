@@ -31,20 +31,15 @@ public class ParamsNode implements JottTree {
      * @throws NodeParseException if the tokens do not form a valid params node
      */
     public static ParamsNode parseParamsNode(TokenDequeue tokens) throws NodeParseException {
-        if (tokens.getFirst().getTokenType() != TokenType.ID_KEYWORD)
+        if (tokens.isEmpty() || !tokens.isFirstOf(TokenType.ID_KEYWORD))
             return new ParamsNode();
 
         ArrayList<ExprNode> expressions = new ArrayList<>();
         for (;;) {
-            expressions.add(ExprNode.parseExprNode(tokens));
-            if (!tokens.isEmpty() && tokens.isFirstOfType(TokenType.COMMA)) {
-                tokens.removeFirst();
-                if (!tokens.isEmpty()) {
-                    if (!tokens.isFirstOfType(TokenType.ID_KEYWORD))
-                        throw new NodeParseException(tokens.getFirst(), TokenType.ID_KEYWORD);
-                } else {
-                    throw new NodeParseException(tokens.getLastRemoved().getLineNum(), TokenType.ID_KEYWORD);
-                }
+            expressions.add(ExprNode.parseExprNode(tokens)); // We should have expressions here, let's parse.
+            if (tokens.isFirstOf(TokenType.COMMA)) {
+                tokens.removeFirst(); // Remove comma
+                tokens.validateFirst(TokenType.ID_KEYWORD); // Ensure we have an idk for the next expression
             } else {
                 return new ParamsNode(expressions);
             }

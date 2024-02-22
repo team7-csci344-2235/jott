@@ -24,20 +24,10 @@ public interface OperandNode extends JottTree {
             case TokenType.NUMBER -> { return NumNode.parseNumNode(tokens, false); }
             case TokenType.FC_HEADER -> { return FunctionCallNode.parseFunctionCallNode(tokens); }
             case TokenType.MATH_OP -> {
-                if (tokens.getFirst().getToken().equals("-")) {
-                    try {
-                        if (tokens.isFirstOfType(TokenType.NUMBER)) {
-                            tokens.removeFirst();
-                            return NumNode.parseNumNode(tokens, true);
-                        } else {
-                            throw new NodeParseException(tokens.getFirst(), TokenType.NUMBER);
-                        }
-                    } catch (NoSuchElementException e) {
-                        throw new NodeParseException(tokens.getLastRemoved().getLineNum(), TokenType.NUMBER);
-                    }
-                } else {
-                    throw new NodeParseException(tokens.getFirst(), "-");
-                }
+                tokens.validateFirst("-"); // Validate negative sign
+                tokens.removeFirst(); // Remove negative sign
+                tokens.validateFirst(TokenType.NUMBER); // Validate that there's a number
+                return NumNode.parseNumNode(tokens, true);
             }
         }
 
