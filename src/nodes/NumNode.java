@@ -1,6 +1,6 @@
 package src.nodes;
 
-import src.TokenDequeue;
+import src.TokenDeque;
 
 /**
  * Class for Number nodes
@@ -12,7 +12,7 @@ public class NumNode implements OperandNode {
         // TODO: Implement this method and arguments
     }
 
-    public static NumNode parseNumNode(TokenDequeue tokens, boolean isNegative) throws NodeParseException {
+    public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) throws NodeParseException {
         // TODO: Implement this method
         return null;
     }

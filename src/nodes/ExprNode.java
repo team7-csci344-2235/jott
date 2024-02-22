@@ -1,7 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
-import src.TokenDequeue;
+import src.TokenDeque;
 
 /**
  * Class for Expr nodes
@@ -13,7 +13,7 @@ public class ExprNode implements JottTree {
         // TODO: Implement this method and arguments
     }
 
-    public static ExprNode parseExprNode(TokenDequeue tokens) throws NodeParseException {
+    public static ExprNode parseExprNode(TokenDeque tokens) throws NodeParseException {
         // TODO: Implement
         return null;
     }

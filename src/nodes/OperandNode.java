@@ -1,7 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
-import src.TokenDequeue;
+import src.TokenDeque;
 import src.TokenType;
 
 import java.util.NoSuchElementException;
@@ -18,7 +18,7 @@ public interface OperandNode extends JottTree {
      * @return the parsed operand node
      * @throws NodeParseException if the tokens do not form a valid operand node
      */
-    static OperandNode parseOperandNode(TokenDequeue tokens) throws NodeParseException {
+    static OperandNode parseOperandNode(TokenDeque tokens) throws NodeParseException {
         switch (tokens.getFirst().getTokenType()) {
             case TokenType.ID_KEYWORD -> { return IDNode.parseIDNode(tokens); }
             case TokenType.NUMBER -> { return NumNode.parseNumNode(tokens, false); }

@@ -19,7 +19,7 @@ public class JottParser {
      */
     public static JottTree parse(ArrayList<Token> tokens) {
         try {
-            return ProgramNode.parseProgramNode(new TokenDequeue(tokens));
+            return ProgramNode.parseProgramNode(new TokenDeque(tokens));
         } catch (JottTree.NodeParseException e) {
             System.err.println(e.getMessage());
             return null;

@@ -1,6 +1,6 @@
 package src.nodes;
 
-import src.TokenDequeue;
+import src.TokenDeque;
 import src.TokenType;
 
 /**
@@ -23,7 +23,7 @@ public class FunctionCallNode implements OperandNode {
      * @return the parsed function call node
      * @throws NodeParseException if the tokens do not form a valid function call node
      */
-    public static FunctionCallNode parseFunctionCallNode(TokenDequeue tokens) throws NodeParseException {
+    public static FunctionCallNode parseFunctionCallNode(TokenDeque tokens) throws NodeParseException {
         tokens.removeFirst(); // We know we'll have FC header first, so remove it
         tokens.validateFirst(TokenType.ID_KEYWORD);
         IDNode idNode = IDNode.parseIDNode(tokens);

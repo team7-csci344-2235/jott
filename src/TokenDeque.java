@@ -4,14 +4,14 @@ import java.util.ArrayDeque;
 import java.util.List;
 
 /**
- * Dequeue which stores tokens and keeps track of the last removed token.
+ * Deque which stores tokens and keeps track of the last removed token.
  * Removes head in O(1) time.
  */
-public class TokenDequeue {
+public class TokenDeque {
     private final ArrayDeque<Token> tokens;
     private Token lastRemoved;
 
-    public TokenDequeue(List<Token> tokens) {
+    public TokenDeque(List<Token> tokens) {
         this.tokens = new ArrayDeque<>(tokens);
     }
 

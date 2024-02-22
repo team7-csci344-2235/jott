@@ -1,7 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
-import src.TokenDequeue;
+import src.TokenDeque;
 
 /**
  * Class for function definition nodes
@@ -13,7 +13,7 @@ public class FunctionDefNode implements JottTree {
         // TODO: Implement this method and arguments
     }
 
-    public static FunctionDefNode parseFunctionDefNode(TokenDequeue tokens) {
+    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens) {
         // TODO: Implement
         return null;
     }

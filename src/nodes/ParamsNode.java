@@ -1,7 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
-import src.TokenDequeue;
+import src.TokenDeque;
 import src.TokenType;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class ParamsNode implements JottTree {
      * @return the parsed params node
      * @throws NodeParseException if the tokens do not form a valid params node
      */
-    public static ParamsNode parseParamsNode(TokenDequeue tokens) throws NodeParseException {
+    public static ParamsNode parseParamsNode(TokenDeque tokens) throws NodeParseException {
         if (tokens.isEmpty() || !tokens.isFirstOf(TokenType.ID_KEYWORD))
             return new ParamsNode();
 

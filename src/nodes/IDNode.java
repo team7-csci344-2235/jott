@@ -1,6 +1,6 @@
 package src.nodes;
 
-import src.TokenDequeue;
+import src.TokenDeque;
 
 /**
  * Class for ID nodes
@@ -12,7 +12,7 @@ public class IDNode implements OperandNode {
         // TODO: Implement this method and arguments
     }
 
-    public static IDNode parseIDNode(TokenDequeue tokens) throws NodeParseException {
+    public static IDNode parseIDNode(TokenDeque tokens) throws NodeParseException {
         // TODO: Implement this method
         return null;
     }

@@ -1,7 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
-import src.TokenDequeue;
+import src.TokenDeque;
 
 import java.util.ArrayList;
 import java.util.stream.Collector;
@@ -31,7 +31,7 @@ public class ProgramNode implements JottTree {
      * @param tokens: Current set of tokens
      * @return the root of the Jott Parse Tree represented by the tokens.
      */
-    public static ProgramNode parseProgramNode(TokenDequeue tokens) throws NodeParseException {
+    public static ProgramNode parseProgramNode(TokenDeque tokens) throws NodeParseException {
         if (tokens.isEmpty())
             return new ProgramNode();
 
