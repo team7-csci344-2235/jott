@@ -10,6 +10,7 @@ import static src.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
 
 /**
  * Class for function call nodes
+ * Includes params_t since a separate node would have been unnecessary.
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
@@ -31,18 +32,16 @@ public class ParamsNode implements JottTree {
      * @throws NodeParseException if the tokens do not form a valid params node
      */
     public static ParamsNode parseParamsNode(TokenDeque tokens) throws NodeParseException {
-        if (tokens.isEmpty() || !tokens.isFirstOf(TokenType.ID_KEYWORD))
+        if (tokens.isFirstOf(TokenType.R_BRACKET)) // No expressions, empty params.
             return new ParamsNode();
 
         ArrayList<ExprNode> expressions = new ArrayList<>();
         for (;;) {
             expressions.add(ExprNode.parseExprNode(tokens)); // We should have expressions here, let's parse.
-            if (tokens.isFirstOf(TokenType.COMMA)) {
+            if (tokens.isFirstOf(TokenType.COMMA))
                 tokens.removeFirst(); // Remove comma
-                tokens.validateFirst(TokenType.ID_KEYWORD); // Ensure we have an idk for the next expression
-            } else {
+            else
                 return new ParamsNode(expressions);
-            }
         }
     }
 
