@@ -8,7 +8,7 @@ import src.TokenType;
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
-public class FunctionCallNode implements OperandNode {
+public class FunctionCallNode implements OperandNode, BodyStmtNode {
     private final IDNode idNode;
     private final ParamsNode parameters;
 

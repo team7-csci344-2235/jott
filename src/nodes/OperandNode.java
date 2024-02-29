@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  *
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
-public interface OperandNode extends JottTree {
+public interface OperandNode extends ExprNode {
     /**
      * Parses an operand node from the given tokens
      * @param tokens the tokens to parse
