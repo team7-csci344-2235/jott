@@ -1,5 +1,6 @@
 package src.nodes;
 
+import src.Token;
 import src.TokenDeque;
 
 /**
@@ -8,19 +9,24 @@ import src.TokenDeque;
  * @author TODO
  */
 public class NumNode implements OperandNode {
-    private NumNode() {
-        // TODO: Implement this method and arguments
+
+    private final String num;
+    private NumNode(Token num) {
+        this.num = num.getToken();
     }
 
     public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) throws NodeParseException {
-        // TODO: Implement this method
-        return null;
+        if (isNegative) {
+            tokens.removeFirst();
+            return new NumNode(tokens.getFirst());
+        } else {
+            return new NumNode(tokens.getFirst());
+        }
     }
 
     @Override
     public String convertToJott() {
-        // TODO: Implement this method
-        return null;
+        return num;
     }
 
     @Override
