@@ -2,6 +2,7 @@ package src.nodes;
 
 import src.JottTree;
 import src.TokenDeque;
+import src.TokenType;
 
 /**
  * Class for RelOp nodes (<, >, =, ==, <=, >=)
@@ -9,20 +10,37 @@ import src.TokenDeque;
  * @author Lianna Pottgen, <lrp2755@rit.edu>  //infinite loop issues
  */
 public class RelOpNode implements JottTree {
-    private final RelOpNode relationalValue;
+    private final String relationalValue;
 
-    private RelOpNode(RelOpNode relationalValue) {
+    private RelOpNode(String relationalValue) {
         this.relationalValue = relationalValue;
     }
 
     public static RelOpNode parseRelOpNode(TokenDeque tokens) throws NodeParseException {
-        RelOpNode relationalValue = RelOpNode.parseRelOpNode(tokens);
-        return relationalValue;
+        //get information
+        tokens.validateFirst(TokenType.REL_OP); 
+
+        //if ">"
+            //return ">"
+        //else if "<"
+            //return "<"
+        //else if "<="
+            //return "<="
+        //else if ">="
+            //return ">="
+        //else if "=="
+            //return "=="
+        tokens.validateFirst(">", "<", "<=", ">=", "==");
+
+        RelOpNode relationalOperation = new RelOpNode(tokens.removeFirst().getToken());
+
+        //return relationalOperation;
+        return relationalOperation;
     }
 
     @Override
     public String convertToJott() {
-        return relationalValue.convertToJott();
+        return relationalValue;
     }
 
     @Override
