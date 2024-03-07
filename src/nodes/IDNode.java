@@ -1,26 +1,34 @@
 package src.nodes;
 
+import java.net.IDN;
+
 import src.TokenDeque;
+import src.TokenType;
 
 /**
  * Class for ID nodes
  *
- * @author TODO
+ * @author Lianna Pottgen <lrp2755@rit.edu>
  */
-public class IDNode implements OperandNode {
-    private IDNode() {
-        // TODO: Implement this method and arguments
+public class IDNode implements OperandNode { 
+    private final String idStringValue;
+
+    private IDNode(String idStringValue) {
+        this.idStringValue = idStringValue;
     }
 
     public static IDNode parseIDNode(TokenDeque tokens) throws NodeParseException {
-        // TODO: Implement this method
-        return null;
+        //get information
+        tokens.validateFirst(TokenType.ID_KEYWORD); 
+
+        IDNode idNodeValue = new IDNode(tokens.removeFirst().getToken());
+
+        return idNodeValue;
     }
 
     @Override
-    public String convertToJott() {
-        // TODO: Implement this method
-        return null;
+    public String convertToJott(){
+        return idStringValue;
     }
 
     @Override
