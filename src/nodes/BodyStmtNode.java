@@ -4,6 +4,8 @@ import src.JottTree;
 import src.TokenDeque;
 import src.TokenType;
 
+import java.awt.dnd.InvalidDnDOperationException;
+
 /**
  * Interface for Body Statement nodes
  *
@@ -11,31 +13,32 @@ import src.TokenType;
  */
 public interface BodyStmtNode extends JottTree {
 
-
-
     static BodyStmtNode parseBodyStmtNode(TokenDeque tokens) throws NodeParseException {
-//        // Ensure first is of one of the following tokens.
-//        tokens.validateFirst(TokenType.ID_KEYWORD, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.MATH_OP);
-//        switch (tokens.getFirst().getTokenType()) {
-//            case TokenType.ID_KEYWORD -> {
-//                tokens.removeFirst(); // Remove semicolon
-//                return IDNode.parseIDNode(tokens);
-//            }
-//            case TokenType.NUMBER -> {
-//                tokens.removeFirst(); // Remove semicolon
-//                return NumNode.parseNumNode(tokens, false);
-//            }
-//            case TokenType.FC_HEADER -> {
-//                tokens.removeFirst(); // Remove semicolon
-//                return FunctionCallNode.parseFunctionCallNode(tokens);
-//            }
-//            case TokenType.MATH_OP -> {
-//                tokens.validateFirst("-"); // Validate negative sign
-//                tokens.removeFirst(); // Remove negative sign
-//                tokens.validateFirst(TokenType.NUMBER); // Validate that there's a number
-//                tokens.removeFirst(); // Remove semicolon
-//                return NumNode.parseNumNode(tokens, true);
-//            }
+        // Ensure first is of one of the following tokens.
+        tokens.validateFirst(TokenType.STRING, TokenType.NUMBER, TokenType.FC_HEADER);
+        if (tokens.isFirstOf("If")) {
+//            IfStmtNode ifStmtNode = ifStmtNode.parseifStmtNode(tokens);
+            tokens.validateFirst(TokenType.SEMICOLON);
+            tokens.removeFirst(); // Remove semicolon
+//            return idStmtNode;
+            return null;
+            //TODO adapt to Sebastian code
+        } else if (tokens.isFirstOf("While")) {
+            WhileLoopNode whileLoopNode = WhileLoopNode.parseWhileLoopNode(tokens);
+            tokens.validateFirst(TokenType.SEMICOLON);
+            tokens.removeFirst(); // Remove semicolon
+            return whileLoopNode;
+        } else if (tokens.isFirstOf(TokenType.ID_KEYWORD)) {
+            AsmtNode asmtNode = AsmtNode.parseAsmtNode(tokens);
+            tokens.validateFirst(TokenType.SEMICOLON);
+            tokens.removeFirst(); // Remove semicolon
+            return asmtNode;
+        } else if (tokens.isFirstOf(TokenType.FC_HEADER)) {
+            FunctionCallNode functionCallNode = FunctionCallNode.parseFunctionCallNode(tokens);
+            tokens.validateFirst(TokenType.SEMICOLON);
+            tokens.removeFirst(); // Remove semicolon
+            return functionCallNode;
+        }
         return null;
     }
 }
