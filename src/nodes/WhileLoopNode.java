@@ -12,7 +12,7 @@ public class WhileLoopNode implements BodyStmtNode{
     }
 
     public static WhileLoopNode parseWhileLoopNode(TokenDeque tokens) throws NodeParseException {
-        tokens.validateFirst(TokenType.STRING);
+        tokens.validateFirst("While");
         tokens.removeFirst(); // Remove while
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst(); // Remove left bracket
