@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Class for Body nodes
  *
- * @author Adrienne Ressy amr3032@g.rit.edu
+ * @author Ewen Cazuc <ec1291@rit.edu>
  */
 public class BodyNode implements JottTree {
 

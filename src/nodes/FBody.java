@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Class for FBody nodes
  *
- * @author Adrienne Ressy amr3032@g.rit.edu
+ * @author Adrienne Ressy <amr3032@rit.edu>
  */
 public class FBody implements JottTree {
 

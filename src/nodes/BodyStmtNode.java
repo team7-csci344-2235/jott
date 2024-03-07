@@ -7,7 +7,7 @@ import src.TokenType;
 /**
  * Interface for Body Statement nodes
  *
- * @author Adrienne Ressy amr3032@g.rit.edu
+ * @author Adrienne Ressy <amr3032@rit.edu>
  */
 public interface BodyStmtNode extends JottTree {
 

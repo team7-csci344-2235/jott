@@ -5,6 +5,11 @@ import src.Token;
 import src.TokenDeque;
 import src.TokenType;
 
+/**
+ * Class for Type nodes
+ *
+ * @author Ewen Cazuc <ec1291@rit.edu>
+ **/
 public class TypeNode implements JottTree {
 
     private final String type;

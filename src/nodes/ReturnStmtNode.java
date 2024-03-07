@@ -4,6 +4,11 @@ import src.JottTree;
 import src.TokenDeque;
 import src.TokenType;
 
+/**
+ * Class for ReturnStmt nodes
+ *
+ * @author Ewen Cazuc <ec1291@rit.edu>
+ */
 public class ReturnStmtNode implements JottTree{
 
     private final ExprNode exprNode;
