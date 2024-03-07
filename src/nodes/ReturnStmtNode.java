@@ -22,7 +22,7 @@ public class ReturnStmtNode implements JottTree{
 
     @Override
     public String convertToJott() {
-        return "return " + exprNode.convertToJott() + ";";
+        return "Return " + exprNode.convertToJott() + ";";
     }
 
     @Override
