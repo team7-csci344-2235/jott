@@ -1,6 +1,7 @@
 package src.nodes;
 
 import src.JottTree;
+import src.Token;
 import src.TokenDeque;
 import src.TokenType;
 
@@ -14,16 +15,14 @@ public interface ExprNode extends JottTree {
 
         // Ensure first is of one of the following tokens.
         tokens.validateFirst(TokenType.STRING, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        if (tokens.isFirstOf(TokenType.STRING)) {
-            if (tokens.isFirstOf("True") || tokens.isFirstOf("False")) {
-//                return BoolNode.parseBoolNode(tokens);
-                return null;
-                //TODO adapt to Lianna's code
-            } else {
+        if (tokens.isFirstOf(TokenType.ID_KEYWORD) && tokens.isFirstOf("True", "False")) {
+//            return BoolNode.parseBoolNode(tokens);
+            return null;
+            //TODO adapt to Lianna's code
+        } else if (tokens.isFirstOf(TokenType.STRING)) {
 //                return StringLitteralNode.parseStringLitteralNode(tokens);
-                return null;
-                //TODO adapt to Lianna's code
-            }
+            return null;
+            //TODO adapt to Lianna's code
         } else {
             OperandNode operandNode = OperandNode.parseOperandNode(tokens);
             if (tokens.isFirstOf(TokenType.REL_OP)) {

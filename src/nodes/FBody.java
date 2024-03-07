@@ -27,7 +27,7 @@ public class FBody implements JottTree {
 
         for (;;) {
             varDecNodes1.add(VarDecNode.parseVarDecNode(tokens));
-            if (tokens.isFirstOf("If") || tokens.isFirstOf("While") || tokens.isFirstOf(TokenType.ID_KEYWORD) || tokens.isFirstOf(TokenType.FC_HEADER) || tokens.isFirstOf("Return"))
+            if (tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER)|| tokens.isFirstOf("Return") && !tokens.isFirstOf("Double", "Integer", "String", "Boolean"))
                 break; //if the next node is a body node we break
         }
 

@@ -17,7 +17,7 @@ public class ReturnStmtNode implements JottTree{
     }
 
     public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens) throws JottTree.NodeParseException {
-        tokens.validateFirst(TokenType.STRING);
+        tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
         ExprNode exprNode = ExprNode.parseExprNode(tokens);
         tokens.validateFirst(TokenType.SEMICOLON);

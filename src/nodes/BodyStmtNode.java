@@ -15,7 +15,7 @@ public interface BodyStmtNode extends JottTree {
 
     static BodyStmtNode parseBodyStmtNode(TokenDeque tokens) throws NodeParseException {
         // Ensure first is of one of the following tokens.
-        tokens.validateFirst(TokenType.STRING, TokenType.NUMBER, TokenType.FC_HEADER);
+        tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
         if (tokens.isFirstOf("If")) {
 //            IfStmtNode ifStmtNode = ifStmtNode.parseifStmtNode(tokens);
             tokens.validateFirst(TokenType.SEMICOLON);
@@ -28,16 +28,16 @@ public interface BodyStmtNode extends JottTree {
             tokens.validateFirst(TokenType.SEMICOLON);
             tokens.removeFirst(); // Remove semicolon
             return whileLoopNode;
-        } else if (tokens.isFirstOf(TokenType.ID_KEYWORD)) {
-            AsmtNode asmtNode = AsmtNode.parseAsmtNode(tokens);
-            tokens.validateFirst(TokenType.SEMICOLON);
-            tokens.removeFirst(); // Remove semicolon
-            return asmtNode;
         } else if (tokens.isFirstOf(TokenType.FC_HEADER)) {
             FunctionCallNode functionCallNode = FunctionCallNode.parseFunctionCallNode(tokens);
             tokens.validateFirst(TokenType.SEMICOLON);
             tokens.removeFirst(); // Remove semicolon
             return functionCallNode;
+        }else if (tokens.isFirstOf(TokenType.ID_KEYWORD)) {
+            AsmtNode asmtNode = AsmtNode.parseAsmtNode(tokens);
+            tokens.validateFirst(TokenType.SEMICOLON);
+            tokens.removeFirst(); // Remove semicolon
+            return asmtNode;
         }
         return null;
     }

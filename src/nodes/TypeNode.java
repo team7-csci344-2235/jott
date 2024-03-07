@@ -9,6 +9,7 @@ import src.TokenType;
  * Class for Type nodes
  *
  * @author Ewen Cazuc <ec1291@rit.edu>
+ * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 public class TypeNode implements JottTree {
 
@@ -18,7 +19,7 @@ public class TypeNode implements JottTree {
     }
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
-        tokens.validateFirst(TokenType.STRING);
+        tokens.validateFirst("Double", "Integer", "String", "Boolean");
         return new TypeNode(tokens.getFirst());
     }
 
