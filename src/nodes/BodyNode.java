@@ -3,24 +3,43 @@ package src.nodes;
 import src.JottTree;
 import src.TokenDeque;
 
+import java.util.ArrayList;
+
+/**
+ * Class for Body nodes
+ *
+ * @author Adrienne Ressy amr3032@g.rit.edu
+ */
 public class BodyNode implements JottTree {
 
-    private final BodyStmtNode bodyStmtNode;
+    private final ArrayList<BodyStmtNode> bodyStmtNodes;
     private final ReturnStmtNode returnStmtNode;
-    private BodyNode(BodyStmtNode bodyStmtNode, ReturnStmtNode returnStmtNode) {
-        this.bodyStmtNode = bodyStmtNode;
+    private BodyNode(ArrayList<BodyStmtNode> bodyStmtNodes, ReturnStmtNode returnStmtNode) {
+        this.bodyStmtNodes = bodyStmtNodes;
         this.returnStmtNode = returnStmtNode;
     }
 
     public static BodyNode parseBodyNode(TokenDeque tokens) throws NodeParseException {
-        BodyStmtNode bodyStmtNode = BodyStmtNode.parseBodyStmtNode(tokens);
+        ArrayList<BodyStmtNode> bodyStmtNodes1 = new ArrayList<>();
+
+        for (;;) {
+            bodyStmtNodes1.add(BodyStmtNode.parseBodyStmtNode(tokens)); // We should have expressions here, let's parse.
+            if (tokens.isFirstOf("Return"))
+                break; //if it's a return statement we break
+        }
+
         ReturnStmtNode returnStmtNode = ReturnStmtNode.parseReturnStmtNode(tokens);
-        return new BodyNode(bodyStmtNode, returnStmtNode);
+        return new BodyNode(bodyStmtNodes1, returnStmtNode);
     }
 
     @Override
     public String convertToJott() {
-        return bodyStmtNode.convertToJott() + returnStmtNode.convertToJott();
+        String result = "";
+        while (!bodyStmtNodes.isEmpty()) {
+            result = result + bodyStmtNodes.getFirst().convertToJott() + " ";
+            bodyStmtNodes.removeFirst();
+        }
+        return result + returnStmtNode.convertToJott();
     }
 
     @Override
