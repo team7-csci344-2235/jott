@@ -25,11 +25,7 @@ public class BoolNode implements JottTree {
         //else if "FALSE", "false", or any combination
             //return "False"
         tokens.validateFirst("True", "False");
-
-        BoolNode trueOrFalseB = new BoolNode(tokens.removeFirst().getToken());
-
-        //return trueOrFalseParse;
-        return trueOrFalseB;
+        return new BoolNode(tokens.removeFirst().getToken());
     }
 
     @Override

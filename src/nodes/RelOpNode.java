@@ -32,10 +32,8 @@ public class RelOpNode implements JottTree {
             //return "=="
         tokens.validateFirst(">", "<", "<=", ">=", "==");
 
-        RelOpNode relationalOperation = new RelOpNode(tokens.removeFirst().getToken());
-
         //return relationalOperation;
-        return relationalOperation;
+        return new RelOpNode(tokens.removeFirst().getToken());
     }
 
     @Override

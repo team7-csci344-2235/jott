@@ -22,10 +22,8 @@ public class StringLiteralNode implements JottTree {
         String holder = tokens.removeFirst().getToken();
         holder = holder.substring(1, holder.length()-2);
 
-        StringLiteralNode stringLiteral = new StringLiteralNode(holder);
-
         //return value
-        return stringLiteral;
+        return new StringLiteralNode(holder);
     }
 
     @Override
