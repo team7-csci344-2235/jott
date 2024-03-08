@@ -19,11 +19,8 @@ public class IDNode implements OperandNode {
 
     public static IDNode parseIDNode(TokenDeque tokens) throws NodeParseException {
         //get information
-        tokens.validateFirst(TokenType.ID_KEYWORD); 
-
-        IDNode idNodeValue = new IDNode(tokens.removeFirst().getToken());
-
-        return idNodeValue;
+        tokens.validateFirst(TokenType.ID_KEYWORD);
+        return new IDNode(tokens.removeFirst().getToken());
     }
 
     @Override

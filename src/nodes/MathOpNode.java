@@ -30,10 +30,8 @@ public class MathOpNode implements JottTree {
             //return "*"
         tokens.validateFirst("/", "+", "-", "*");
 
-        MathOpNode mathOperation = new MathOpNode(tokens.removeFirst().getToken());
-
         //return mathOperation;
-        return mathOperation;
+        return new MathOpNode(tokens.removeFirst().getToken());
     }
 
     @Override
