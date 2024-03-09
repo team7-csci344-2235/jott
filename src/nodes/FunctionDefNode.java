@@ -8,7 +8,7 @@ import src.TokenType;
 /**
  * Class for function definition nodes
  *
- * @author TODO
+ * @author Sebastian LaVine <sml1040@rit.edu>
  */
 public class FunctionDefNode implements JottTree {
 
