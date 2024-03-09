@@ -8,6 +8,7 @@ public class FunctionDefParamTNode implements JottTree {
 
     private final IDNode idNode;
     private final TypeNode typeNode;
+
     private FunctionDefParamTNode(IDNode idNode, TypeNode typeNode) {
         this.idNode = idNode;
         this.typeNode = typeNode;
@@ -20,7 +21,7 @@ public class FunctionDefParamTNode implements JottTree {
         tokens.validateFirst(TokenType.COLON);
         tokens.removeFirst(); // Remove colon
         TypeNode typeNode = TypeNode.parseTypeNode(tokens);
-        return null;
+        return new FunctionDefParamTNode(idNode, typeNode);
     }
 
     @Override

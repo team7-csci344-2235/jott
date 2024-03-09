@@ -33,6 +33,12 @@ public interface JottTree {
                     " but got token type '" + got.getTokenType() + "' instead.");
         }
 
+        public NodeParseException(Token got, String expected) {
+            super("Parsing Error at line " + got.getLineNum() +
+                    ": Expected '" + expected +
+                    "' but got '" + got.getToken() + "' instead.");
+        }
+
         public NodeParseException(int previousLine, TokenType... expected) {
             super("Parsing Error after line " + previousLine +
                     ": Expected token types " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
