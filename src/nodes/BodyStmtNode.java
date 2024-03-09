@@ -17,12 +17,10 @@ public interface BodyStmtNode extends JottTree {
         // Ensure first is of one of the following tokens.
         tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
         if (tokens.isFirstOf("If")) {
-//            IfStmtNode ifStmtNode = ifStmtNode.parseifStmtNode(tokens);
+            IfStmtNode ifStmtNode = IfStmtNode.parseIfStmtNode(tokens);
             tokens.validateFirst(TokenType.SEMICOLON);
             tokens.removeFirst(); // Remove semicolon
-//            return idStmtNode;
-            return null;
-            //TODO adapt to Sebastian code
+            return ifStmtNode;
         } else if (tokens.isFirstOf("While")) {
             WhileLoopNode whileLoopNode = WhileLoopNode.parseWhileLoopNode(tokens);
             tokens.validateFirst(TokenType.SEMICOLON);
