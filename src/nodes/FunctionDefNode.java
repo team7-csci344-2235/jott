@@ -34,7 +34,7 @@ public class FunctionDefNode implements JottTree {
         // Check that we start with a Def.
         tokens.validateFirst(TokenType.ID_KEYWORD);
         Token maybeDef = tokens.removeFirst();
-        if (maybeDef.getToken() != "Def") {
+        if (!maybeDef.getToken().equals("Def")) {
             throw new JottTree.NodeParseException(maybeDef, "Def");
         }
 
@@ -63,7 +63,7 @@ public class FunctionDefNode implements JottTree {
         TypeNode returnType = null; // <- special case for "Void"
         Token maybeVoid = tokens.getFirst();
         if ( ! (maybeVoid.getTokenType() == TokenType.ID_KEYWORD
-                && maybeVoid.getToken() == "Void") ) {
+                && maybeVoid.getToken().equals("Void")) ) {
             returnType = TypeNode.parseTypeNode(tokens);
         }
 
