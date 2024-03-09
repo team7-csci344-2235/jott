@@ -47,8 +47,10 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst();
 
-        FunctionDefParamNode params =
-            FunctionDefParamNode.parseFunctionDefParamNode(tokens);
+        FunctionDefParamNode params = null;
+        if (tokens.getFirst().getTokenType() != TokenType.R_BRACKET) {
+            params = FunctionDefParamNode.parseFunctionDefParamNode(tokens);
+        }
 
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
@@ -83,11 +85,22 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        return "Def " + this.name.convertToJott() + "["
-            + this.params.convertToJott() + "]: "
-            + (this.maybeReturnType == null
-                    ? "Void" : this.maybeReturnType.convertToJott())
-            + "{" + this.functionBody.convertToJott() + "}";
+        StringBuilder sb = new StringBuilder("Def ");
+        sb.append(this.name.convertToJott());
+        sb.append("[");
+        if (this.params != null) {
+            sb.append(this.params.convertToJott());
+        }
+        sb.append("]: ");
+        if (this.maybeReturnType == null) {
+            sb.append("Void");
+        } else {
+            sb.append(this.maybeReturnType.convertToJott());
+        }
+        sb.append("{");
+        sb.append(this.functionBody.convertToJott());
+        sb.append("}");
+        return sb.toString();
     }
 
     @Override
