@@ -64,8 +64,10 @@ public class FunctionDefNode implements JottTree {
         // Special case check for "Void" followed by TypeNode check.
         TypeNode returnType = null; // <- special case for "Void"
         Token maybeVoid = tokens.getFirst();
-        if ( ! (maybeVoid.getTokenType() == TokenType.ID_KEYWORD
-                && maybeVoid.getToken().equals("Void")) ) {
+        if (maybeVoid.getTokenType() == TokenType.ID_KEYWORD
+                && maybeVoid.getToken().equals("Void")) {
+            tokens.removeFirst();
+        } else {
             returnType = TypeNode.parseTypeNode(tokens);
         }
 
