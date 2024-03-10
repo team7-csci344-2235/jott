@@ -45,7 +45,12 @@ public class ProgramNode implements JottTree {
     @Override
     public String convertToJott() {
         if (functionDefNodes == null) return "";
-        return functionDefNodes.stream().map(FunctionDefNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
+
+        StringBuilder sb = new StringBuilder();
+        for (FunctionDefNode func : this.functionDefNodes) {
+            sb.append(func.convertToJott());
+        }
+        return sb.toString();
     }
 
     @Override
