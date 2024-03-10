@@ -9,7 +9,7 @@ import src.TokenType;
  *
  * @author Lianna Pottgen, <lrp2755@rit.edu> 
  */
-public class StringLiteralNode implements JottTree {
+public class StringLiteralNode implements JottTree, ExprNode {
     private final String stringValue;
 
     private StringLiteralNode(String stringValue) {

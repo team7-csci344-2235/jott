@@ -9,7 +9,7 @@ import src.TokenType;
  *
  * @author Lianna Pottgen, <lrp2755@rit.edu>
  */
-public class BoolNode implements JottTree {
+public class BoolNode implements JottTree, ExprNode{
     private final String trueOrFalse;
 
     private BoolNode(String trueOrFalse) {
