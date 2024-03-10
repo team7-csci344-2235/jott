@@ -38,7 +38,7 @@ public class BodyNode implements JottTree {
     public String convertToJott() {
         String result = "";
         while (!bodyStmtNodes.isEmpty()) {
-            result = result + bodyStmtNodes.getFirst().convertToJott() + " ";
+            result = result + bodyStmtNodes.getFirst().convertToJott() + ";";
             bodyStmtNodes.removeFirst();
         }
         return result + returnStmtNode.convertToJott();
