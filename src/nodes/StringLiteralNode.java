@@ -20,7 +20,7 @@ public class StringLiteralNode implements JottTree, ExprNode {
         tokens.validateFirst(TokenType.STRING);
 
         String holder = tokens.removeFirst().getToken();
-        holder = holder.substring(1, holder.length()-2);
+        holder = holder.substring(1, holder.length()-1);
 
         //return value
         return new StringLiteralNode(holder);
