@@ -16,12 +16,12 @@ public interface ExprNode extends JottTree {
         // Ensure first is of one of the following tokens.
         tokens.validateFirst(TokenType.STRING, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
 
-        if (tokens.isFirstOf(TokenType.ID_KEYWORD) && tokens.isFirstOf("True", "False")){
+        if (tokens.isFirstOf(TokenType.ID_KEYWORD)
+                && tokens.isFirstOf("True", "False")) {
             return BoolNode.parseBoolNode(tokens);
         } else if (tokens.isFirstOf(TokenType.STRING)) {
             return StringLiteralNode.parseStringLiteralNode(tokens);
-        }
-        else {
+        } else {
             OperandNode operandNode = OperandNode.parseOperandNode(tokens);
 
             if (tokens.isFirstOf(TokenType.REL_OP)) {
@@ -33,9 +33,8 @@ public interface ExprNode extends JottTree {
 
                 return mathOpNode;
             }
-            
-            //return OperandNode.parseOperandNode(tokens);
-            return operandNode;
+
+            return OperandNode.parseOperandNode(tokens);
         }
 
     }
