@@ -1,4 +1,4 @@
 # IntelliJ stuff
 .idea/
 *.xml
-*/*.class
+**/*.class
