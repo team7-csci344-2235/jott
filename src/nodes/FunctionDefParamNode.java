@@ -45,9 +45,15 @@ public class FunctionDefParamNode implements JottTree {
         if (this.firstParamName == null) {
             return "";
         }
+        if(theRest != null){
         return this.firstParamName.convertToJott() + ": "
             + this.firstParamType.convertToJott()
             + this.theRest.convertToJott();
+        }
+        else{
+            return this.firstParamName.convertToJott() + ": "
+            + this.firstParamType.convertToJott();
+        }
     }
 
     @Override

@@ -22,7 +22,7 @@ public class MathOpNode implements JottTree, ExprNode {
 
     public static MathOpNode parseMathNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
         //get information
-        tokens.validateFirst(TokenType.ID_KEYWORD); 
+        //tokens.validateFirst(TokenType.ID_KEYWORD); 
 
         //if "/"
             //return "/"

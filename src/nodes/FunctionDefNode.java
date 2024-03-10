@@ -88,15 +88,17 @@ public class FunctionDefNode implements JottTree {
         if (this.params != null) {
             sb.append(this.params.convertToJott());
         }
-        sb.append("]: ");
+        sb.append("]:");
         if (this.maybeReturnType == null) {
             sb.append("Void");
         } else {
             sb.append(this.maybeReturnType.convertToJott());
         }
         sb.append("{");
+        sb.append("\n");
         sb.append(this.functionBody.convertToJott());
         sb.append("}");
+        sb.append("\n");
         return sb.toString();
     }
 

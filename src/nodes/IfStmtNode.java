@@ -165,7 +165,7 @@ public class IfStmtNode implements BodyStmtNode {
         tokens.removeFirst();
 
         ExprNode expr = ExprNode.parseExprNode(tokens);
-        tokens.removeFirst();
+        //tokens.removeFirst();
         
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
@@ -210,9 +210,12 @@ public class IfStmtNode implements BodyStmtNode {
     public String convertToJott() {
         StringBuilder sb = new StringBuilder("If [");
         sb.append(this.expr.convertToJott());
-        sb.append("] {");
+        sb.append("]{");
+        sb.append("\n");
+        sb.append("");
         sb.append(this.body.convertToJott());
-        sb.append("}");
+        sb.append("        }");
+        sb.append("\n");
         for (ElseIfNode ei : this.elseIfs) {
             sb.append(" ");
             sb.append(ei.convertToJott());

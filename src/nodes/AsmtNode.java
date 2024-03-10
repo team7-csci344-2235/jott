@@ -27,7 +27,7 @@ public class AsmtNode implements BodyStmtNode{
 
     @Override
     public String convertToJott() {
-        return idNode.convertToJott() + " = " + exprNode.convertToJott() + ";";
+        return idNode.convertToJott() + " = " + exprNode.convertToJott();
     }
 
     @Override

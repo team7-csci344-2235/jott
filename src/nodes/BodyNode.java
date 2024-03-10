@@ -39,9 +39,15 @@ public class BodyNode implements JottTree {
         String result = "";
         while (!bodyStmtNodes.isEmpty()) {
             result = result + bodyStmtNodes.getFirst().convertToJott() + ";";
+            result += "\n";
             bodyStmtNodes.removeFirst();
         }
-        return result + returnStmtNode.convertToJott();
+        if(returnStmtNode!=null){
+            return result + returnStmtNode.convertToJott();
+        }
+        else{
+            return result;
+        }
     }
 
     @Override

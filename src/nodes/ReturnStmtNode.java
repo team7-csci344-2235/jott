@@ -39,7 +39,7 @@ public class ReturnStmtNode implements JottTree{
         if (exprNode == null) {
             return "";
         }
-        return "Return " + exprNode.convertToJott() + ";";
+        return "Return " + exprNode.convertToJott() + ";" + "\n";
     }
 
     @Override
