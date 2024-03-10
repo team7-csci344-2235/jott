@@ -30,13 +30,12 @@ public interface ExprNode extends JottTree {
 
             } else if (tokens.isFirstOf(TokenType.MATH_OP)) {
                 MathOpNode mathOpNode = MathOpNode.parseMathNode(operandNode, tokens);
-
                 return mathOpNode;
+
             } 
             else {
-                return operandNode; // Just the one operand.
+                return operandNode;
             }
         }
-
     }
 }
