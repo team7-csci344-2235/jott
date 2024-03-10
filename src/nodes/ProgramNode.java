@@ -4,8 +4,6 @@ import src.JottTree;
 import src.TokenDeque;
 
 import java.util.ArrayList;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Class for Program nodes
@@ -13,8 +11,6 @@ import java.util.stream.Collectors;
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
 public class ProgramNode implements JottTree {
-    public final static Collector<CharSequence, ?, String> JOTT_LIST_COLLECTOR = Collectors.joining(", ");
-
     private final ArrayList<FunctionDefNode> functionDefNodes;
 
     private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes) {
