@@ -2,6 +2,7 @@ package src.nodes;
 
 import src.JottTree;
 import src.TokenDeque;
+import src.TokenType;
 
 import java.util.ArrayList;
 
@@ -24,9 +25,10 @@ public class BodyNode implements JottTree {
 
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
-        while (!tokens.isFirstOf("Return")) {
+        while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
             bodyStmtNodes1.add(BodyStmtNode.parseBodyStmtNode(tokens));
         }
+
 
         ReturnStmtNode returnStmtNode = ReturnStmtNode.parseReturnStmtNode(tokens);
         return new BodyNode(bodyStmtNodes1, returnStmtNode);
