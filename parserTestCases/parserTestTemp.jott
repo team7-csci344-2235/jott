@@ -1,4 +1,10 @@
-Def main[]:Integer{
-Double x;x = 5.0;
-Return x;
+Def foo[x: Integer]:Integer{
+If [x>10]{
+Return 1;
+        }
+ Else {Return 0;
+};
+}
+, Def main[]:Void{
+::print[::foo[10]];
 }

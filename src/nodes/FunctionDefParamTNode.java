@@ -26,7 +26,14 @@ public class FunctionDefParamTNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        return ", "+ idNode.convertToJott() + ": " + typeNode.convertToJott();
+        String temp = ","+ idNode.convertToJott() + ": " + typeNode.convertToJott();
+        if(temp.equals(", ")){
+            return "";
+        }
+        else{
+            return temp;
+        }
+        //return ", "+ idNode.convertToJott() + ": " + typeNode.convertToJott();
     }
 
     @Override
