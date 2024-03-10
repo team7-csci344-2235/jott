@@ -35,8 +35,6 @@ public interface ExprNode extends JottTree {
             } else {
                 return operandNode;
             }
-
         }
-
     }
 }
