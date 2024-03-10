@@ -27,7 +27,7 @@ public class FBody implements JottTree {
 
         // Check for variable declarations at the start of the function body.
         // Note that no variable declarations is acceptable.
-        while ((!tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER)
+        while ((!tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER, TokenType.R_BRACE)
                 && (!tokens.isFirstOf("Return")) || tokens.isFirstOf("Double", "Integer", "String", "Boolean"))) {
             varDecNodes1.add(VarDecNode.parseVarDecNode(tokens));
         }
