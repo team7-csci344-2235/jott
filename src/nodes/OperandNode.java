@@ -1,6 +1,5 @@
 package src.nodes;
 
-import org.w3c.dom.Node;
 import src.JottTree;
 import src.TokenDeque;
 import src.TokenType;
