@@ -6,22 +6,21 @@ import src.TokenDeque;
 /**
  * Class for Number nodes
  *
- * @author TODO
+ * @author Ewen Cazuc
+ * @author Sebastian LaVine <sml1040@rit.edu>
  */
 public class NumNode implements OperandNode {
 
     private final String num;
-    private NumNode(Token num) {
-        this.num = num.getToken();
+    private NumNode(String num) {
+        this.num = num;
     }
 
     public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) throws NodeParseException {
-        if (isNegative) {
-            tokens.removeFirst();
-            return new NumNode(tokens.getFirst());
-        } else {
-            return new NumNode(tokens.getFirst());
-        }
+        Token number = tokens.removeFirst();
+        return new NumNode(
+            (isNegative) ? "-" + number.getToken() : number.getToken()
+        );
     }
 
     @Override
