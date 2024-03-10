@@ -16,7 +16,14 @@ public class ReturnStmtNode implements JottTree{
         this.exprNode = exprNode;
     }
 
+    private ReturnStmtNode() {
+        this.exprNode = null;
+    }
+
     public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens) throws JottTree.NodeParseException {
+        if (tokens.isFirstOf(TokenType.R_BRACE)) // No expressions, empty params.
+            return new ReturnStmtNode();
+
         tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
         ExprNode exprNode = ExprNode.parseExprNode(tokens);
@@ -29,6 +36,9 @@ public class ReturnStmtNode implements JottTree{
 
     @Override
     public String convertToJott() {
+        if (exprNode == null) {
+            return "";
+        }
         return "Return " + exprNode.convertToJott() + ";";
     }
 
@@ -49,6 +59,6 @@ public class ReturnStmtNode implements JottTree{
 
     @Override
     public boolean validateTree() {
-        return exprNode.validateTree();
+        return false;
     }
 }
