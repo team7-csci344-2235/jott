@@ -22,7 +22,6 @@ public class JottParser {
             return ProgramNode.parseProgramNode(new TokenDeque(tokens));
         } catch (JottTree.NodeParseException e) {
             System.err.println(e.getMessage());
-            e.printStackTrace(System.err);
             return null;
         }
     }
