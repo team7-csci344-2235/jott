@@ -22,10 +22,10 @@ public class BodyNode implements JottTree {
     public static BodyNode parseBodyNode(TokenDeque tokens) throws NodeParseException {
         ArrayList<BodyStmtNode> bodyStmtNodes1 = new ArrayList<>();
 
-        for (;;) {
-            bodyStmtNodes1.add(BodyStmtNode.parseBodyStmtNode(tokens)); // We should have expressions here, let's parse.
-            if (tokens.isFirstOf("Return"))
-                break; //if it's a return statement we break
+        // Parse body statements. Keep in mind that zero body statements is
+        // acceptable.
+        while (!tokens.isFirstOf("Return")) {
+            bodyStmtNodes1.add(BodyStmtNode.parseBodyStmtNode(tokens));
         }
 
         ReturnStmtNode returnStmtNode = ReturnStmtNode.parseReturnStmtNode(tokens);
