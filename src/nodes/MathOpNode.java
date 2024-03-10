@@ -11,40 +11,20 @@ import src.TokenType;
  */
 public class MathOpNode implements JottTree, ExprNode {
     private final String mathOpString;
-    private final OperandNode firstOp;
-    private final OperandNode secondOp;
 
-    private MathOpNode(OperandNode firstOp, String value, OperandNode secondOp) {
-        this.firstOp = firstOp;
+    private MathOpNode(String value) {
         this.mathOpString = value;
-        this.secondOp = secondOp;
     }
 
     public static MathOpNode parseMathNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
         //get information
         tokens.validateFirst(TokenType.ID_KEYWORD); 
-
-        //if "/"
-            //return "/"
-        //else if "+"
-            //return "+"
-        //else if "-"
-            //return "-"
-        //else if "*"
-            //return "*"
-        tokens.validateFirst("/", "+", "-", "*");
-        String mathOpHolder = tokens.removeFirst().getToken();
-
-        tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens);
-
-        //return mathOperation;
-        return new MathOpNode(firstOp, mathOpHolder, operandNode1);
+        return new MathOpNode(tokens.removeFirst().getToken());
     }
 
     @Override
     public String convertToJott() {
-        return firstOp.convertToJott() + mathOpString + secondOp.convertToJott();
+        return mathOpString;
     }
 
     @Override

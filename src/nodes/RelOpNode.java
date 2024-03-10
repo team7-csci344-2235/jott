@@ -11,42 +11,21 @@ import src.TokenType;
  */
 public class RelOpNode implements JottTree, ExprNode {
     private final String relationalValue;
-    private final OperandNode firstOpStr;
-    private final OperandNode secondOpStr;
 
-    private RelOpNode(OperandNode firstOp, String relationalValue, OperandNode secondOp) {
-        this.firstOpStr = firstOp;
+
+    private RelOpNode(String relationalValue) {
         this.relationalValue = relationalValue;
-        this.secondOpStr = secondOp;
     }
 
     public static RelOpNode parseRelOpNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
         //get information
         tokens.validateFirst(TokenType.REL_OP); 
-
-        //if ">"
-            //return ">"
-        //else if "<"
-            //return "<"
-        //else if "<="
-            //return "<="
-        //else if ">="
-            //return ">="
-        //else if "=="
-            //return "=="
-        tokens.validateFirst(">", "<", "<=", ">=", "==");
-        String relOpHolder = tokens.removeFirst().getToken();
-
-        tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens);
-
-        //return relationalOperation;
-        return new RelOpNode(firstOp, relOpHolder, operandNode1);
+        return new RelOpNode(tokens.removeFirst().getToken());
     }
 
     @Override
     public String convertToJott() {
-        return firstOpStr.convertToJott() +relationalValue+ secondOpStr.convertToJott();
+        return relationalValue;
     }
 
     @Override
