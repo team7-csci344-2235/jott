@@ -25,10 +25,11 @@ public class FBody implements JottTree {
     public static FBody parseFBodyNode(TokenDeque tokens) throws NodeParseException {
         ArrayList<VarDecNode> varDecNodes1 = new ArrayList<>();
 
-        for (;;) {
+        // Check for variable declarations at the start of the function body.
+        // Note that no variable declarations is acceptable.
+        while (!tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER)
+                && (!tokens.isFirstOf("Return") || tokens.isFirstOf("Double", "Integer", "String", "Boolean"))) {
             varDecNodes1.add(VarDecNode.parseVarDecNode(tokens));
-            if (tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER)|| tokens.isFirstOf("Return") && !tokens.isFirstOf("Double", "Integer", "String", "Boolean"))
-                break; //if the next node is a body node we break
         }
 
         BodyNode bodyNode1 = BodyNode.parseBodyNode(tokens);
