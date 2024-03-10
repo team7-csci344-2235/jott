@@ -36,18 +36,24 @@ public class BodyNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        String result = "";
+        StringBuilder sb = new StringBuilder();
         while (!bodyStmtNodes.isEmpty()) {
-            result = result + bodyStmtNodes.getFirst().convertToJott() + ";";
-            result += "\n";
+            BodyStmtNode node = bodyStmtNodes.getFirst();
+            sb.append(node.convertToJott());
+
+            // If statements / while loops do not have semicolons.
+            if (node instanceof AsmtNode || node instanceof FunctionCallNode) {
+                sb.append(";");
+            }
+            sb.append("\n");
             bodyStmtNodes.removeFirst();
         }
-        if(returnStmtNode!=null){
-            return result + returnStmtNode.convertToJott();
+
+        if(returnStmtNode != null){
+            sb.append(returnStmtNode.convertToJott());
         }
-        else{
-            return result;
-        }
+
+        return sb.toString();
     }
 
     @Override
