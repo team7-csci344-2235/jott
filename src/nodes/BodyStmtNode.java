@@ -4,8 +4,6 @@ import src.JottTree;
 import src.TokenDeque;
 import src.TokenType;
 
-import java.awt.dnd.InvalidDnDOperationException;
-
 /**
  * Interface for Body Statement nodes
  *
