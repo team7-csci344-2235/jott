@@ -32,11 +32,8 @@ public class FunctionDefNode implements JottTree {
 
     public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens) throws NodeParseException {
         // Check that we start with a Def.
-        tokens.validateFirst(TokenType.ID_KEYWORD);
-        Token maybeDef = tokens.removeFirst();
-        if (!maybeDef.getToken().equals("Def")) {
-            throw new JottTree.NodeParseException(maybeDef, "Def");
-        }
+        tokens.validateFirst("Def");
+        tokens.removeFirst();
 
         // Check that we've got an ID (name).
         IDNode name = IDNode.parseIDNode(tokens);
