@@ -2,3 +2,4 @@
 .idea/
 *.xml
 **/*.class
+parserTestCases/parserTestTemp.jott
