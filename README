@@ -1,3 +1,21 @@
+Phase 2 information
+
+Our code is organized into the `src` directory. The
+`testers/JottParserTester.java` file has been modified to import our code and
+provided code correctly.
+
+From the main directory, build the `JottParserTester` class with
+
+        javac testers/JottParserTester.java
+
+Then from the root project directory, run
+
+        java testers.JottParserTester
+
+---
+
+Phase 1 information
+
 Currently, as we work on phase 1, all of our code is in the `src`
 package. The professor said that code he created must remain there in
 order to work with the test cases. For future phases he said we can
@@ -19,6 +37,7 @@ To run the test, run
 Note that we must be in the root directory of the repository so that
 `testers.JottTokenizerTester` has access to the test cases in
 `tokenizerTestCases/`.
+
 ---
 
 From the professor:
