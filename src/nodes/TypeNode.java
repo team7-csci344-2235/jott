@@ -20,7 +20,7 @@ public class TypeNode implements JottTree {
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
         tokens.validateFirst("Double", "Integer", "String", "Boolean");
-        return new TypeNode(tokens.getFirst());
+        return new TypeNode(tokens.removeFirst());
     }
 
     @Override
