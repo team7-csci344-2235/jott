@@ -32,9 +32,9 @@ public interface ExprNode extends JottTree {
                 MathOpNode mathOpNode = MathOpNode.parseMathNode(operandNode, tokens);
 
                 return mathOpNode;
+            } else {
+                return operandNode; // Just the one operand.
             }
-
-            return OperandNode.parseOperandNode(tokens);
         }
 
     }
