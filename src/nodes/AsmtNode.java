@@ -14,9 +14,12 @@ public class AsmtNode implements BodyStmtNode{
 
     public static AsmtNode parseAsmtNode(TokenDeque tokens) throws NodeParseException {
         IDNode idNode = IDNode.parseIDNode(tokens);
+
         tokens.validateFirst(TokenType.ASSIGN);
         tokens.removeFirst(); // Remove equals
+
         ExprNode exprNode = ExprNode.parseExprNode(tokens);
+
         tokens.validateFirst(TokenType.SEMICOLON);
         tokens.removeFirst(); // Remove semicolon
         return new AsmtNode(idNode, exprNode);

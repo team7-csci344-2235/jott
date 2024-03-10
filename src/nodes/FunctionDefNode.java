@@ -55,7 +55,6 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
 
-
         // Get return type.
 
         tokens.validateFirst(TokenType.COLON);
@@ -73,7 +72,6 @@ public class FunctionDefNode implements JottTree {
 
 
         // Get function body.
-
         tokens.validateFirst(TokenType.L_BRACE);
         tokens.removeFirst();
 

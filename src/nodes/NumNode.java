@@ -2,6 +2,7 @@ package src.nodes;
 
 import src.Token;
 import src.TokenDeque;
+import src.TokenType;
 
 /**
  * Class for Number nodes

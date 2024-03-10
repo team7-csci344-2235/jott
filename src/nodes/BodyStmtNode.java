@@ -32,9 +32,11 @@ public interface BodyStmtNode extends JottTree {
             tokens.removeFirst(); // Remove semicolon
             return functionCallNode;
         }else if (tokens.isFirstOf(TokenType.ID_KEYWORD)) {
+            tokens.removeFirst();
             AsmtNode asmtNode = AsmtNode.parseAsmtNode(tokens);
-            tokens.validateFirst(TokenType.SEMICOLON);
-            tokens.removeFirst(); // Remove semicolon
+            //tokens.validateFirst(TokenType.SEMICOLON);
+            //tokens.removeFirst(); 
+            // Remove semicolon
             return asmtNode;
         }
         return null;

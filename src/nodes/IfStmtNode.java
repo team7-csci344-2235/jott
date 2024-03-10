@@ -165,7 +165,8 @@ public class IfStmtNode implements BodyStmtNode {
         tokens.removeFirst();
 
         ExprNode expr = ExprNode.parseExprNode(tokens);
-
+        tokens.removeFirst();
+        
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
 
