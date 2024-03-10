@@ -29,7 +29,6 @@ public class FunctionDefParamNode implements JottTree {
         TypeNode firstParamType = TypeNode.parseTypeNode(tokens);
 
         // (Potentially) followed by more parameters.
-
         if (tokens.isEmpty()) {
             // Then we're done, there's only one argument.
             return new FunctionDefParamNode(firstParamName,

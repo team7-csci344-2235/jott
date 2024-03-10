@@ -23,8 +23,7 @@ public interface OperandNode extends ExprNode {
     static OperandNode parseOperandNode(TokenDeque tokens) throws NodeParseException {
         // Ensure first is of one of the following tokens.
         tokens.validateFirst(TokenType.ID_KEYWORD, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.MATH_OP);
-        switch (tokens.getFirst().getTokenType()) {
-            case SEMICOLON -> {return SEMICOLON}
+        switch (tokens.getFirst().getTokenType()){
             case ID_KEYWORD-> { return IDNode.parseIDNode(tokens); }
             case NUMBER -> { return NumNode.parseNumNode(tokens, false); }
             case FC_HEADER -> { return FunctionCallNode.parseFunctionCallNode(tokens); }
