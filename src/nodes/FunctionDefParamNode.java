@@ -6,18 +6,20 @@ import src.TokenType;
 
 import java.util.ArrayList;
 
+import static src.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
+
 public class FunctionDefParamNode implements JottTree {
 
     private final IDNode firstParamName;
     private final TypeNode firstParamType;
-    private final FunctionDefParamTNode theRest;
+    private final ArrayList<FunctionDefParamTNode> functionDefParamTNodes;
 
-    private FunctionDefParamNode(IDNode name, TypeNode type,
-            FunctionDefParamTNode theRest) {
-        this.firstParamName = name;
-        this.firstParamType = type;
-        this.theRest = null;
-    }
+private FunctionDefParamNode(IDNode name, TypeNode type,
+                             ArrayList<FunctionDefParamTNode> functionDefParamTNodes) {
+    this.firstParamName = name;
+    this.firstParamType = type;
+    this.functionDefParamTNodes = functionDefParamTNodes;
+}
 
     public static FunctionDefParamNode parseFunctionDefParamNode(TokenDeque tokens) throws NodeParseException {
         // Parse ID, followed by colon.
@@ -29,15 +31,12 @@ public class FunctionDefParamNode implements JottTree {
         TypeNode firstParamType = TypeNode.parseTypeNode(tokens);
 
         // (Potentially) followed by more parameters.
-
-        if(tokens.getFirst().getTokenType() == TokenType.R_BRACKET){
-            return new FunctionDefParamNode(firstParamName,
-                    firstParamType, null);
+        ArrayList<FunctionDefParamTNode> functionDefParamTNodes1 = new ArrayList<>();
+        while (!tokens.isFirstOf(TokenType.R_BRACE)) {
+            functionDefParamTNodes1.add(FunctionDefParamTNode.parseFunctionDefParamTNode(tokens));
         }
-        else{
-            return new FunctionDefParamNode(firstParamName, firstParamType,
-                FunctionDefParamTNode.parseFunctionDefParamTNode(tokens));
-        }     
+
+        return new FunctionDefParamNode(firstParamName, firstParamType,functionDefParamTNodes1);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class FunctionDefParamNode implements JottTree {
         }
         return this.firstParamName.convertToJott() + ": "
             + this.firstParamType.convertToJott()
-            + this.theRest.convertToJott();
+            + functionDefParamTNodes.stream().map(FunctionDefParamTNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
     }
 
     @Override
