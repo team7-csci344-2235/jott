@@ -3,10 +3,10 @@
 
 Def foo[x:Integer]:Integer{
     If[x > 10]{
-	    return 1;
+	    Return 1;
 	}
 	Else{
-	    return 0;
+	    Return 0;
     }
 }
 

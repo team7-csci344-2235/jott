@@ -2,6 +2,7 @@
 #while is a keyword
 
 Def foo[]:Void{
-    Integer while = 5;
+    Integer while;
+    while = 5;
 	::print[while];
 }

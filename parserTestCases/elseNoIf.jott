@@ -3,7 +3,8 @@
 #Error: <else> without <if>
 
 Def main[]:Integer{
-    Integer x = 0;
+    Integer x;
+    x = 0;
 	While[x <10]{
 	    If[x==5]{
 		    ::print[True];

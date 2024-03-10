@@ -6,6 +6,7 @@ Def foo[y:Double]:Integer{
 }
 
 Def main[]:Void{
-    Integer x = ::foo[5];
+    Integer x;
+    x = ::foo[5];
 	::print[x];
 }

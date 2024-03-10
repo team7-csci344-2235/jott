@@ -6,7 +6,8 @@ Def foo[x:Integer]:Integer{
 }
 
 Def main[]:Double{
-    Integer x = 0;
+    Integer x;
+    x = 0;
 	While[x<10]{
 	    x = ::foo[x];
 		::print[x];

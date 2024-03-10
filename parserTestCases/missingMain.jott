@@ -12,5 +12,5 @@ Def main1[]:Integer{
 	    x = ::foo[x];
 		::print[x];
 	}
-	return x;
+	Return x;
 }
