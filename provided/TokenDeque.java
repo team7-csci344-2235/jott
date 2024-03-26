@@ -31,7 +31,7 @@ public class TokenDeque {
     public void validateFirst(TokenType... otherTypes) throws JottTree.NodeParseException {
         for (TokenType otherType: otherTypes)
             if (tokens.isEmpty())
-                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherTypes);
+                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), getLastRemoved().getFilename(), otherTypes);
             else if (tokens.getFirst().getTokenType() == otherType)
                 return;
         throw new JottTree.NodeParseException(tokens.getFirst(), otherTypes);
@@ -45,7 +45,7 @@ public class TokenDeque {
     public void validateFirst(String... otherStrs) throws JottTree.NodeParseException {
         for (String otherStr : otherStrs)
             if (tokens.isEmpty())
-                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(), otherStrs);
+                throw new JottTree.NodeParseException(getLastRemoved().getLineNum(),getLastRemoved().getFilename(), otherStrs);
             else if (tokens.getFirst().getToken().equals(otherStr))
                 return;
         throw new JottTree.NodeParseException(tokens.getFirst(), otherStrs);

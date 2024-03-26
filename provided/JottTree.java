@@ -16,33 +16,36 @@ public interface JottTree {
      */
     class NodeParseException extends Exception {
         public NodeParseException(Token got, String... expected) {
-            super("Parsing Error at line " + got.getLineNum() +
-                    ": Expected " + String.join(" or ", expected) +
-                    " but got '" + got.getToken() + "' instead.");
+            super("Syntax Error \n" +
+                    "Expected " + String.join(" or ", expected) +
+                            " but got " + got.getToken() + " instead \n" +
+                    got.getFilename() + ":" + got.getLineNum());
         }
 
-        public NodeParseException(int previousLine, String... expected) {
-            super("Parsing Error after line " + previousLine +
-                    ": Expected " + String.join(" or ", expected) +
-                    " but got nothing instead.");
+        public NodeParseException(int previousLine, String filename, String... expected) {
+            super("Syntax Error \n" +
+                    "Expected " + String.join(" or ", expected) + " but got nothing instead \n" +
+                    filename + ":" + previousLine);
         }
 
         public NodeParseException(Token got, TokenType... expected) {
-            super("Parsing Error at line " + got.getLineNum() +
-                    ": Expected token types " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
-                    " but got token type '" + got.getTokenType() + "' instead.");
+            super("Syntax Error \n" +
+                    "Expected " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
+                    " but got " + got.getToken() + " instead \n" +
+                    got.getFilename() + ":" + got.getLineNum());
         }
 
         public NodeParseException(Token got, String expected) {
-            super("Parsing Error at line " + got.getLineNum() +
-                    ": Expected '" + expected +
-                    "' but got '" + got.getToken() + "' instead.");
+            super("Syntax Error \n" +
+                    "Expected " + expected +
+                    " but got " + got.getToken() + " ainstead \n" +
+                    got.getFilename() + ":" + got.getLineNum());
         }
 
-        public NodeParseException(int previousLine, TokenType... expected) {
-            super("Parsing Error after line " + previousLine +
-                    ": Expected token types " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
-                    " but got nothing instead.");
+        public NodeParseException(int previousLine, String filename, TokenType... expected) {
+            super("Syntax Error \n" +
+                    "Expected " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) + " but got nothing instead \n" +
+                    filename + ":" + previousLine);
         }
     }
 
