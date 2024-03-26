@@ -1,7 +1,7 @@
-package src.nodes;
+package provided.nodes;
 
-import src.JottTree;
-import src.TokenDeque;
+import provided.JottTree;
+import provided.TokenDeque;
 
 import java.util.ArrayList;
 import java.util.stream.Collector;

@@ -1,9 +1,8 @@
-package src.nodes;
+package provided.nodes;
 
-import src.JottTree;
-import src.Token;
-import src.TokenDeque;
-import src.TokenType;
+import provided.JottTree;
+import provided.Token;
+import provided.TokenDeque;
 
 /**
  * Class for Type nodes

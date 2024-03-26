@@ -1,7 +1,7 @@
-package src.nodes;
+package provided.nodes;
 
-import src.TokenDeque;
-import src.TokenType;
+import provided.TokenDeque;
+import provided.TokenType;
 
 public class WhileLoopNode implements BodyStmtNode{
     private final ExprNode exprNode;

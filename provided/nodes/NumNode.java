@@ -1,8 +1,7 @@
-package src.nodes;
+package provided.nodes;
 
-import src.Token;
-import src.TokenDeque;
-import src.TokenType;
+import provided.Token;
+import provided.TokenDeque;
 
 /**
  * Class for Number nodes

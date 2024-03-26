@@ -1,10 +1,7 @@
-package src.nodes;
+package provided.nodes;
 
-import src.JottTree;
-import src.TokenDeque;
-import src.TokenType;
-
-import java.util.NoSuchElementException;
+import provided.TokenDeque;
+import provided.TokenType;
 
 /**
  * Interface for operand nodes

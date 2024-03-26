@@ -1,12 +1,12 @@
-package src.nodes;
+package provided.nodes;
 
-import src.JottTree;
-import src.TokenDeque;
-import src.TokenType;
+import provided.JottTree;
+import provided.TokenDeque;
+import provided.TokenType;
 
 import java.util.ArrayList;
 
-import static src.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
+import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
 
 /**
  * Class for function call nodes

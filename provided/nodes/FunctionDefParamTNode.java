@@ -1,8 +1,8 @@
-package src.nodes;
+package provided.nodes;
 
-import src.JottTree;
-import src.TokenDeque;
-import src.TokenType;
+import provided.JottTree;
+import provided.TokenDeque;
+import provided.TokenType;
 
 public class FunctionDefParamTNode implements JottTree {
 

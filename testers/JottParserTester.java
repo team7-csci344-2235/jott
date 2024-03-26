@@ -7,7 +7,7 @@ package testers;
   This tester assumes a working and valid tokenizer.
  */
 
-import src.*;
+import provided.*;
 
 import java.io.FileWriter;
 import java.io.IOException;

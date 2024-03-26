@@ -1,9 +1,7 @@
-package src.nodes;
+package provided.nodes;
 
-import java.net.IDN;
-
-import src.TokenDeque;
-import src.TokenType;
+import provided.TokenDeque;
+import provided.TokenType;
 
 /**
  * Class for ID nodes

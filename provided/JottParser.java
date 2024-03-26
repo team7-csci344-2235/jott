@@ -1,6 +1,6 @@
-package src;
+package provided;
 
-import src.nodes.*;
+import provided.nodes.*;
 
 import java.util.ArrayList;
 
