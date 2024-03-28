@@ -58,7 +58,7 @@ public class ReturnStmtNode implements JottTree{
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        return;
     }
 }

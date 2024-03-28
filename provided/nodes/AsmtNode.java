@@ -46,8 +46,8 @@ public class AsmtNode implements BodyStmtNode{
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        return;
     }
 
 }

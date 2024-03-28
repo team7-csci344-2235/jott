@@ -44,7 +44,7 @@ public class NumNode implements OperandNode {
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        return;
     }
 }

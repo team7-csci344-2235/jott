@@ -50,6 +50,18 @@ public interface JottTree {
     }
 
     /**
+     * Exception for when a node is invalid.
+     * @author Sebastian LaVine <sml1040@rit.edu>
+     */
+    class NodeValidateException extends Exception {
+        public NodeValidateException(String message, String filename, int line) {
+            super("Semantic Error:\n"
+                    + message + "\n"
+                    + filename + ":" + line);
+        }
+    }
+
+    /**
      * Will output a string of this tree in Jott
      * @return a string representing the Jott code of this tree
      */
@@ -75,8 +87,7 @@ public interface JottTree {
 
     /**
      * This will validate that the tree follows the semantic rules of Jott
-	 * Errors validating will be reported to System.err
-     * @return true if valid Jott code; false otherwise
+     * @return void if valid Jott code; throws NodeValidateException if not
      */
-    public boolean validateTree();
+    public void validateTree() throws NodeValidateException;
 }
