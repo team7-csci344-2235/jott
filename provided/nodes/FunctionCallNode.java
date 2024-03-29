@@ -9,12 +9,14 @@ import provided.TokenType;
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
 public class FunctionCallNode implements OperandNode, BodyStmtNode {
+    private final int startLine;
     private final IDNode idNode;
     private final ParamsNode parameters;
 
-    private FunctionCallNode(IDNode idNode, ParamsNode parameters) {
+    private FunctionCallNode(int startLine, IDNode idNode, ParamsNode parameters) {
         this.idNode = idNode;
         this.parameters = parameters;
+        this.startLine = startLine;
     }
 
     /**
@@ -26,13 +28,14 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     public static FunctionCallNode parseFunctionCallNode(TokenDeque tokens) throws NodeParseException {
         tokens.removeFirst(); // We know we'll have FC header first, so remove it
         tokens.validateFirst(TokenType.ID_KEYWORD);
+        int startLine = tokens.getFirst().getLineNum();
         IDNode idNode = IDNode.parseIDNode(tokens);
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst(); // Remove L bracket
         ParamsNode parameters = ParamsNode.parseParamsNode(tokens);
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
-        return new FunctionCallNode(idNode, parameters);
+        return new FunctionCallNode(startLine, idNode, parameters);
     }
 
     @Override
@@ -58,5 +61,15 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
+    }
+
+    @Override
+    public TypeNode.VariableType getEvaluationVariableType() {
+        return idNode.getEvaluationVariableType();
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
     }
 }

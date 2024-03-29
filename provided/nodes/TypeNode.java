@@ -11,7 +11,9 @@ import provided.TokenDeque;
  * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 public class TypeNode implements JottTree {
-
+    public enum VariableType {
+        DOUBLE, INTEGER, STRING, BOOLEAN
+    }
     private final String type;
     private TypeNode(Token type) {
         this.type = type.getToken();

@@ -10,15 +10,16 @@ import provided.TokenDeque;
  * @author Sebastian LaVine <sml1040@rit.edu>
  */
 public class NumNode implements OperandNode {
-
+    private final int startLine;
     private final String num;
-    private NumNode(String num) {
+    private NumNode(int startLine, String num) {
         this.num = num;
+        this.startLine = startLine;
     }
 
-    public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) throws NodeParseException {
+    public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) {
         Token number = tokens.removeFirst();
-        return new NumNode(
+        return new NumNode(number.getLineNum(),
             (isNegative) ? "-" + number.getToken() : number.getToken()
         );
     }
@@ -46,5 +47,15 @@ public class NumNode implements OperandNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
+    }
+
+    @Override
+    public TypeNode.VariableType getEvaluationVariableType() {
+        return num.contains(".") ? TypeNode.VariableType.DOUBLE : TypeNode.VariableType.INTEGER;
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
     }
 }

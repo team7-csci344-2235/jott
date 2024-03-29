@@ -37,4 +37,17 @@ public interface ExprNode extends JottTree {
             }
         }
     }
+
+    /**
+     * Get the evaluation variable type of the expression
+     * Note: This should be called after the expression has been validated, so it may be populated.
+     * @return the evaluation variable type of the expression
+     */
+    TypeNode.VariableType getEvaluationVariableType();
+
+    /**
+     * Get the start line of the expression
+     * @return the start line of the expression
+     */
+    int getStartLine();
 }

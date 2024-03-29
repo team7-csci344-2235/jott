@@ -1,6 +1,7 @@
 package provided.nodes;
 
 import provided.JottTree;
+import provided.Token;
 import provided.TokenDeque;
 import provided.TokenType;
 
@@ -15,14 +16,20 @@ import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
  * @author Ethan Hartman <ehh4525@rit.edu>
  */
 public class ParamsNode implements JottTree {
+    private final int startLine;
     private final ArrayList<ExprNode> expressions;
+    private final String filename;
 
-    private ParamsNode(ArrayList<ExprNode> expressions) {
+    private ParamsNode(String filename, int startLine, ArrayList<ExprNode> expressions) {
         this.expressions = expressions;
+        this.filename = filename;
+        this.startLine = startLine;
     }
 
-    private ParamsNode() {
+    private ParamsNode(String filename, int startLine) {
         this.expressions = null;
+        this.filename = filename;
+        this.startLine = startLine;
     }
 
     /**
@@ -32,8 +39,9 @@ public class ParamsNode implements JottTree {
      * @throws NodeParseException if the tokens do not form a valid params node
      */
     public static ParamsNode parseParamsNode(TokenDeque tokens) throws NodeParseException {
+        Token lastToken = tokens.getLastRemoved();
         if (tokens.isFirstOf(TokenType.R_BRACKET)) // No expressions, empty params.
-            return new ParamsNode();
+            return new ParamsNode(lastToken.getFilename(), lastToken.getLineNum());
 
         ArrayList<ExprNode> expressions = new ArrayList<>();
         for (;;) {
@@ -41,7 +49,7 @@ public class ParamsNode implements JottTree {
             if (tokens.isFirstOf(TokenType.COMMA))
                 tokens.removeFirst(); // Remove comma
             else
-                return new ParamsNode(expressions);
+                return new ParamsNode(lastToken.getFilename(), lastToken.getLineNum(), expressions);
         }
     }
 
@@ -68,6 +76,23 @@ public class ParamsNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        // We will need to get the name of the function we are calling to check the required parameters.
+        int defParamsLengthPlaceholder = 0;
+        if ((expressions == null ? 0 : expressions.size()) != defParamsLengthPlaceholder) // Param length check
+            throw new NodeValidateException("Invalid number of parameters in function call", filename, startLine);
+        else if (expressions == null) return; // No expressions required, no need to validate further.
+
+        // Assuming we have some type of ArrayList defining the required function parameter types.
+        ArrayList<TypeNode.VariableType> requiredTypes = new ArrayList<>(); // Placeholder
+
+        // Validate expressions and check if they match the required types.
+        ExprNode expr;
+        for (int i = 0; i < expressions.size(); i++) {
+            expr = expressions.get(i);
+            expr.validateTree();
+            TypeNode.VariableType evalType = expr.getEvaluationVariableType();
+            if (evalType != requiredTypes.get(i))
+                throw new NodeValidateException("Invalid parameter type in function call: " + expr.convertToJott() + "\nExpected: '" + requiredTypes.get(i) + "' but got type: '" + evalType + "' instead.", filename, expr.getStartLine());
+        }
     }
 }
