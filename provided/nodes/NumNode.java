@@ -24,6 +24,11 @@ public class NumNode implements OperandNode {
         );
     }
 
+    public boolean isZero() {
+        // Replace all decimals and zeros, then check if the string is empty
+        return num.replace(".", "").replace("0", "").isEmpty();
+    }
+
     @Override
     public String convertToJott() {
         return num;
