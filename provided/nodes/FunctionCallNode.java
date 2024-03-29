@@ -10,13 +10,15 @@ import provided.TokenType;
  */
 public class FunctionCallNode implements OperandNode, BodyStmtNode {
     private final int startLine;
+    private final String filename;
     private final IDNode idNode;
     private final ParamsNode parameters;
 
-    private FunctionCallNode(int startLine, IDNode idNode, ParamsNode parameters) {
+    private FunctionCallNode(int startLine, String filename, IDNode idNode, ParamsNode parameters) {
         this.idNode = idNode;
         this.parameters = parameters;
         this.startLine = startLine;
+        this.filename = filename;
     }
 
     /**
@@ -35,7 +37,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         ParamsNode parameters = ParamsNode.parseParamsNode(tokens);
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
-        return new FunctionCallNode(startLine, idNode, parameters);
+        return new FunctionCallNode(startLine, tokens.getLastRemoved().getFilename(), idNode, parameters);
     }
 
     @Override
@@ -60,7 +62,12 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        idNode.validateTree();
+        // TODO: Ensure idNode (method name) is included in function symbol table, pass necessary parameters to parameterNode
+        boolean isInSymbolTablePlaceholder = true;
+        if (!isInSymbolTablePlaceholder)
+            throw new NodeValidateException("Call to unknown function: '" + idNode.convertToJott() + "'", filename, startLine);
+        parameters.validateTree();
     }
 
     @Override
