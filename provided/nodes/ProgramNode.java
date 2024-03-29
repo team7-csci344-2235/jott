@@ -70,6 +70,12 @@ public class ProgramNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        for (FunctionDefNode fdn : this.functionDefNodes) {
+            // Note that we don't check for an exception or specify an
+            // error message *here*. If this node is invalid, then an
+            // exception further down the stack will provide a more
+            // descriptive error message.
+            fdn.validateTree();
+        }
     }
 }
