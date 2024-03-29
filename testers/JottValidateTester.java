@@ -1,10 +1,13 @@
 package testers;
 
 /*
-  Jott parser tester. This will test the parsing phase of the Jott
+  Jott validate tester. This will test the validation phase of the Jott
   project.
 
-  This tester assumes a working and valid tokenizer.
+  This tester assumes a working and valid tokenizer and parser.
+
+  We tacked on our validation phase to our parser, so this will still just
+  look like we're calling our parser. Not too many changes required. --seb
  */
 
 import provided.*;
@@ -15,7 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class JottParserTester {
+public class JottValidateTester {
     ArrayList<TestCase> testCases;
 
     private static class TestCase{
@@ -37,42 +40,30 @@ public class JottParserTester {
 
     private void createTestCases(){
         this.testCases = new ArrayList<>();
-        testCases.add(new TestCase("provided writeup example1", "providedExample1.jott", false ));
-        testCases.add(new TestCase("provided writeup example2 (error)", "providedExample2.jott", true ));
-        testCases.add(new TestCase("provided writeup example3 (error)", "providedExample3.jott", true ));
-        testCases.add(new TestCase("provided writeup example4 (error)", "providedExample4.jott", true ));
-        testCases.add(new TestCase("provided writeup example5 (error)", "providedExample5.jott", true ));
+        testCases.add(new TestCase("invalid param (type mismatch)", "funcCallParamInvalid.jott", true ));
+        testCases.add(new TestCase("function not defined", "funcNotDefined.jott", true ));
+        testCases.add(new TestCase("integer relop double", "funcReturnInExpr.jott", true ));
+        testCases.add(new TestCase("return wrong type", "funcWrongParamType.jott", true ));
         testCases.add(new TestCase("hello world", "helloWorld.jott", false ));
-        testCases.add(new TestCase("1foo error (error)", "1foo.jott", true ));
-        testCases.add(new TestCase("return <id> type mismatch", "returnId.jott", false ));
-        testCases.add(new TestCase("type:var error (error)", "paramOrderSwapped.jott", true ));
-        testCases.add(new TestCase("missing expr (error)", "missingExp.jott", true ));
-        testCases.add(new TestCase("missingBrace (error)", "missingBrace.jott", true ));
-        testCases.add(new TestCase("elseif without if (error)", "elseIfNoIf.jott", true ));
-        testCases.add(new TestCase("missing return", "missingReturn.jott", false ));
-        testCases.add(new TestCase("Void not valid param type (error)", "voidParam.jott", true ));
-        testCases.add(new TestCase("function not defined", "funcNotDefined.jott", false ));
-        testCases.add(new TestCase("mismatch return type", "mismatchedReturn.jott", false ));
-        testCases.add(new TestCase("function call param type not matching", "funcCallParamInvalid.jott", false ));
-        testCases.add(new TestCase("single expression program (error)", "singleExpr.jott", true ));
-        testCases.add(new TestCase("valid while loop", "validLoop.jott", false ));
-        testCases.add(new TestCase("missing main", "missingMain.jott", false ));
-        testCases.add(new TestCase("main must be integer", "mainReturnNotInt.jott", false ));
-        testCases.add(new TestCase("i_expr relop d_expr function return", "funcReturnInExpr.jott", false ));
-        testCases.add(new TestCase("invalid asmt stmt (error)", "invalidAsmtStmt.jott", true ));
-        testCases.add(new TestCase("missing comma in func_def_params (error)", "missingCommaParams.jott", true ));
-        testCases.add(new TestCase("while is keyword, cannot be used as id", "whileKeyword.jott", false ));
-        testCases.add(new TestCase("expr by itself (error)", "loneExpr.jott", true ));
-        testCases.add(new TestCase("code after return (error)", "codeAfterReturn.jott", true ));
-        //testCases.add(new TestCase("lone minus (error)", "loneMinus.jott", true ));
-        testCases.add(new TestCase("else without if (error)", "elseNoIf.jott", true ));
-        testCases.add(new TestCase("missing closing } (error)", "missingClosing.jott", true ));
-        testCases.add(new TestCase("valid if with return", "validIfReturn.jott", false));
+        testCases.add(new TestCase("if statement returns", "ifStmtReturns.jott", false ));
+        testCases.add(new TestCase("larger", "largerValid.jott", false ));
+        testCases.add(new TestCase("main must return Void", "mainReturnNotInt.jott", true ));
+        testCases.add(new TestCase("mismatched return", "mismatchedReturn.jott", true ));
+        testCases.add(new TestCase("missing params in call", "missingFuncParams.jott", true ));
+        testCases.add(new TestCase("missing main function", "missingMain.jott", true ));
+        testCases.add(new TestCase("missing return", "missingReturn.jott", true ));
+        testCases.add(new TestCase("missing return (if branches)", "noReturnIf.jott", true ));
+        testCases.add(new TestCase("missing return (while)", "noReturnWhile.jott", true ));
+        testCases.add(new TestCase("provided example 1", "providedExample1.jott", false ));
+        testCases.add(new TestCase("return from void", "returnId.jott", true ));
+        testCases.add(new TestCase("valid loop", "validLoop.jott", false ));
+        testCases.add(new TestCase("void return", "voidReturn.jott", true ));
+        testCases.add(new TestCase("while is a keyword", "whileKeyword.jott", true ));
     }
 
     private boolean parserTest(TestCase test, String orginalJottCode){
         try {
-            ArrayList<Token> tokens = JottTokenizer.tokenize("parserTestCases/" + test.fileName);
+            ArrayList<Token> tokens = JottTokenizer.tokenize("phase3testcases/" + test.fileName);
 
             if (tokens == null) {
                 System.err.println("\tFailed Test: " + test.testName);
@@ -105,7 +96,7 @@ public class JottParserTester {
             System.out.println(jottCode);
 
             try {
-                FileWriter writer = new FileWriter("parserTestCases/parserTestTemp.jott");
+                FileWriter writer = new FileWriter("phase3testcases/parserTestTemp.jott");
                 if (jottCode == null) {
                     System.err.println("\tFailed Test: " + test.testName);
                     System.err.println("Expected a program string; got null");
@@ -117,7 +108,7 @@ public class JottParserTester {
                 e.printStackTrace();
             }
 
-            ArrayList<Token> newTokens = JottTokenizer.tokenize("parserTestCases/parserTestTemp.jott");
+            ArrayList<Token> newTokens = JottTokenizer.tokenize("phase3testcases/parserTestTemp.jott");
 
             if (newTokens == null) {
                 System.err.println("\tFailed Test: " + test.testName);
@@ -175,7 +166,7 @@ public class JottParserTester {
         String orginalJottCode;
         try {
             orginalJottCode = new String(
-                    Files.readAllBytes(Paths.get("parserTestCases/" + test.fileName)));
+                    Files.readAllBytes(Paths.get("phase3testcases/" + test.fileName)));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -186,12 +177,12 @@ public class JottParserTester {
 
     public static void main(String[] args) {
         System.out.println("NOTE: System.err may print at the end. This is fine.");
-        JottParserTester tester = new JottParserTester();
+        JottValidateTester tester = new JottValidateTester();
 
         int numTests = 0;
         int passedTests = 0;
         tester.createTestCases();
-        for(JottParserTester.TestCase test: tester.testCases){
+        for(JottValidateTester.TestCase test: tester.testCases){
             numTests++;
             if(tester.runTest(test)){
                 passedTests++;
