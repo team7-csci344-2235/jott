@@ -61,4 +61,8 @@ public class ReturnStmtNode implements JottTree{
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public ExprNode getExprNode() {
+        return exprNode;
+    }
 }
