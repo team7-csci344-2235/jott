@@ -55,6 +55,11 @@ public class FunctionDefParamTNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public IDNode getIdNode() {
+        return idNode;
+    }
+
     public TypeNode getTypeNode() {
         return typeNode;
     }

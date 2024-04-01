@@ -39,6 +39,14 @@ public class FunctionDefNode implements JottTree {
             variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
         }
 
+        if (this.getParams() != null) {
+            variablesType.put(this.params.getFirstParamName().getIdStringValue(), this.params.getFirstParamType().getType());
+
+            if (this.getParams().getTheRest() != null) {
+                variablesType.put(this.params.getTheRest().getIdNode().getIdStringValue(), this.params.getTheRest().getTypeNode().getType());
+            }
+        }
+
     }
 
     public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens) throws NodeParseException {
