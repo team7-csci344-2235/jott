@@ -121,4 +121,12 @@ public class FunctionDefNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public FunctionDefParamNode getParams() {
+        return this.params;
+    }
+
+    public IDNode getName() {
+        return name;
+    }
 }

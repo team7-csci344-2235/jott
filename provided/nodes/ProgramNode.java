@@ -4,6 +4,8 @@ import provided.JottTree;
 import provided.TokenDeque;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -17,12 +19,31 @@ public class ProgramNode implements JottTree {
 
     private final ArrayList<FunctionDefNode> functionDefNodes;
 
+    private final Map<String, ArrayList<String>> programsParamsType;
+
     private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes) {
         this.functionDefNodes = functionDefNodes;
+        this.programsParamsType = new HashMap<>();
+
+        for (FunctionDefNode functionDefNode : this.functionDefNodes) {
+            //For every function in the program we check if it has params and if so we add them in the map
+
+            if (functionDefNode.getParams() != null) {
+                ArrayList<String> nodesParams = new ArrayList<>();
+                nodesParams.add(functionDefNode.getParams().getFirstParamType().getType());
+
+                if (functionDefNode.getParams().getTheRest() != null) {
+                    nodesParams.add(functionDefNode.getParams().getTheRest().getTypeNode().getType());
+                }
+
+                this.programsParamsType.put(functionDefNode.getName().getIdStringValue(), nodesParams);
+            }
+        }
     }
 
     private ProgramNode() {
         this.functionDefNodes = null;
+        this.programsParamsType = new HashMap<>();
     }
 
     /**

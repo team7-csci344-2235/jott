@@ -46,4 +46,7 @@ public class TypeNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+    public String getType() {
+        return this.type;
+    }
 }

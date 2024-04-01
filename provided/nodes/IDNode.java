@@ -45,4 +45,8 @@ public class IDNode implements OperandNode {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public String getIdStringValue() {
+        return idStringValue;
+    }
 }
