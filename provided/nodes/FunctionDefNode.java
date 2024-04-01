@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public class FunctionDefNode implements JottTree {
 
+    private final int startLine;
+    private final String filename;
     private final IDNode name;
     private final FunctionDefParamNode params;
 
@@ -27,13 +29,15 @@ public class FunctionDefNode implements JottTree {
 
     private final Map<String, String> variablesType;
 
-    private FunctionDefNode(IDNode name, FunctionDefParamNode params,
-                            TypeNode maybeReturnType, FBody functionBody) {
+    private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
+                            TypeNode maybeReturnType, FBody functionBody){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
         this.functionBody = functionBody;
         this.variablesType = new HashMap<>();
+        this.startLine = startLine;
+        this.filename = filename;
 
         for (VarDecNode varDecNode : this.functionBody.getVarDecNodes()) {
             variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
@@ -53,7 +57,7 @@ public class FunctionDefNode implements JottTree {
         // Check that we start with a Def.
         tokens.validateFirst("Def");
         tokens.removeFirst();
-
+        int startLine = tokens.getFirst().getLineNum();
         // Check that we've got an ID (name).
         IDNode name = IDNode.parseIDNode(tokens);
 
@@ -96,7 +100,7 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
-        return new FunctionDefNode(name, params, returnType, functionBody);
+        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody);
     }
 
     @Override
@@ -148,4 +152,9 @@ public class FunctionDefNode implements JottTree {
     public IDNode getName() {
         return name;
     }
+
+    public int getStartLine() {
+        return startLine;
+    }
+
 }
