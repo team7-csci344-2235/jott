@@ -5,6 +5,7 @@ import provided.Token;
 import provided.TokenDeque;
 import provided.TokenType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +29,10 @@ public class FunctionDefNode implements JottTree {
     private final FBody functionBody;
 
     private final Map<String, TypeNode.VariableType> variablesType;
+    private final HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes;
 
     private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
-                            TypeNode maybeReturnType, FBody functionBody){
+                            TypeNode maybeReturnType, FBody functionBody, HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
@@ -38,29 +40,27 @@ public class FunctionDefNode implements JottTree {
         this.variablesType = new HashMap<>();
         this.startLine = startLine;
         this.filename = filename;
+        this.programParamTypes = programParamTypes;
 
-        for (VarDecNode varDecNode : this.functionBody.getVarDecNodes()) {
+        for (VarDecNode varDecNode : functionBody.getVarDecNodes())
             variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
+
+        if (params != null) {
+            variablesType.put(params.getFirstParamName().getIdStringValue(), params.getFirstParamType().getType());
+
+            if (params.getTheRest() != null)
+                for (FunctionDefParamTNode theRest : params.getTheRest())
+                    variablesType.put(theRest.getIdNode().getIdStringValue(), theRest.getTypeNode().getType());
         }
-
-        if (this.getParams() != null) {
-            variablesType.put(this.params.getFirstParamName().getIdStringValue(), this.params.getFirstParamType().getType());
-
-            if (this.getParams().getTheRest() != null) {
-                variablesType.put(this.params.getTheRest().getIdNode().getIdStringValue(), this.params.getTheRest().getTypeNode().getType());
-            }
-        }
-
     }
 
-    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens) throws NodeParseException {
+    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes) throws NodeParseException {
         // Check that we start with a Def.
         tokens.validateFirst("Def");
         tokens.removeFirst();
         int startLine = tokens.getFirst().getLineNum();
         // Check that we've got an ID (name).
         IDNode name = IDNode.parseIDNode(tokens);
-
 
         // Get parameters.
 
@@ -100,7 +100,7 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
-        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody);
+        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody, programParamTypes);
     }
 
     @Override
@@ -142,19 +142,15 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
-    }
+        if (params != null) {
+            ArrayList<TypeNode.VariableType> nodesParams = new ArrayList<>();
+            nodesParams.add(params.getFirstParamType().getType());
 
-    public FunctionDefParamNode getParams() {
-        return this.params;
-    }
+            if(programParamTypes.containsKey(name.getIdStringValue()))
+                throw new NodeValidateException("Function " + name.getIdStringValue() + " is already defined", filename, startLine);
 
-    public IDNode getName() {
-        return name;
+            programParamTypes.put(name.getIdStringValue(), nodesParams);
+        }
+        // TODO probably lower node validation. I just moved this stuff from ProgramNode into here.
     }
-
-    public int getStartLine() {
-        return startLine;
-    }
-
 }

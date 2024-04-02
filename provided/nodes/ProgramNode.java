@@ -2,6 +2,7 @@ package provided.nodes;
 
 import provided.JottTree;
 import provided.TokenDeque;
+import provided.nodes.TypeNode.VariableType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,37 +20,19 @@ public class ProgramNode implements JottTree {
 
     private final ArrayList<FunctionDefNode> functionDefNodes;
 
-    private final Map<String, ArrayList<TypeNode.VariableType>> programsParamsType;
+    private final Map<String, ArrayList<VariableType>> programParamTypes;
 
     private final String filename;
 
-    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename) throws NodeValidateException{
+    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename, HashMap<String, ArrayList<VariableType>> programParamTypes) {
         this.functionDefNodes = functionDefNodes;
-        this.programsParamsType = new HashMap<>();
+        this.programParamTypes = programParamTypes;
         this.filename = filename;
-
-
-        for (FunctionDefNode functionDefNode : this.functionDefNodes) {
-            //For every function in the program we check if it has params and if so we add them in the map
-
-            if (functionDefNode.getParams() != null) {
-                ArrayList<TypeNode.VariableType> nodesParams = new ArrayList<>();
-                nodesParams.add(functionDefNode.getParams().getFirstParamType().getType());
-
-                if (functionDefNode.getParams().getTheRest() != null) {
-                    nodesParams.add(functionDefNode.getParams().getTheRest().getTypeNode().getType());
-                }
-                if(this.programsParamsType.containsKey(functionDefNode.getName().getIdStringValue())){
-                    throw new NodeValidateException("Function " + functionDefNode.getName().getIdStringValue() + " is already defined", filename, functionDefNode.getStartLine());
-                }
-                this.programsParamsType.put(functionDefNode.getName().getIdStringValue(), nodesParams);
-            }
-        }
     }
 
     private ProgramNode(String filename) {
         this.functionDefNodes = null;
-        this.programsParamsType = new HashMap<>();
+        this.programParamTypes = new HashMap<>();
         this.filename = filename;
     }
 
@@ -59,15 +42,16 @@ public class ProgramNode implements JottTree {
      * @param tokens: Current set of tokens
      * @return the root of the Jott Parse Tree represented by the tokens.
      */
-    public static ProgramNode parseProgramNode(TokenDeque tokens) throws NodeParseException, NodeValidateException {
+    public static ProgramNode parseProgramNode(TokenDeque tokens) throws NodeParseException {
         if (tokens.isEmpty())
             return new ProgramNode(tokens.getLastRemoved().getFilename());
 
+        HashMap<String, ArrayList<VariableType>> programParamTypes = new HashMap<>();
         ArrayList<FunctionDefNode> functionDefNodes = new ArrayList<>();
         while (!tokens.isEmpty())
-            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens));
+            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens, programParamTypes));
 
-        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename());
+        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename(), programParamTypes);
     }
 
     @Override
@@ -98,15 +82,16 @@ public class ProgramNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        if(!this.programsParamsType.containsKey("main")){
-            throw new NodeValidateException("No main function defined",filename , 0);
-        }
-        for (FunctionDefNode fdn : this.functionDefNodes) {
-            // Note that we don't check for an exception or specify an
-            // error message *here*. If this node is invalid, then an
-            // exception further down the stack will provide a more
-            // descriptive error message.
-            fdn.validateTree();
-        }
+        if(!programParamTypes.containsKey("main"))
+            throw new NodeValidateException("No main function defined", filename, 0);
+
+        if (functionDefNodes != null)
+            for (FunctionDefNode fdn : functionDefNodes) {
+                // Note that we don't check for an exception or specify an
+                // error message *here*. If this node is invalid, then an
+                // exception further down the stack will provide a more
+                // descriptive error message.
+                fdn.validateTree();
+            }
     }
 }

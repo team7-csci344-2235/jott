@@ -73,7 +73,7 @@ public class JottValidateTester {
             }
             System.out.println(tokenListString(tokens));
             ArrayList<Token> cpyTokens = new ArrayList<>(tokens);
-            JottTree root = JottParser.parse(tokens);
+            JottTree root = JottParser.parse(tokens, true);
 
             if (!test.error && root == null) {
                 System.err.println("\tFailed Test: " + test.testName);
