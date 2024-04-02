@@ -29,10 +29,10 @@ public class FunctionDefNode implements JottTree {
     private final FBody functionBody;
 
     private final Map<String, TypeNode.VariableType> variablesType;
-    private final HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes;
+    private final HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap;
 
     private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
-                            TypeNode maybeReturnType, FBody functionBody, HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes){
+                            TypeNode maybeReturnType, FBody functionBody, HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
@@ -40,7 +40,7 @@ public class FunctionDefNode implements JottTree {
         this.variablesType = new HashMap<>();
         this.startLine = startLine;
         this.filename = filename;
-        this.programParamTypes = programParamTypes;
+        this.programParamMap = programParamMap;
 
         for (VarDecNode varDecNode : functionBody.getVarDecNodes())
             variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
@@ -54,7 +54,7 @@ public class FunctionDefNode implements JottTree {
         }
     }
 
-    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, HashMap<String, ArrayList<TypeNode.VariableType>> programParamTypes) throws NodeParseException {
+    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap) throws NodeParseException {
         // Check that we start with a Def.
         tokens.validateFirst("Def");
         tokens.removeFirst();
@@ -100,7 +100,7 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
-        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody, programParamTypes);
+        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody, programParamMap);
     }
 
     @Override
@@ -146,10 +146,10 @@ public class FunctionDefNode implements JottTree {
             ArrayList<TypeNode.VariableType> nodesParams = new ArrayList<>();
             nodesParams.add(params.getFirstParamType().getType());
 
-            if(programParamTypes.containsKey(name.getIdStringValue()))
+            if(programParamMap.containsKey(name.getIdStringValue()))
                 throw new NodeValidateException("Function " + name.getIdStringValue() + " is already defined", filename, startLine);
 
-            programParamTypes.put(name.getIdStringValue(), nodesParams);
+            programParamMap.put(name.getIdStringValue(), nodesParams);
         }
         // TODO probably lower node validation. I just moved this stuff from ProgramNode into here.
     }

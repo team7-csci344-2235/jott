@@ -20,19 +20,20 @@ public class ProgramNode implements JottTree {
 
     private final ArrayList<FunctionDefNode> functionDefNodes;
 
-    private final Map<String, ArrayList<VariableType>> programParamTypes;
+    // Map where the string is the function name and the value is the Function parameters type.
+    private final Map<String, ArrayList<VariableType>> programParamMap;
 
     private final String filename;
 
-    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename, HashMap<String, ArrayList<VariableType>> programParamTypes) {
+    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename, HashMap<String, ArrayList<VariableType>> programParamMap) {
         this.functionDefNodes = functionDefNodes;
-        this.programParamTypes = programParamTypes;
+        this.programParamMap = programParamMap;
         this.filename = filename;
     }
 
     private ProgramNode(String filename) {
         this.functionDefNodes = null;
-        this.programParamTypes = new HashMap<>();
+        this.programParamMap = new HashMap<>();
         this.filename = filename;
     }
 
@@ -46,12 +47,12 @@ public class ProgramNode implements JottTree {
         if (tokens.isEmpty())
             return new ProgramNode(tokens.getLastRemoved().getFilename());
 
-        HashMap<String, ArrayList<VariableType>> programParamTypes = new HashMap<>();
+        HashMap<String, ArrayList<VariableType>> programParamMap = new HashMap<>();
         ArrayList<FunctionDefNode> functionDefNodes = new ArrayList<>();
         while (!tokens.isEmpty())
-            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens, programParamTypes));
+            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens, programParamMap));
 
-        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename(), programParamTypes);
+        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename(), programParamMap);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class ProgramNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        if(!programParamTypes.containsKey("main"))
+        if(!programParamMap.containsKey("main"))
             throw new NodeValidateException("No main function defined", filename, 0);
 
         if (functionDefNodes != null)
