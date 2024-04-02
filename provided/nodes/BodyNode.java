@@ -75,4 +75,11 @@ public class BodyNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public boolean isReturnable() {
+        if (returnStmtNode.getExprNode() != null) {
+            return true;
+        }
+        return false;
+    }
 }

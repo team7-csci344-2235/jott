@@ -5,6 +5,9 @@ import provided.Token;
 import provided.TokenDeque;
 import provided.TokenType;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class for function definition nodes
  *
@@ -12,6 +15,8 @@ import provided.TokenType;
  */
 public class FunctionDefNode implements JottTree {
 
+    private final int startLine;
+    private final String filename;
     private final IDNode name;
     private final FunctionDefParamNode params;
 
@@ -22,19 +27,37 @@ public class FunctionDefNode implements JottTree {
 
     private final FBody functionBody;
 
-    private FunctionDefNode(IDNode name, FunctionDefParamNode params,
-            TypeNode maybeReturnType, FBody functionBody) {
+    private final Map<String, String> variablesType;
+
+    private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
+                            TypeNode maybeReturnType, FBody functionBody){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
         this.functionBody = functionBody;
+        this.variablesType = new HashMap<>();
+        this.startLine = startLine;
+        this.filename = filename;
+
+        for (VarDecNode varDecNode : this.functionBody.getVarDecNodes()) {
+            variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
+        }
+
+        if (this.getParams() != null) {
+            variablesType.put(this.params.getFirstParamName().getIdStringValue(), this.params.getFirstParamType().getType());
+
+            if (this.getParams().getTheRest() != null) {
+                variablesType.put(this.params.getTheRest().getIdNode().getIdStringValue(), this.params.getTheRest().getTypeNode().getType());
+            }
+        }
+
     }
 
     public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens) throws NodeParseException {
         // Check that we start with a Def.
         tokens.validateFirst("Def");
         tokens.removeFirst();
-
+        int startLine = tokens.getFirst().getLineNum();
         // Check that we've got an ID (name).
         IDNode name = IDNode.parseIDNode(tokens);
 
@@ -77,7 +100,7 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
-        return new FunctionDefNode(name, params, returnType, functionBody);
+        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody);
     }
 
     @Override
@@ -121,4 +144,17 @@ public class FunctionDefNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public FunctionDefParamNode getParams() {
+        return this.params;
+    }
+
+    public IDNode getName() {
+        return name;
+    }
+
+    public int getStartLine() {
+        return startLine;
+    }
+
 }

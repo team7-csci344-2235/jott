@@ -64,4 +64,8 @@ public class FBody implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
+
+    public ArrayList<VarDecNode> getVarDecNodes() {
+        return varDecNodes;
+    }
 }
