@@ -58,4 +58,8 @@ public class IDNode implements OperandNode {
     public int getStartLine() {
         return startLine;
     }
+
+    public String getIdStringValue() {
+        return idStringValue;
+    }
 }

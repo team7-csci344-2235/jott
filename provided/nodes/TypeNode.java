@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenDeque;
+import provided.TokenType;
 
 /**
  * Class for Type nodes
@@ -14,9 +15,9 @@ public class TypeNode implements JottTree {
     public enum VariableType {
         DOUBLE, INTEGER, STRING, BOOLEAN
     }
-    private final String type;
-    private TypeNode(Token type) {
-        this.type = type.getToken();
+    private final VariableType type;
+    private TypeNode(Token token) {
+        type = VariableType.valueOf(token.getToken().toUpperCase());
     }
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
@@ -26,7 +27,13 @@ public class TypeNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        return type;
+        switch (type) {
+            case DOUBLE -> {return "Double";}
+            case INTEGER -> {return "Integer";}
+            case STRING -> {return "String";}
+            case BOOLEAN -> {return "Boolean";}
+        }
+        return "";
     }
 
     @Override
@@ -48,7 +55,7 @@ public class TypeNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
-    public String getType() {
-        return this.type;
+    public VariableType getType() {
+        return type;
     }
 }

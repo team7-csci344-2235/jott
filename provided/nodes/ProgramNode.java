@@ -19,7 +19,7 @@ public class ProgramNode implements JottTree {
 
     private final ArrayList<FunctionDefNode> functionDefNodes;
 
-    private final Map<String, ArrayList<String>> programsParamsType;
+    private final Map<String, ArrayList<TypeNode.VariableType>> programsParamsType;
 
     private final String filename;
 
@@ -33,7 +33,7 @@ public class ProgramNode implements JottTree {
             //For every function in the program we check if it has params and if so we add them in the map
 
             if (functionDefNode.getParams() != null) {
-                ArrayList<String> nodesParams = new ArrayList<>();
+                ArrayList<TypeNode.VariableType> nodesParams = new ArrayList<>();
                 nodesParams.add(functionDefNode.getParams().getFirstParamType().getType());
 
                 if (functionDefNode.getParams().getTheRest() != null) {

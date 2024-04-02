@@ -27,7 +27,7 @@ public class FunctionDefNode implements JottTree {
 
     private final FBody functionBody;
 
-    private final Map<String, String> variablesType;
+    private final Map<String, TypeNode.VariableType> variablesType;
 
     private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
                             TypeNode maybeReturnType, FBody functionBody){
