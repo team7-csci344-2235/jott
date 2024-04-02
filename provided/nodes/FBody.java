@@ -68,4 +68,8 @@ public class FBody implements JottTree {
     public ArrayList<VarDecNode> getVarDecNodes() {
         return varDecNodes;
     }
+
+    public BodyNode getBodyNode() {
+        return bodyNode;
+    }
 }

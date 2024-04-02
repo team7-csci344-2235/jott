@@ -142,6 +142,9 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
+        if(maybeReturnType.getType().equals("Void") && functionBody.getBodyNode().isReturnable()){
+            throw new NodeValidateException("Function " + name.getIdStringValue() + " is defined as Void but has a return statement", filename, startLine);
+        }
         return;
     }
 

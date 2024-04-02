@@ -82,4 +82,8 @@ public class BodyNode implements JottTree {
         }
         return false;
     }
+
+    public ReturnStmtNode getReturnStmtNode() {
+        return returnStmtNode;
+    }
 }
