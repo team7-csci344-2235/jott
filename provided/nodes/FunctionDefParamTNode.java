@@ -49,10 +49,6 @@ public class FunctionDefParamTNode implements JottTree {
         return;
     }
 
-    public IDNode getIdNode() {
-        return idNode;
-    }
-
     public TypeNode getTypeNode() {
         return typeNode;
     }

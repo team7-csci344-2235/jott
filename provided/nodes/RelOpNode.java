@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 /**
  * Class for RelOp nodes (<, >, =, ==, <=, >=)
@@ -22,7 +23,7 @@ public class RelOpNode implements JottTree, ExprNode {
         this.startLine = startLine;
     }
 
-    public static RelOpNode parseRelOpNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
+    public static RelOpNode parseRelOpNode(OperandNode firstOp, TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         //get information
         tokens.validateFirst(TokenType.REL_OP); 
 
@@ -41,7 +42,7 @@ public class RelOpNode implements JottTree, ExprNode {
         int startLine = tokens.getLastRemoved().getLineNum();
 
         tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens);
+        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens, variableTable);
 
         //return relationalOperation;
         return new RelOpNode(startLine, firstOp, relOpHolder, operandNode1);
@@ -70,11 +71,6 @@ public class RelOpNode implements JottTree, ExprNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
-    }
-
-    @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return TypeNode.VariableType.BOOLEAN;
     }
 
     @Override

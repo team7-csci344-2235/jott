@@ -1,13 +1,8 @@
 package provided.nodes;
 
-import provided.JottTree;
-import provided.Token;
-import provided.TokenDeque;
-import provided.TokenType;
+import provided.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Class for function definition nodes
@@ -20,41 +15,25 @@ public class FunctionDefNode implements JottTree {
     private final String filename;
     private final IDNode name;
     private final FunctionDefParamNode params;
-
     // Void is not represented as a TypeNode but could be a potential "return
     // value" (or lack thereof) for a function. If this is null but the object
     // is otherwise valid, then the function "returns Void".
     private final TypeNode maybeReturnType;
-
     private final FBody functionBody;
-
-    private final Map<String, TypeNode.VariableType> variablesType;
-    private final HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap;
+    private final SymbolTable symbolTable;
 
     private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
-                            TypeNode maybeReturnType, FBody functionBody, HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap){
+                            TypeNode maybeReturnType, FBody functionBody, SymbolTable symbolTable){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
         this.functionBody = functionBody;
-        this.variablesType = new HashMap<>();
         this.startLine = startLine;
         this.filename = filename;
-        this.programParamMap = programParamMap;
-
-        for (VarDecNode varDecNode : functionBody.getVarDecNodes())
-            variablesType.put(varDecNode.getIdNode().getIdStringValue(), varDecNode.getTypeNode().getType());
-
-        if (params != null) {
-            variablesType.put(params.getFirstParamName().getIdStringValue(), params.getFirstParamType().getType());
-
-            if (params.getTheRest() != null)
-                for (FunctionDefParamTNode theRest : params.getTheRest())
-                    variablesType.put(theRest.getIdNode().getIdStringValue(), theRest.getTypeNode().getType());
-        }
+        this.symbolTable = symbolTable;
     }
 
-    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, HashMap<String, ArrayList<TypeNode.VariableType>> programParamMap) throws NodeParseException {
+    public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, SymbolTable symbolTable) throws NodeParseException {
         // Check that we start with a Def.
         tokens.validateFirst("Def");
         tokens.removeFirst();
@@ -95,12 +74,14 @@ public class FunctionDefNode implements JottTree {
         tokens.validateFirst(TokenType.L_BRACE);
         tokens.removeFirst();
 
-        FBody functionBody = FBody.parseFBodyNode(tokens);
+        // Create function body and give it a new localized variable table.
+        FBody functionBody = FBody.parseFBodyNode(tokens, symbolTable.createVariableTable());
 
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
-        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename() ,name, params, returnType, functionBody, programParamMap);
+        return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename(), name, params, returnType,
+                functionBody, symbolTable);
     }
 
     @Override
@@ -142,15 +123,25 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
+        ArrayList<TypeNode.VariableType> nodesParams = null;
+        name.validateTree();
+        if (maybeReturnType != null) maybeReturnType.validateTree();
         if (params != null) {
-            ArrayList<TypeNode.VariableType> nodesParams = new ArrayList<>();
+            nodesParams = new ArrayList<>();
             nodesParams.add(params.getFirstParamType().getType());
 
-            if(programParamMap.containsKey(name.getIdStringValue()))
-                throw new NodeValidateException("Function " + name.getIdStringValue() + " is already defined", filename, startLine);
+            if (params.getTheRest() != null)
+                for (FunctionDefParamTNode theRest : params.getTheRest())
+                    nodesParams.add(theRest.getTypeNode().getType());
 
-            programParamMap.put(name.getIdStringValue(), nodesParams);
+            params.validateTree();
         }
-        // TODO probably lower node validation. I just moved this stuff from ProgramNode into here.
+
+        // Try to add the function to the symbol table. Yes, params can be null.
+        if (!symbolTable.tryAddFunction(name.getIdStringValue(), nodesParams, maybeReturnType != null ? maybeReturnType.getType() : null))
+            throw new NodeValidateException("Function " + name.getIdStringValue() + " already exists.", filename, startLine);
+
+        // Finish validation.
+        functionBody.validateTree();
     }
 }

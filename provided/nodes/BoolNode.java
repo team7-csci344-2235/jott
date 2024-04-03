@@ -56,11 +56,6 @@ public class BoolNode implements JottTree, ExprNode{
     }
 
     @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return TypeNode.VariableType.BOOLEAN;
-    }
-
-    @Override
     public int getStartLine() {
         return startLine;
     }

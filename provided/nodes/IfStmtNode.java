@@ -1,9 +1,6 @@
 package provided.nodes;
 
-import provided.JottTree;
-import provided.Token;
-import provided.TokenDeque;
-import provided.TokenType;
+import provided.*;
 
 import java.util.ArrayList;
 
@@ -21,7 +18,7 @@ public class IfStmtNode implements BodyStmtNode {
             this.body = body;
         }
 
-        public static ElseNode parseElseNode(TokenDeque tokens) throws NodeParseException {
+        public static ElseNode parseElseNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
             // Check that we start with a Else.
             tokens.validateFirst(TokenType.ID_KEYWORD);
             Token maybeElseif = tokens.removeFirst();
@@ -35,7 +32,7 @@ public class IfStmtNode implements BodyStmtNode {
             tokens.validateFirst(TokenType.L_BRACE);
             tokens.removeFirst();
 
-            BodyNode body = BodyNode.parseBodyNode(tokens);
+            BodyNode body = BodyNode.parseBodyNode(tokens, variableTable);
 
             tokens.validateFirst(TokenType.R_BRACE);
             tokens.removeFirst();
@@ -78,7 +75,7 @@ public class IfStmtNode implements BodyStmtNode {
             this.body = body;
         }
 
-        public static ElseIfNode parseElseIfNode (TokenDeque tokens) throws NodeParseException {
+        public static ElseIfNode parseElseIfNode (TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
             // Check that we start with a Elseif.
             tokens.validateFirst(TokenType.ID_KEYWORD);
             Token maybeElseif = tokens.removeFirst();
@@ -92,7 +89,7 @@ public class IfStmtNode implements BodyStmtNode {
             tokens.validateFirst(TokenType.L_BRACKET);
             tokens.removeFirst();
 
-            ExprNode expr = ExprNode.parseExprNode(tokens);
+            ExprNode expr = ExprNode.parseExprNode(tokens, variableTable);
 
             tokens.validateFirst(TokenType.R_BRACKET);
             tokens.removeFirst();
@@ -103,7 +100,7 @@ public class IfStmtNode implements BodyStmtNode {
             tokens.validateFirst(TokenType.L_BRACE);
             tokens.removeFirst();
 
-            BodyNode body = BodyNode.parseBodyNode(tokens);
+            BodyNode body = BodyNode.parseBodyNode(tokens, variableTable);
 
             tokens.validateFirst(TokenType.R_BRACE);
             tokens.removeFirst();
@@ -150,7 +147,7 @@ public class IfStmtNode implements BodyStmtNode {
         this.else_ = else_;
     }
 
-    public static IfStmtNode parseIfStmtNode(TokenDeque tokens) throws NodeParseException {
+    public static IfStmtNode parseIfStmtNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         // Check that we start with a If.
         tokens.validateFirst(TokenType.ID_KEYWORD);
         Token maybeDef = tokens.removeFirst();
@@ -164,7 +161,7 @@ public class IfStmtNode implements BodyStmtNode {
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst();
 
-        ExprNode expr = ExprNode.parseExprNode(tokens);
+        ExprNode expr = ExprNode.parseExprNode(tokens, variableTable);
         //tokens.removeFirst();
         
         tokens.validateFirst(TokenType.R_BRACKET);
@@ -176,7 +173,7 @@ public class IfStmtNode implements BodyStmtNode {
         tokens.validateFirst(TokenType.L_BRACE);
         tokens.removeFirst();
 
-        BodyNode body = BodyNode.parseBodyNode(tokens);
+        BodyNode body = BodyNode.parseBodyNode(tokens, variableTable);
 
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
@@ -191,7 +188,7 @@ public class IfStmtNode implements BodyStmtNode {
                 break;
             }
 
-            elseIfs.add(ElseIfNode.parseElseIfNode(tokens));
+            elseIfs.add(ElseIfNode.parseElseIfNode(tokens, variableTable));
         }
 
 
@@ -200,7 +197,7 @@ public class IfStmtNode implements BodyStmtNode {
         Token maybeElse = tokens.getFirst();
         if (maybeElse.getTokenType() == TokenType.ID_KEYWORD
                 && maybeElse.getToken().equals("Else")) {
-            else_ = ElseNode.parseElseNode(tokens);
+            else_ = ElseNode.parseElseNode(tokens, variableTable);
         }
 
         return new IfStmtNode(expr, body, elseIfs, else_);
