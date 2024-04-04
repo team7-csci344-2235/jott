@@ -1,12 +1,10 @@
 package provided.nodes;
 
 import provided.JottTree;
+import provided.SymbolTable;
 import provided.TokenDeque;
-import provided.nodes.TypeNode.VariableType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -17,24 +15,20 @@ import java.util.stream.Collectors;
  */
 public class ProgramNode implements JottTree {
     public final static Collector<CharSequence, ?, String> JOTT_LIST_COLLECTOR = Collectors.joining(", ");
-
     private final ArrayList<FunctionDefNode> functionDefNodes;
-
-    // Map where the string is the function name and the value is the Function parameters type.
-    private final Map<String, ArrayList<VariableType>> programParamMap;
-
+    private final SymbolTable symbolTable;
     private final String filename;
 
-    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename, HashMap<String, ArrayList<VariableType>> programParamMap) {
+    private ProgramNode(ArrayList<FunctionDefNode> functionDefNodes, String filename, SymbolTable symbolTable) {
         this.functionDefNodes = functionDefNodes;
-        this.programParamMap = programParamMap;
+        this.symbolTable = symbolTable;
         this.filename = filename;
     }
 
     private ProgramNode(String filename) {
         this.functionDefNodes = null;
-        this.programParamMap = new HashMap<>();
         this.filename = filename;
+        symbolTable = new SymbolTable();
     }
 
     /**
@@ -47,12 +41,12 @@ public class ProgramNode implements JottTree {
         if (tokens.isEmpty())
             return new ProgramNode(tokens.getLastRemoved().getFilename());
 
-        HashMap<String, ArrayList<VariableType>> programParamMap = new HashMap<>();
+        SymbolTable symbolTable = new SymbolTable();
         ArrayList<FunctionDefNode> functionDefNodes = new ArrayList<>();
         while (!tokens.isEmpty())
-            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens, programParamMap));
+            functionDefNodes.add(FunctionDefNode.parseFunctionDefNode(tokens, symbolTable));
 
-        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename(), programParamMap);
+        return new ProgramNode(functionDefNodes, tokens.getLastRemoved().getFilename(), symbolTable);
     }
 
     @Override
@@ -83,9 +77,7 @@ public class ProgramNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        if(!programParamMap.containsKey("main"))
-            throw new NodeValidateException("No main function defined", filename, 0);
-
+        // Validate all function definitions
         if (functionDefNodes != null)
             for (FunctionDefNode fdn : functionDefNodes) {
                 // Note that we don't check for an exception or specify an
@@ -94,5 +86,13 @@ public class ProgramNode implements JottTree {
                 // descriptive error message.
                 fdn.validateTree();
             }
+
+        // Check for a main function now that all functions have been defined
+        if(!symbolTable.hasFunction("main"))
+            throw new NodeValidateException("No main function defined", filename, 0);
+
+        // Check for main function parameters
+        if (symbolTable.getFunctionParams("main") != null)
+            throw new NodeValidateException("Main function should not have parameters", filename, 0);
     }
 }

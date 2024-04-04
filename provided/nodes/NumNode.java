@@ -12,9 +12,12 @@ import provided.TokenDeque;
 public class NumNode implements OperandNode {
     private final int startLine;
     private final String num;
+    private final TypeNode.VariableType variableType;
+
     private NumNode(int startLine, String num) {
         this.num = num;
         this.startLine = startLine;
+        this.variableType = num.contains(".") ? TypeNode.VariableType.DOUBLE : TypeNode.VariableType.INTEGER;
     }
 
     public static NumNode parseNumNode(TokenDeque tokens, boolean isNegative) {
@@ -55,12 +58,11 @@ public class NumNode implements OperandNode {
     }
 
     @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return num.contains(".") ? TypeNode.VariableType.DOUBLE : TypeNode.VariableType.INTEGER;
-    }
-
-    @Override
     public int getStartLine() {
         return startLine;
+    }
+
+    public TypeNode.VariableType getVariableType() {
+        return variableType;
     }
 }

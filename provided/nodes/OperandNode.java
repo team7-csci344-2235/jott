@@ -2,6 +2,7 @@ package provided.nodes;
 
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 /**
  * Interface for operand nodes
@@ -16,14 +17,13 @@ public interface OperandNode extends ExprNode {
      * @return the parsed operand node
      * @throws NodeParseException if the tokens do not form a valid operand node
      */
-    static OperandNode parseOperandNode(TokenDeque tokens) throws NodeParseException {
+    static OperandNode parseOperandNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         // Ensure first is of one of the following tokens.
-
         tokens.validateFirst(TokenType.ID_KEYWORD, TokenType.NUMBER, TokenType.FC_HEADER, TokenType.MATH_OP);
         switch (tokens.getFirst().getTokenType()){
             case ID_KEYWORD-> { return IDNode.parseIDNode(tokens); }
             case NUMBER -> { return NumNode.parseNumNode(tokens, false); }
-            case FC_HEADER -> { return FunctionCallNode.parseFunctionCallNode(tokens); }
+            case FC_HEADER -> { return FunctionCallNode.parseFunctionCallNode(tokens, variableTable); }
             case MATH_OP -> {
                 tokens.validateFirst("-"); // Validate negative sign
                 tokens.removeFirst(); // Remove negative sign
@@ -32,6 +32,28 @@ public interface OperandNode extends ExprNode {
             }
         }
 
+        return null;
+    }
+
+    /**
+     * Gets the type of the operand node
+     * @param operandNode the operand node
+     * @param variableTable the variable table
+     * @param filename the filename
+     * @return the type of the operand node
+     * @throws NodeValidateException if the operand node is invalid
+     */
+    static TypeNode.VariableType getOperandType(OperandNode operandNode, VariableTable variableTable, String filename) throws NodeValidateException {
+        if (operandNode instanceof IDNode) {
+            return variableTable.getVariableType(((IDNode) operandNode).getIdStringValue());
+        } else if (operandNode instanceof NumNode) {
+            return ((NumNode) operandNode).getVariableType();
+        } else if (operandNode instanceof FunctionCallNode) {
+            String functionName = ((FunctionCallNode) operandNode).getIdNode().getIdStringValue();
+            if (!variableTable.hasFunction(functionName))
+                throw new NodeValidateException("Call to unknown function: '" + functionName + "'", filename, operandNode.getStartLine());
+            return variableTable.getFunctionReturnType(functionName);
+        }
         return null;
     }
 }

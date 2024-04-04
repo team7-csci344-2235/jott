@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 import java.util.Objects;
 
@@ -18,16 +19,18 @@ public class MathOpNode implements JottTree, ExprNode {
     private final String mathOpString;
     private final OperandNode firstOp;
     private final OperandNode secondOp;
+    private final VariableTable variableTable;
 
-    private MathOpNode(int startLine, String filename, OperandNode firstOp, String value, OperandNode secondOp) {
+    private MathOpNode(int startLine, String filename, OperandNode firstOp, String value, OperandNode secondOp, VariableTable variableTable) {
         this.firstOp = firstOp;
         this.mathOpString = value;
         this.secondOp = secondOp;
         this.startLine = startLine;
         this.filename = filename;
+        this.variableTable = variableTable;
     }
 
-    public static MathOpNode parseMathNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
+    public static MathOpNode parseMathNode(OperandNode firstOp, TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         //get information
         //tokens.validateFirst(TokenType.ID_KEYWORD); 
 
@@ -43,12 +46,8 @@ public class MathOpNode implements JottTree, ExprNode {
         String mathOpHolder = tokens.removeFirst().getToken();
         int startLine = tokens.getLastRemoved().getLineNum();
         String filename = tokens.getLastRemoved().getFilename();
-
         tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens);
-
-        //return mathOperation;
-        return new MathOpNode(startLine, filename, firstOp, mathOpHolder, operandNode1);
+        return new MathOpNode(startLine, filename, firstOp, mathOpHolder, OperandNode.parseOperandNode(tokens, variableTable), variableTable);
     }
 
     @Override
@@ -73,12 +72,11 @@ public class MathOpNode implements JottTree, ExprNode {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        // TODO: Pass the symbol table to these operands so they know to check if they've been declared / initialized.
         firstOp.validateTree();
         secondOp.validateTree();
 
         // Check for matching operand types
-        if (firstOp.getEvaluationVariableType() != secondOp.getEvaluationVariableType())
+        if (OperandNode.getOperandType(firstOp, variableTable, filename) != OperandNode.getOperandType(secondOp, variableTable, filename))
             throw new NodeValidateException("Operand types do not match for math operation", filename, startLine);
 
         // Check for division by zero. I don't think we need to evaluate functions or variables here.
@@ -87,15 +85,12 @@ public class MathOpNode implements JottTree, ExprNode {
     }
 
     @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        // Note: The return type of math operation should always the same type as the first operand.
-        // If they are different, we do not care because the validateTree method will throw the error.
-        return firstOp.getEvaluationVariableType();
-    }
-
-    @Override
     public int getStartLine() {
         return startLine;
+    }
+
+    public TypeNode.VariableType getOperandType() throws NodeValidateException {
+        return OperandNode.getOperandType(firstOp, variableTable, filename);
     }
 }
 

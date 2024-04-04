@@ -2,6 +2,7 @@ package provided.nodes;
 
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 public class AsmtNode implements BodyStmtNode{
 
@@ -17,13 +18,13 @@ public class AsmtNode implements BodyStmtNode{
         this.filename = filename;
     }
 
-    public static AsmtNode parseAsmtNode(TokenDeque tokens) throws NodeParseException {
+    public static AsmtNode parseAsmtNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         IDNode idNode = IDNode.parseIDNode(tokens);
 
         tokens.validateFirst(TokenType.ASSIGN);
         tokens.removeFirst(); // Remove equals
 
-        ExprNode exprNode = ExprNode.parseExprNode(tokens);
+        ExprNode exprNode = ExprNode.parseExprNode(tokens, variableTable);
 
         tokens.validateFirst(TokenType.SEMICOLON);
         tokens.removeFirst(); // Remove semicolon

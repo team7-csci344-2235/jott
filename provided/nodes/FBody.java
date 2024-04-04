@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,6 @@ import java.util.ArrayList;
  * @author Adrienne Ressy <amr3032@rit.edu>
  */
 public class FBody implements JottTree {
-
     private final ArrayList<VarDecNode> varDecNodes;
     private final BodyNode bodyNode;
 
@@ -21,25 +21,24 @@ public class FBody implements JottTree {
         this.bodyNode = bodyNode;
     }
 
-    public static FBody parseFBodyNode(TokenDeque tokens) throws NodeParseException {
-        ArrayList<VarDecNode> varDecNodes1 = new ArrayList<>();
+    public static FBody parseFBodyNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
+        ArrayList<VarDecNode> varDecNodes = new ArrayList<>();
 
         // Check for variable declarations at the start of the function body.
         // Note that no variable declarations is acceptable.
         while ((!tokens.isFirstOf(TokenType.ID_KEYWORD, TokenType.FC_HEADER, TokenType.R_BRACE)
                 && (!tokens.isFirstOf("Return")) || tokens.isFirstOf("Double", "Integer", "String", "Boolean"))) {
-            varDecNodes1.add(VarDecNode.parseVarDecNode(tokens));
+            varDecNodes.add(VarDecNode.parseVarDecNode(tokens, variableTable));
         }
 
-        BodyNode bodyNode1 = BodyNode.parseBodyNode(tokens);
-        return new FBody(varDecNodes1, bodyNode1);
+        return new FBody(varDecNodes, BodyNode.parseBodyNode(tokens, variableTable));
     }
 
     @Override
     public String convertToJott() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         while (!varDecNodes.isEmpty()) {
-            result = result + varDecNodes.getFirst().convertToJott();
+            result.append(varDecNodes.getFirst().convertToJott());
             varDecNodes.removeFirst();
         }
         return result + bodyNode.convertToJott();
@@ -62,10 +61,9 @@ public class FBody implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
-    }
+        for (VarDecNode varDecNode : varDecNodes)
+            varDecNode.validateTree();
 
-    public ArrayList<VarDecNode> getVarDecNodes() {
-        return varDecNodes;
+        bodyNode.validateTree();
     }
 }

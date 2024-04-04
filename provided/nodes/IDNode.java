@@ -11,7 +11,6 @@ import provided.TokenType;
 public class IDNode implements OperandNode {
     private final int startLine;
     private final String idStringValue;
-    private TypeNode.VariableType variableType; // TODO: This should prolly be set while validating the tree
 
     private IDNode(int startLine, String idStringValue) {
         this.idStringValue = idStringValue;
@@ -47,11 +46,6 @@ public class IDNode implements OperandNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
-    }
-
-    @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return variableType;
     }
 
     @Override

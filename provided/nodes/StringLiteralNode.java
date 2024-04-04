@@ -54,11 +54,6 @@ public class StringLiteralNode implements JottTree, ExprNode {
     }
 
     @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return TypeNode.VariableType.STRING;
-    }
-
-    @Override
     public int getStartLine() {
         return startLine;
     }

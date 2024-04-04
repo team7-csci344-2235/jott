@@ -2,6 +2,7 @@ package provided.nodes;
 
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 /**
  * Class for function call nodes
@@ -13,12 +14,14 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     private final String filename;
     private final IDNode idNode;
     private final ParamsNode parameters;
+    private final VariableTable variableTable;
 
-    private FunctionCallNode(int startLine, String filename, IDNode idNode, ParamsNode parameters) {
+    private FunctionCallNode(int startLine, String filename, IDNode idNode, ParamsNode parameters, VariableTable variableTable) {
         this.idNode = idNode;
         this.parameters = parameters;
         this.startLine = startLine;
         this.filename = filename;
+        this.variableTable = variableTable;
     }
 
     /**
@@ -27,17 +30,17 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
      * @return the parsed function call node
      * @throws NodeParseException if the tokens do not form a valid function call node
      */
-    public static FunctionCallNode parseFunctionCallNode(TokenDeque tokens) throws NodeParseException {
+    public static FunctionCallNode parseFunctionCallNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         tokens.removeFirst(); // We know we'll have FC header first, so remove it
         tokens.validateFirst(TokenType.ID_KEYWORD);
         int startLine = tokens.getFirst().getLineNum();
         IDNode idNode = IDNode.parseIDNode(tokens);
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst(); // Remove L bracket
-        ParamsNode parameters = ParamsNode.parseParamsNode(tokens);
+        ParamsNode parameters = ParamsNode.parseParamsNode(tokens, idNode.getIdStringValue(), variableTable);
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst();
-        return new FunctionCallNode(startLine, tokens.getLastRemoved().getFilename(), idNode, parameters);
+        return new FunctionCallNode(startLine, tokens.getLastRemoved().getFilename(), idNode, parameters, variableTable);
     }
 
     @Override
@@ -63,20 +66,18 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public void validateTree() throws NodeValidateException {
         idNode.validateTree();
-        // TODO: Ensure idNode (method name) is included in function symbol table, pass necessary parameters to parameterNode
-        boolean isInSymbolTablePlaceholder = true;
-        if (!isInSymbolTablePlaceholder)
+        // Ensure we have the function we want to call
+        if (variableTable.hasFunction(idNode.getIdStringValue()))
             throw new NodeValidateException("Call to unknown function: '" + idNode.convertToJott() + "'", filename, startLine);
         parameters.validateTree();
     }
 
     @Override
-    public TypeNode.VariableType getEvaluationVariableType() {
-        return idNode.getEvaluationVariableType();
-    }
-
-    @Override
     public int getStartLine() {
         return startLine;
+    }
+
+    public IDNode getIdNode() {
+        return idNode;
     }
 }

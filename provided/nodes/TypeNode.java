@@ -3,7 +3,6 @@ package provided.nodes;
 import provided.JottTree;
 import provided.Token;
 import provided.TokenDeque;
-import provided.TokenType;
 
 /**
  * Class for Type nodes
@@ -16,8 +15,13 @@ public class TypeNode implements JottTree {
         DOUBLE, INTEGER, STRING, BOOLEAN
     }
     private final VariableType type;
+    private final int startLine;
+    private final String filename;
+
     private TypeNode(Token token) {
         type = VariableType.valueOf(token.getToken().toUpperCase());
+        startLine = token.getLineNum();
+        filename = token.getFilename();
     }
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
@@ -57,5 +61,13 @@ public class TypeNode implements JottTree {
     }
     public VariableType getType() {
         return type;
+    }
+
+    public int getStartLine() {
+        return startLine;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 }

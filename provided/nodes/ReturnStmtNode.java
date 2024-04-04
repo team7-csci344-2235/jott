@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 /**
  * Class for ReturnStmt nodes
@@ -20,13 +21,13 @@ public class ReturnStmtNode implements JottTree{
         this.exprNode = null;
     }
 
-    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens) throws JottTree.NodeParseException {
+    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable) throws JottTree.NodeParseException {
         if (tokens.isFirstOf(TokenType.R_BRACE)) // No expressions, empty params.
             return new ReturnStmtNode();
 
         tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
-        ExprNode exprNode = ExprNode.parseExprNode(tokens);
+        ExprNode exprNode = ExprNode.parseExprNode(tokens, variableTable);
         
 
         tokens.validateFirst(TokenType.SEMICOLON);
