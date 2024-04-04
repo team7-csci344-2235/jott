@@ -67,7 +67,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     public void validateTree() throws NodeValidateException {
         idNode.validateTree();
         // Ensure we have the function we want to call
-        if (variableTable.hasFunction(idNode.getIdStringValue()))
+        if (!variableTable.hasFunction(idNode.getIdStringValue()))
             throw new NodeValidateException("Call to unknown function: '" + idNode.convertToJott() + "'", filename, startLine);
         parameters.validateTree();
     }
