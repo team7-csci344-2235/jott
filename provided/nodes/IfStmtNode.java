@@ -62,7 +62,7 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public void validateTree() throws NodeValidateException {
-            return;
+            body.validateTree();
         }
     }
 
@@ -131,7 +131,7 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public void validateTree() throws NodeValidateException {
-            return;
+            body.validateTree();
         }
     }
 
@@ -242,6 +242,6 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        body.validateTree();
     }
 }
