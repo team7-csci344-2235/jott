@@ -72,7 +72,12 @@ public class BodyNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        for(BodyStmtNode node : bodyStmtNodes) {
+            node.validateTree();
+        }
+        if(returnStmtNode != null) {
+            returnStmtNode.validateTree();
+        }
     }
 
     public boolean isReturnable() {
