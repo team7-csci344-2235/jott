@@ -46,7 +46,8 @@ public class FunctionDefParamTNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        idNode.validateTree();
+        typeNode.validateTree();
     }
 
     public TypeNode getTypeNode() {

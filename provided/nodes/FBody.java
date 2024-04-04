@@ -63,4 +63,8 @@ public class FBody implements JottTree {
 
         bodyNode.validateTree();
     }
+
+    public BodyNode getBodyNode() {
+        return bodyNode;
+    }
 }

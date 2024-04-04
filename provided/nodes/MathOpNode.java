@@ -75,6 +75,24 @@ public class MathOpNode implements JottTree, ExprNode {
         firstOp.validateTree();
         secondOp.validateTree();
 
+        //if variables are initialzed
+        if(firstOp instanceof IDNode){
+            if(!variableTable.hasVariable(((IDNode) firstOp).getIdStringValue())){
+                throw new NodeValidateException("Variable " + ((IDNode) firstOp).getIdStringValue() + " undefined", filename, startLine);
+            }
+            else if(!variableTable.isVariableInitialized(((IDNode) firstOp).getIdStringValue())){
+                throw new NodeValidateException("Variable " + ((IDNode) firstOp).getIdStringValue() + " must be initialized before use", filename, startLine);
+            }
+        }
+        if(secondOp instanceof IDNode){
+            if(!variableTable.hasVariable(((IDNode) secondOp).getIdStringValue())){
+                throw new NodeValidateException("Variable " + ((IDNode) secondOp).getIdStringValue() + " undefined", filename, startLine);
+            }
+            else if(!variableTable.isVariableInitialized(((IDNode) secondOp).getIdStringValue())){
+                throw new NodeValidateException("Variable " + ((IDNode) secondOp).getIdStringValue() + " must be initialized before use", filename, startLine);
+            }
+        }
+
         // Check for matching operand types
         if (OperandNode.getOperandType(firstOp, variableTable, filename) != OperandNode.getOperandType(secondOp, variableTable, filename))
             throw new NodeValidateException("Operand types do not match for math operation", filename, startLine);
