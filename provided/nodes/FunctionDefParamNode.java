@@ -4,17 +4,21 @@ import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
 
+import java.util.ArrayList;
+
+import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
+
 public class FunctionDefParamNode implements JottTree {
 
     private final IDNode firstParamName;
     private final TypeNode firstParamType;
-    private final FunctionDefParamTNode theRest;
+    private final ArrayList<FunctionDefParamTNode> theRest;
 
     private FunctionDefParamNode(IDNode name, TypeNode type,
-            FunctionDefParamTNode theRest) {
+                                 ArrayList<FunctionDefParamTNode> theRest) {
         this.firstParamName = name;
         this.firstParamType = type;
-        this.theRest = null;
+        this.theRest = theRest;
     }
 
     public static FunctionDefParamNode parseFunctionDefParamNode(TokenDeque tokens) throws NodeParseException {
@@ -33,8 +37,14 @@ public class FunctionDefParamNode implements JottTree {
                     firstParamType, null);
         }
         else{
-            return new FunctionDefParamNode(firstParamName, firstParamType,
-                FunctionDefParamTNode.parseFunctionDefParamTNode(tokens));
+            ArrayList<FunctionDefParamTNode> params = new ArrayList<>();
+            for (;;) {
+                params.add(FunctionDefParamTNode.parseFunctionDefParamTNode(tokens)); // We should have expressions here, let's parse.
+                if (tokens.isFirstOf(TokenType.COMMA))
+                    tokens.removeFirst(); // Remove comma
+                else
+                    return new FunctionDefParamNode(firstParamName, firstParamType, params);
+            }
         }     
     }
 
@@ -44,9 +54,9 @@ public class FunctionDefParamNode implements JottTree {
             return "";
         }
         if(theRest != null){
-        return this.firstParamName.convertToJott() + ": "
-            + this.firstParamType.convertToJott()
-            + this.theRest.convertToJott();
+            return this.firstParamName.convertToJott() + ": "
+                + this.firstParamType.convertToJott()
+                + this.theRest.stream().map(FunctionDefParamTNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
         }
         else{
             return this.firstParamName.convertToJott() + ": "
@@ -74,15 +84,11 @@ public class FunctionDefParamNode implements JottTree {
         return;
     }
 
-    public IDNode getFirstParamName() {
-        return firstParamName;
-    }
-
     public TypeNode getFirstParamType() {
         return this.firstParamType;
     }
 
-    public provided.nodes.FunctionDefParamTNode getTheRest() {
+    public ArrayList<provided.nodes.FunctionDefParamTNode> getTheRest() {
         return theRest;
     }
 }

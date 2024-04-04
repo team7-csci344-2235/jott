@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 /**
  * Class for RelOp nodes (<, >, =, ==, <=, >=)
@@ -10,17 +11,19 @@ import provided.TokenType;
  * @author Lianna Pottgen, <lrp2755@rit.edu>  //infinite loop issues
  */
 public class RelOpNode implements JottTree, ExprNode {
+    private final int startLine;
     private final String relationalValue;
     private final OperandNode firstOpStr;
     private final OperandNode secondOpStr;
 
-    private RelOpNode(OperandNode firstOp, String relationalValue, OperandNode secondOp) {
+    private RelOpNode(int startLine, OperandNode firstOp, String relationalValue, OperandNode secondOp) {
         this.firstOpStr = firstOp;
         this.relationalValue = relationalValue;
         this.secondOpStr = secondOp;
+        this.startLine = startLine;
     }
 
-    public static RelOpNode parseRelOpNode(OperandNode firstOp, TokenDeque tokens) throws NodeParseException {
+    public static RelOpNode parseRelOpNode(OperandNode firstOp, TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
         //get information
         tokens.validateFirst(TokenType.REL_OP); 
 
@@ -36,12 +39,13 @@ public class RelOpNode implements JottTree, ExprNode {
             //return "=="
         tokens.validateFirst(">", "<", "<=", ">=", "==");
         String relOpHolder = tokens.removeFirst().getToken();
+        int startLine = tokens.getLastRemoved().getLineNum();
 
         tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
-        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens);
+        OperandNode operandNode1 = OperandNode.parseOperandNode(tokens, variableTable);
 
         //return relationalOperation;
-        return new RelOpNode(firstOp, relOpHolder, operandNode1);
+        return new RelOpNode(startLine, firstOp, relOpHolder, operandNode1);
     }
 
     @Override
@@ -67,6 +71,11 @@ public class RelOpNode implements JottTree, ExprNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
     }
 }
 

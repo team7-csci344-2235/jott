@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.JottTree;
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 import java.util.ArrayList;
 
@@ -12,26 +13,24 @@ import java.util.ArrayList;
  * @author Ewen Cazuc <ec1291@rit.edu>
  */
 public class BodyNode implements JottTree {
-
     private final ArrayList<BodyStmtNode> bodyStmtNodes;
     private final ReturnStmtNode returnStmtNode;
+
     private BodyNode(ArrayList<BodyStmtNode> bodyStmtNodes, ReturnStmtNode returnStmtNode) {
         this.bodyStmtNodes = bodyStmtNodes;
         this.returnStmtNode = returnStmtNode;
     }
 
-    public static BodyNode parseBodyNode(TokenDeque tokens) throws NodeParseException {
-        ArrayList<BodyStmtNode> bodyStmtNodes1 = new ArrayList<>();
+    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
+        ArrayList<BodyStmtNode> bodyStmtNodes = new ArrayList<>();
 
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
         while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
-            bodyStmtNodes1.add(BodyStmtNode.parseBodyStmtNode(tokens));
+            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable));
         }
 
-
-        ReturnStmtNode returnStmtNode = ReturnStmtNode.parseReturnStmtNode(tokens);
-        return new BodyNode(bodyStmtNodes1, returnStmtNode);
+        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable));
     }
 
     @Override

@@ -11,10 +11,17 @@ import provided.TokenDeque;
  * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 public class TypeNode implements JottTree {
+    public enum VariableType {
+        DOUBLE, INTEGER, STRING, BOOLEAN
+    }
+    private final VariableType type;
+    private final int startLine;
+    private final String filename;
 
-    private final String type;
-    private TypeNode(Token type) {
-        this.type = type.getToken();
+    private TypeNode(Token token) {
+        type = VariableType.valueOf(token.getToken().toUpperCase());
+        startLine = token.getLineNum();
+        filename = token.getFilename();
     }
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
@@ -24,7 +31,13 @@ public class TypeNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        return type;
+        switch (type) {
+            case DOUBLE -> {return "Double";}
+            case INTEGER -> {return "Integer";}
+            case STRING -> {return "String";}
+            case BOOLEAN -> {return "Boolean";}
+        }
+        return "";
     }
 
     @Override
@@ -46,7 +59,15 @@ public class TypeNode implements JottTree {
     public void validateTree() throws NodeValidateException {
         return;
     }
-    public String getType() {
-        return this.type;
+    public VariableType getType() {
+        return type;
+    }
+
+    public int getStartLine() {
+        return startLine;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 }

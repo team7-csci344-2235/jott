@@ -10,10 +10,12 @@ import provided.TokenType;
  * @author Lianna Pottgen, <lrp2755@rit.edu> 
  */
 public class StringLiteralNode implements JottTree, ExprNode {
+    private final int startLine;
     private final String stringValue;
 
-    private StringLiteralNode(String stringValue) {
+    private StringLiteralNode(int startLine, String stringValue) {
         this.stringValue = stringValue;
+        this.startLine = startLine;
     }
 
     public static StringLiteralNode parseStringLiteralNode(TokenDeque tokens) throws NodeParseException {
@@ -23,7 +25,7 @@ public class StringLiteralNode implements JottTree, ExprNode {
         holder = holder.substring(1, holder.length()-1);
 
         //return value
-        return new StringLiteralNode(holder);
+        return new StringLiteralNode(tokens.getLastRemoved().getLineNum(), holder);
     }
 
     @Override
@@ -49,6 +51,11 @@ public class StringLiteralNode implements JottTree, ExprNode {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
     }
 }
 
