@@ -45,7 +45,10 @@ public interface OperandNode extends ExprNode {
      */
     static TypeNode.VariableType getOperandType(OperandNode operandNode, VariableTable variableTable, String filename) throws NodeValidateException {
         if (operandNode instanceof IDNode) {
-            return variableTable.getVariableType(((IDNode) operandNode).getIdStringValue());
+            String functionName = ((IDNode) operandNode).getIdStringValue();
+            if (!variableTable.hasVariable(functionName))
+                throw new NodeValidateException("Use of undeclared variable: '" + functionName + "'", filename, operandNode.getStartLine());
+            return variableTable.getVariableType(functionName);
         } else if (operandNode instanceof NumNode) {
             return ((NumNode) operandNode).getVariableType();
         } else if (operandNode instanceof FunctionCallNode) {

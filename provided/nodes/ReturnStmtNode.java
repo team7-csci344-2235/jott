@@ -24,9 +24,9 @@ public class ReturnStmtNode implements JottTree{
         this.startLine = startLine;
     }
 
-    private ReturnStmtNode(SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
+    private ReturnStmtNode(String functionName, SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
         this.exprNode = null;
-        this.functionName = null;
+        this.functionName = functionName;
         this.symbolTable = symbolTable;
         this.variableTable = variableTable;
         this.filename = filename;
@@ -35,7 +35,7 @@ public class ReturnStmtNode implements JottTree{
 
     public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws JottTree.NodeParseException {
         if (tokens.isFirstOf(TokenType.R_BRACE)) // No expressions, empty params.
-            return new ReturnStmtNode(symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
+            return new ReturnStmtNode(functionName, symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
 
         tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
