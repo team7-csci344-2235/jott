@@ -4,6 +4,7 @@ import provided.nodes.TypeNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class for symbol table which allows for function tracking.
@@ -35,6 +36,7 @@ public class SymbolTable {
         ArrayList<TypeNode.VariableType> valsForLength = new ArrayList<>();
         valsForLength.add(TypeNode.VariableType.STRING);
         tryAddFunction("length", valsForLength, TypeNode.VariableType.INTEGER);
+        tryAddFunction("print", new ArrayList<>(List.of(TypeNode.VariableType.ANY)), null);
     }
 
     /**
