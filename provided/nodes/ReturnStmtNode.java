@@ -1,9 +1,6 @@
 package provided.nodes;
 
-import provided.JottTree;
-import provided.TokenDeque;
-import provided.TokenType;
-import provided.VariableTable;
+import provided.*;
 
 /**
  * Class for ReturnStmt nodes
@@ -13,17 +10,32 @@ import provided.VariableTable;
 public class ReturnStmtNode implements JottTree{
 
     private final ExprNode exprNode;
-    private ReturnStmtNode(ExprNode exprNode) {
+    private final String functionName;
+    private final SymbolTable symbolTable;
+    private final VariableTable variableTable;
+    private final String filename;
+    private final int startLine;
+    private ReturnStmtNode(ExprNode exprNode, String functionName, SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
         this.exprNode = exprNode;
+        this.functionName = functionName;
+        this.symbolTable = symbolTable;
+        this.variableTable = variableTable;
+        this.filename = filename;
+        this.startLine = startLine;
     }
 
-    private ReturnStmtNode() {
+    private ReturnStmtNode(SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
         this.exprNode = null;
+        this.functionName = null;
+        this.symbolTable = symbolTable;
+        this.variableTable = variableTable;
+        this.filename = filename;
+        this.startLine = startLine;
     }
 
-    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable) throws JottTree.NodeParseException {
+    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws JottTree.NodeParseException {
         if (tokens.isFirstOf(TokenType.R_BRACE)) // No expressions, empty params.
-            return new ReturnStmtNode();
+            return new ReturnStmtNode(symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
 
         tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
@@ -32,7 +44,7 @@ public class ReturnStmtNode implements JottTree{
 
         tokens.validateFirst(TokenType.SEMICOLON);
         tokens.removeFirst(); // Remove semicolon
-        return new ReturnStmtNode(exprNode);
+        return new ReturnStmtNode(exprNode, functionName, symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
     }
 
     @Override
@@ -60,10 +72,20 @@ public class ReturnStmtNode implements JottTree{
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
-    }
+        if (exprNode != null) {
+            exprNode.validateTree();
+        }
+        if (exprNode instanceof IDNode) {
+            if (variableTable.hasVariable(((IDNode) exprNode).getIdStringValue())) {
+                throw new NodeValidateException("Returned variable is not declared.", filename, startLine);
+            }
+            if (variableTable.isVariableInitialized(((IDNode) exprNode).getIdStringValue())) {
+                throw new NodeValidateException("Returned variable is not initialized.", filename, startLine);
+            }
 
-    public ExprNode getExprNode() {
-        return exprNode;
+        }
+        if (ExprNode.getExprType(exprNode, variableTable, filename) != symbolTable.getFunctionReturnType(functionName)) {
+            throw new NodeValidateException("Return type does not match function return type.", filename, startLine);
+        }
     }
 }

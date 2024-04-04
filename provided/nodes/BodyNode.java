@@ -1,9 +1,6 @@
 package provided.nodes;
 
-import provided.JottTree;
-import provided.TokenDeque;
-import provided.TokenType;
-import provided.VariableTable;
+import provided.*;
 
 import java.util.ArrayList;
 
@@ -21,7 +18,7 @@ public class BodyNode implements JottTree {
         this.returnStmtNode = returnStmtNode;
     }
 
-    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
+    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
         ArrayList<BodyStmtNode> bodyStmtNodes = new ArrayList<>();
 
         // Parse body statements. Keep in mind that zero body statements is
@@ -30,7 +27,7 @@ public class BodyNode implements JottTree {
             bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable));
         }
 
-        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable));
+        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName, symbolTable));
     }
 
     @Override
@@ -73,12 +70,5 @@ public class BodyNode implements JottTree {
     @Override
     public void validateTree() throws NodeValidateException {
         return;
-    }
-
-    public boolean isReturnable() {
-        if (returnStmtNode.getExprNode() != null) {
-            return true;
-        }
-        return false;
     }
 }
