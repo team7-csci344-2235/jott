@@ -8,14 +8,16 @@ public class AsmtNode implements BodyStmtNode{
 
     private final IDNode idNode;
     private final ExprNode exprNode;
+    private final VariableTable variableTable;
     private final int startLine;
     private final String filename;
 
-    private AsmtNode(IDNode idNode, ExprNode exprNode, int startLine, String filename) {
+    private AsmtNode(IDNode idNode, ExprNode exprNode, VariableTable variableTable, int startLine, String filename) {
         this.idNode = idNode;
         this.exprNode = exprNode;
-        this.startLine = startLine;
+        this.variableTable = variableTable;
         this.filename = filename;
+        this.startLine = startLine;
     }
 
     public static AsmtNode parseAsmtNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
@@ -29,7 +31,7 @@ public class AsmtNode implements BodyStmtNode{
         tokens.validateFirst(TokenType.SEMICOLON);
         tokens.removeFirst(); // Remove semicolon
 
-        return new AsmtNode(idNode, exprNode, tokens.getLastRemoved().getLineNum(), tokens.getLastRemoved().getFilename());
+        return new AsmtNode(idNode, exprNode, variableTable, tokens.getLastRemoved().getLineNum(), tokens.getLastRemoved().getFilename());
     }
 
     @Override
@@ -54,8 +56,16 @@ public class AsmtNode implements BodyStmtNode{
 
     @Override
     public void validateTree() throws NodeValidateException {
-        if (this.idNode.getEvaluationVariableType() != this.exprNode.getEvaluationVariableType()) {
-            throw new NodeValidateException("Types don't make in assigment", filename, startLine);
+        this.idNode.validateTree();
+        this.exprNode.validateTree();
+        if (!variableTable.hasVariable(idNode.getIdStringValue()) ) {
+            throw new NodeValidateException("Variable " + idNode.getIdStringValue() + " not declared", filename, startLine);
+        }
+        if (variableTable.getVariableType(idNode.getIdStringValue()) != ExprNode.getExprType(exprNode, variableTable, filename)) {
+            throw new NodeValidateException("ID type doesn't match expression type.", filename, startLine);
+        }
+        if (!variableTable.tryInitializeVariable(idNode.getIdStringValue())) {
+            throw new NodeValidateException("Variable " + idNode.getIdStringValue() + " already initialized.", filename, startLine);
         }
     }
 
