@@ -1,9 +1,6 @@
 package provided.nodes;
 
-import provided.JottTree;
-import provided.TokenDeque;
-import provided.TokenType;
-import provided.VariableTable;
+import provided.*;
 
 import java.util.ArrayList;
 
@@ -21,7 +18,7 @@ public class FBody implements JottTree {
         this.bodyNode = bodyNode;
     }
 
-    public static FBody parseFBodyNode(TokenDeque tokens, VariableTable variableTable) throws NodeParseException {
+    public static FBody parseFBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
         ArrayList<VarDecNode> varDecNodes = new ArrayList<>();
 
         // Check for variable declarations at the start of the function body.
@@ -31,7 +28,7 @@ public class FBody implements JottTree {
             varDecNodes.add(VarDecNode.parseVarDecNode(tokens, variableTable));
         }
 
-        return new FBody(varDecNodes, BodyNode.parseBodyNode(tokens, variableTable));
+        return new FBody(varDecNodes, BodyNode.parseBodyNode(tokens, variableTable, functionName, symbolTable));
     }
 
     @Override

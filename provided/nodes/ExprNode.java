@@ -40,4 +40,27 @@ public interface ExprNode extends JottTree {
      * @return the start line of the expression
      */
     int getStartLine();
+
+    /**
+     * Gets the type of the expr node
+     * @param exprNode the operand node
+     * @param variableTable the variable table
+     * @param filename the filename
+     * @return the type of the expr node
+     * @throws NodeValidateException if the expr node is invalid
+     */
+    static TypeNode.VariableType getExprType(ExprNode exprNode, VariableTable variableTable, String filename) throws NodeValidateException {
+        if (exprNode instanceof OperandNode) {
+            return OperandNode.getOperandType((OperandNode) exprNode, variableTable, filename);
+        } else if (exprNode instanceof RelOpNode) {
+            return TypeNode.VariableType.BOOLEAN;
+        } else if (exprNode instanceof MathOpNode) {
+            return ((MathOpNode) exprNode).getOperandType();
+        } else if (exprNode instanceof StringLiteralNode) {
+            return TypeNode.VariableType.STRING;
+        } else if (exprNode instanceof BoolNode) {
+            return TypeNode.VariableType.BOOLEAN;
+        }
+        return null;
+    }
 }
