@@ -50,6 +50,7 @@ public class WhileLoopNode implements BodyStmtNode{
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        exprNode.validateTree();
+        bodyNode.validateTree();
     }
 }
