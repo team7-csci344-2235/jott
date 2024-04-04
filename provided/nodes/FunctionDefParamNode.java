@@ -81,7 +81,17 @@ public class FunctionDefParamNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        if (this.firstParamName != null) {
+            this.firstParamName.validateTree();
+        }
+        if (this.firstParamType != null) {
+            this.firstParamType.validateTree();
+        }
+        if (this.theRest != null) {
+            for (FunctionDefParamTNode param : this.theRest) {
+                param.validateTree();
+            }
+        }
     }
 
     public TypeNode getFirstParamType() {
