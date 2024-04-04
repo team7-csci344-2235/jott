@@ -24,7 +24,7 @@ public class BodyNode implements JottTree {
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
         while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
-            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName, symbolTable));
+            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName,symbolTable));
         }
 
         return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName, symbolTable));
@@ -69,6 +69,11 @@ public class BodyNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        return;
+        for(BodyStmtNode node : bodyStmtNodes) {
+            node.validateTree();
+        }
+        if(returnStmtNode != null) {
+            returnStmtNode.validateTree();
+        }
     }
 }
