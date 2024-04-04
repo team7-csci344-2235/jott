@@ -2,6 +2,7 @@
 #return <id> is not allowed from void
 
 Def main[]:Void{
-    Double x = 5.0;
+    Double x;
+    x = 5.0;
 	Return x;
 }
