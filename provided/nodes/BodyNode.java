@@ -76,15 +76,4 @@ public class BodyNode implements JottTree {
             returnStmtNode.validateTree();
         }
     }
-
-    public boolean isReturnable() {
-        if (returnStmtNode.getExprNode() != null) {
-            return true;
-        }
-        return false;
-    }
-
-    public ReturnStmtNode getReturnStmtNode() {
-        return returnStmtNode;
-    }
 }
