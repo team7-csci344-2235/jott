@@ -75,7 +75,7 @@ public class FunctionDefNode implements JottTree {
         tokens.removeFirst();
 
         // Create function body and give it a new localized variable table.
-        FBody functionBody = FBody.parseFBodyNode(tokens, symbolTable.createVariableTable(), name.getIdStringValue(), symbolTable);
+        FBody functionBody = FBody.parseFBodyNode(tokens, symbolTable.createVariableTable(), name.getIdStringValue());
 
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
