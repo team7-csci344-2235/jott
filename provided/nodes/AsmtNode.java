@@ -64,9 +64,7 @@ public class AsmtNode implements BodyStmtNode{
         if (variableTable.getVariableType(idNode.getIdStringValue()) != ExprNode.getExprType(exprNode, variableTable, filename)) {
             throw new NodeValidateException("ID type doesn't match expression type.", filename, startLine);
         }
-        if (!variableTable.tryInitializeVariable(idNode.getIdStringValue())) {
-            throw new NodeValidateException("Variable " + idNode.getIdStringValue() + " already initialized.", filename, startLine);
-        }
+        variableTable.assignVariable(idNode.getIdStringValue());
     }
 
 }
