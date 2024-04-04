@@ -18,16 +18,16 @@ public class BodyNode implements JottTree {
         this.returnStmtNode = returnStmtNode;
     }
 
-    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
+    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
         ArrayList<BodyStmtNode> bodyStmtNodes = new ArrayList<>();
 
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
         while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
-            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName,symbolTable));
+            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName));
         }
 
-        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName, symbolTable));
+        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName));
     }
 
     @Override
