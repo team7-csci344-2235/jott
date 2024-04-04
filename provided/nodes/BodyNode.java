@@ -24,7 +24,7 @@ public class BodyNode implements JottTree {
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
         while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
-            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable));
+            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName, symbolTable));
         }
 
         return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName, symbolTable));
