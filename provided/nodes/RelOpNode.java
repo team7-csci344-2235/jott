@@ -79,12 +79,12 @@ public class RelOpNode implements JottTree, ExprNode {
 
         //if variables are initialzed
         if(firstOpStr instanceof IDNode){
-            if(!variableTable.isVariableInitialized(((IDNode) firstOpStr).getIdStringValue())){
+            if(!variableTable.hasVariable(((IDNode) firstOpStr).getIdStringValue()) || !variableTable.isVariableInitialized(((IDNode) firstOpStr).getIdStringValue())){
                 throw new NodeValidateException("Variable " + ((IDNode) firstOpStr).getIdStringValue() + " must be initialized before use", filename, startLine);
             }
         }
         if(secondOpStr instanceof IDNode){
-            if(!variableTable.isVariableInitialized(((IDNode) secondOpStr).getIdStringValue())){
+            if(!variableTable.hasVariable(((IDNode) secondOpStr).getIdStringValue()) || !variableTable.isVariableInitialized(((IDNode) secondOpStr).getIdStringValue())){
                 throw new NodeValidateException("Variable " + ((IDNode) secondOpStr).getIdStringValue() + " must be initialized before use", filename, startLine);
             }
         }
