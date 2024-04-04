@@ -77,6 +77,14 @@ public class ProgramNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
+        // Check for a main function now that all functions have been defined
+        if(!symbolTable.hasFunction("main"))
+            throw new NodeValidateException("No main function defined", filename, 0);
+
+        // Check for main function parameters
+        if (symbolTable.getFunctionParams("main") != null)
+            throw new NodeValidateException("Main function should not have parameters", filename, 0);
+
         // Validate all function definitions
         if (functionDefNodes != null)
             for (FunctionDefNode fdn : functionDefNodes) {
@@ -87,12 +95,5 @@ public class ProgramNode implements JottTree {
                 fdn.validateTree();
             }
 
-        // Check for a main function now that all functions have been defined
-        if(!symbolTable.hasFunction("main"))
-            throw new NodeValidateException("No main function defined", filename, 0);
-
-        // Check for main function parameters
-        if (symbolTable.getFunctionParams("main") != null)
-            throw new NodeValidateException("Main function should not have parameters", filename, 0);
     }
 }
