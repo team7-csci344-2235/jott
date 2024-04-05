@@ -73,15 +73,19 @@ public class ReturnStmtNode implements JottTree{
             exprNode.validateTree();
         }
         if (exprNode instanceof IDNode) {
-            if (variableTable.hasVariable(((IDNode) exprNode).getIdStringValue())) {
+            if (!variableTable.hasVariable(((IDNode) exprNode).getIdStringValue())) {
                 throw new NodeValidateException("Returned variable is not declared.", filename, startLine);
             }
-            if (variableTable.isVariableInitialized(((IDNode) exprNode).getIdStringValue())) {
+            if (!variableTable.isVariableInitialized(((IDNode) exprNode).getIdStringValue())) {
                 throw new NodeValidateException("Returned variable is not initialized.", filename, startLine);
             }
 
         }
         if (ExprNode.getExprType(exprNode, variableTable, filename) != variableTable.getFunctionReturnType(functionName)) {
+            // TODO: fix failed test case at phase3testcases/ifStmtReturns.jott:12
+            System.err.printf("ExprNode type: %s    Function return type: %s\n",
+                    ExprNode.getExprType(exprNode, variableTable, filename),
+                    variableTable.getFunctionReturnType(functionName));
             throw new NodeValidateException("Return type does not match function return type.", filename, startLine);
         }
     }
