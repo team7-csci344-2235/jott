@@ -44,6 +44,16 @@ public class ReturnStmtNode implements JottTree{
         return new ReturnStmtNode(exprNode, functionName, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
     }
 
+    /**
+     * ReturnStmtNode always "exists" even if the parent BodyNode doesn't have
+     * a return.
+     * This checks whether or not there is an actual return statement in
+     * this thing.
+     */
+    public boolean actuallyIsAReturn() {
+        return exprNode != null;
+    }
+
     @Override
     public String convertToJott() {
         if (exprNode == null) {
@@ -81,11 +91,15 @@ public class ReturnStmtNode implements JottTree{
             }
 
         }
-        if (ExprNode.getExprType(exprNode, variableTable, filename) != variableTable.getFunctionReturnType(functionName)) {
-            // TODO: fix failed test case at phase3testcases/ifStmtReturns.jott:12
-            System.err.printf("ExprNode type: %s    Function return type: %s\n",
-                    ExprNode.getExprType(exprNode, variableTable, filename),
-                    variableTable.getFunctionReturnType(functionName));
+
+        var exprType = ExprNode.getExprType(exprNode, variableTable, filename);
+        var funcReturnType = variableTable.getFunctionReturnType(functionName);
+        if (exprType != funcReturnType) {
+            if (exprType == null) {
+                // XXX: this message string is magic! See BodyNode.java.
+                throw new NodeValidateException("Function is missing return.",
+                        filename, startLine);
+            }
             throw new NodeValidateException("Return type does not match function return type.", filename, startLine);
         }
     }

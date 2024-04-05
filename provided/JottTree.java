@@ -54,10 +54,17 @@ public interface JottTree {
      * @author Sebastian LaVine <sml1040@rit.edu>
      */
     class NodeValidateException extends Exception {
+        private final String originalMessage;
+
         public NodeValidateException(String message, String filename, int line) {
             super("Semantic Error:\n"
                     + message + "\n"
                     + filename + ":" + line);
+            this.originalMessage = message;
+        }
+
+        public String getOriginalMessage() {
+            return this.originalMessage;
         }
     }
 

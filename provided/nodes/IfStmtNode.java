@@ -40,6 +40,10 @@ public class IfStmtNode implements BodyStmtNode {
             return new ElseNode(body);
         }
 
+        public boolean hasReturn() {
+            return this.body.hasReturn();
+        }
+
         @Override
         public String convertToJott() {
             return "Else {" + this.body.convertToJott() + "}";
@@ -51,9 +55,7 @@ public class IfStmtNode implements BodyStmtNode {
         }
 
         @Override
-        public String convertToC() {
-            return null;
-        }
+        public String convertToC() { return null; }
 
         @Override
         public String convertToPython() {
@@ -108,6 +110,10 @@ public class IfStmtNode implements BodyStmtNode {
             return new ElseIfNode(expr, body);
         }
 
+        public boolean hasReturn() {
+            return this.body.hasReturn();
+        }
+
         @Override
         public String convertToJott() {
             return "Elseif [" + this.expr.convertToJott() + "] {"
@@ -139,12 +145,21 @@ public class IfStmtNode implements BodyStmtNode {
     private final BodyNode body;
     private final ArrayList<ElseIfNode> elseIfs;
     private final ElseNode else_;
+    private boolean returns;
 
-    private IfStmtNode(ExprNode expr, BodyNode body, ArrayList<ElseIfNode> elseIfs,  ElseNode else_) {
+    private final String filename;
+    private final int startLine;
+
+    private IfStmtNode(ExprNode expr, BodyNode body,
+            ArrayList<ElseIfNode> elseIfs,  ElseNode else_,
+            String filename, int startLine) {
         this.expr = expr;
         this.body = body;
         this.elseIfs = elseIfs;
         this.else_ = else_;
+        this.returns = false;
+        this.filename = filename;
+        this.startLine = startLine;
     }
 
     public static IfStmtNode parseIfStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
@@ -155,7 +170,8 @@ public class IfStmtNode implements BodyStmtNode {
             throw new JottTree.NodeParseException(maybeDef, "If");
         }
 
-
+        String filename = tokens.getLastRemoved().getFilename();
+        int lineNum = tokens.getLastRemoved().getLineNum();
         // Get the condition expression.
 
         tokens.validateFirst(TokenType.L_BRACKET);
@@ -200,7 +216,16 @@ public class IfStmtNode implements BodyStmtNode {
             else_ = ElseNode.parseElseNode(tokens, variableTable, functionName);
         }
 
-        return new IfStmtNode(expr, body, elseIfs, else_);
+        return new IfStmtNode(expr, body, elseIfs, else_, filename, lineNum);
+    }
+
+    /**
+     * Returns whether or not this if statement has return paths.
+     * NOTE: this value will NOT necessarily be correct if it is called before
+     * this node has been validated.
+     */
+    public boolean returns() {
+        return this.returns;
     }
 
     @Override
@@ -241,6 +266,50 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public void validateTree() throws NodeValidateException {
+        // This validates the bodies of the constituent parts of the if
+        // statement. Then, it checks that the if statement follows the return
+        // path rule in the grammar.
+        //
+        // An if statement can only return if *all* of the branches
+        // (if/elif/else) return.
+        //
+        // So after we check the bodies, we check the presence (or lack
+        // thereof) of return statements based on that rule.
+
         body.validateTree();
+        for (ElseIfNode ein : elseIfs) {
+            ein.validateTree();
+        }
+        if (else_ != null) {
+            else_.validateTree();
+        }
+
+        // Now we check the returns.
+        if (else_ != null) {
+            if (body.hasReturn()) {
+                this.returns = true;
+            }
+            if (else_.hasReturn() != this.returns) {
+                throw new NodeValidateException("All branches of an if-statement must return, or all not return.",
+                        filename, startLine);
+            }
+            for (ElseIfNode ein : elseIfs) {
+                if (ein.hasReturn() != this.returns) {
+                    throw new NodeValidateException("All branches of an if-statement must return, or all not return.",
+                            filename, startLine);
+                }
+            }
+        } else {
+            if (body.hasReturn()) {
+                this.returns = true;
+            }
+            for (ElseIfNode ein : elseIfs) {
+                if (ein.hasReturn() != this.returns) {
+                    throw new NodeValidateException("All branches of an if-statement must return, or all not return.",
+                            filename, startLine);
+                }
+            }
+        }
+
     }
 }
