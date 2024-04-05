@@ -21,9 +21,10 @@ public class FunctionDefNode implements JottTree {
     private final TypeNode maybeReturnType;
     private final FBody functionBody;
     private final SymbolTable symbolTable;
+    private final VariableTable variableTable;
 
     private FunctionDefNode(int startLine, String filename, IDNode name, FunctionDefParamNode params,
-                            TypeNode maybeReturnType, FBody functionBody, SymbolTable symbolTable){
+                            TypeNode maybeReturnType, FBody functionBody, SymbolTable symbolTable, VariableTable variableTable){
         this.name = name;
         this.params = params;
         this.maybeReturnType = maybeReturnType; // Note: null is a valid value
@@ -31,6 +32,7 @@ public class FunctionDefNode implements JottTree {
         this.startLine = startLine;
         this.filename = filename;
         this.symbolTable = symbolTable;
+        this.variableTable = variableTable;
     }
 
     public static FunctionDefNode parseFunctionDefNode(TokenDeque tokens, SymbolTable symbolTable) throws NodeParseException {
@@ -45,6 +47,17 @@ public class FunctionDefNode implements JottTree {
 
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst();
+
+        // Variable table. Contains information about parameters as well as
+        // variables declared in the function body.
+        // XXX: Yes, it is scuffed that we have both this and the symbolTable
+        // at the top level. This is because we have gone with registering
+        // declarations in the `validateTree` level, so this object must
+        // stick around in the FunctionDefNode until then.
+        var variableTable = symbolTable.createVariableTable();
+
+        // TODO: give variableTable to functiondefparamnode, or otherwise
+        // get the info from it to put into variableTable
 
         FunctionDefParamNode params = null;
         if (tokens.getFirst().getTokenType() != TokenType.R_BRACKET) {
@@ -75,13 +88,13 @@ public class FunctionDefNode implements JottTree {
         tokens.removeFirst();
 
         // Create function body and give it a new localized variable table.
-        FBody functionBody = FBody.parseFBodyNode(tokens, symbolTable.createVariableTable(), name.getIdStringValue());
+        FBody functionBody = FBody.parseFBodyNode(tokens, variableTable, name.getIdStringValue());
 
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst();
 
         return new FunctionDefNode(startLine,tokens.getLastRemoved().getFilename(), name, params, returnType,
-                functionBody, symbolTable);
+                functionBody, symbolTable, variableTable);
     }
 
     @Override
@@ -127,12 +140,27 @@ public class FunctionDefNode implements JottTree {
         name.validateTree();
         if (maybeReturnType != null) maybeReturnType.validateTree();
         if (params != null) {
+            var firstId = params.getFirstParamId();
+            var firstType = params.getFirstParamType();
+
             nodesParams = new ArrayList<>();
-            nodesParams.add(params.getFirstParamType().getType());
+            nodesParams.add(firstType.getType());
+
+            // Try to add the variable to the variable table.
+            if (!variableTable.tryDeclareParamVariable(firstId.getIdStringValue(), firstType.getType()))
+                throw new NodeValidateException("Variable " + firstId.getIdStringValue() + " already declared.",
+                        firstType.getFilename(), firstType.getStartLine());
 
             if (params.getTheRest() != null)
-                for (FunctionDefParamTNode theRest : params.getTheRest())
-                    nodesParams.add(theRest.getTypeNode().getType());
+                for (FunctionDefParamTNode param : params.getTheRest()) {
+                    var id = param.getIdNode();
+                    var type = param.getTypeNode();
+                    nodesParams.add(type.getType());
+
+                    if (!variableTable.tryDeclareParamVariable(id.getIdStringValue(), type.getType()))
+                        throw new NodeValidateException("Variable " + id.getIdStringValue() + " already declared.",
+                                type.getFilename(), type.getStartLine());
+                }
 
             params.validateTree();
         }

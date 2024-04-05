@@ -33,6 +33,25 @@ public class VariableTable extends SymbolTable {
     }
 
     /**
+     * Try to declare a variable to the table.
+     *
+     * A variable "declared" with this function will be set as being
+     * initialized. We assume that the parameters that are passed to functions
+     * have been initialized
+     * the responsibility of the caller to initialize variables.
+     *
+     * @param name the name of the variable
+     * @param type the type of the variable
+     * @return true if the variable was successfully declared, false if the variable already exists in the variable or function table
+     */
+    public boolean tryDeclareParamVariable(String name, TypeNode.VariableType type) {
+        if (variableStuffMap.containsKey(name) || functionStuffMap.containsKey(name))
+            return false;
+        variableStuffMap.put(name, new VariableStuff(type, true));
+        return true;
+    }
+
+    /**
      * Set that a variable has been assigned.
      * We need to store this information to make sure that variables are
      * initialized before use.
