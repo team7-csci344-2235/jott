@@ -16,36 +16,55 @@ public interface JottTree {
      */
     class NodeParseException extends Exception {
         public NodeParseException(Token got, String... expected) {
-            super("Syntax Error \n" +
+            super("Syntax Error:\n" +
                     "Expected " + String.join(" or ", expected) +
                             " but got " + got.getToken() + " instead \n" +
                     got.getFilename() + ":" + got.getLineNum());
         }
 
         public NodeParseException(int previousLine, String filename, String... expected) {
-            super("Syntax Error \n" +
+            super("Syntax Error:\n" +
                     "Expected " + String.join(" or ", expected) + " but got nothing instead \n" +
                     filename + ":" + previousLine);
         }
 
         public NodeParseException(Token got, TokenType... expected) {
-            super("Syntax Error \n" +
+            super("Syntax Error:\n" +
                     "Expected " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) +
                     " but got " + got.getToken() + " instead \n" +
                     got.getFilename() + ":" + got.getLineNum());
         }
 
         public NodeParseException(Token got, String expected) {
-            super("Syntax Error \n" +
+            super("Syntax Error:\n" +
                     "Expected " + expected +
                     " but got " + got.getToken() + " ainstead \n" +
                     got.getFilename() + ":" + got.getLineNum());
         }
 
         public NodeParseException(int previousLine, String filename, TokenType... expected) {
-            super("Syntax Error \n" +
+            super("Syntax Error:\n" +
                     "Expected " + Arrays.stream(expected).map(TokenType::name).collect(Collectors.joining(" or ")) + " but got nothing instead \n" +
                     filename + ":" + previousLine);
+        }
+    }
+
+    /**
+     * Exception for when a node is invalid.
+     * @author Sebastian LaVine <sml1040@rit.edu>
+     */
+    class NodeValidateException extends Exception {
+        private final String originalMessage;
+
+        public NodeValidateException(String message, String filename, int line) {
+            super("Semantic Error:\n"
+                    + message + "\n"
+                    + filename + ":" + line);
+            this.originalMessage = message;
+        }
+
+        public String getOriginalMessage() {
+            return this.originalMessage;
         }
     }
 
@@ -75,8 +94,7 @@ public interface JottTree {
 
     /**
      * This will validate that the tree follows the semantic rules of Jott
-	 * Errors validating will be reported to System.err
-     * @return true if valid Jott code; false otherwise
+     * @return void if valid Jott code; throws NodeValidateException if not
      */
-    public boolean validateTree();
+    public void validateTree() throws NodeValidateException;
 }

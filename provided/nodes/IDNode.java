@@ -8,17 +8,19 @@ import provided.TokenType;
  *
  * @author Lianna Pottgen <lrp2755@rit.edu>
  */
-public class IDNode implements OperandNode { 
+public class IDNode implements OperandNode {
+    private final int startLine;
     private final String idStringValue;
 
-    private IDNode(String idStringValue) {
+    private IDNode(int startLine, String idStringValue) {
         this.idStringValue = idStringValue;
+        this.startLine = startLine;
     }
 
     public static IDNode parseIDNode(TokenDeque tokens) throws NodeParseException {
         //get information
         tokens.validateFirst(TokenType.ID_KEYWORD);
-        return new IDNode(tokens.removeFirst().getToken());
+        return new IDNode(tokens.getFirst().getLineNum(), tokens.removeFirst().getToken());
     }
 
     @Override
@@ -42,7 +44,16 @@ public class IDNode implements OperandNode {
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        return;
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    public String getIdStringValue() {
+        return idStringValue;
     }
 }

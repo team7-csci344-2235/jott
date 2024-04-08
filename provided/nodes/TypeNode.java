@@ -11,10 +11,19 @@ import provided.TokenDeque;
  * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 public class TypeNode implements JottTree {
+    /**
+     * Enum for the different types of variables. Any should only be used for special parameters such as print,
+     * which accepts any type.
+     */
+    public enum VariableType { DOUBLE, INTEGER, STRING, BOOLEAN, ANY }
+    private final VariableType type;
+    private final int startLine;
+    private final String filename;
 
-    private final String type;
-    private TypeNode(Token type) {
-        this.type = type.getToken();
+    private TypeNode(Token token) {
+        type = VariableType.valueOf(token.getToken().toUpperCase());
+        startLine = token.getLineNum();
+        filename = token.getFilename();
     }
 
     public static TypeNode parseTypeNode(TokenDeque tokens) throws NodeParseException {
@@ -24,7 +33,13 @@ public class TypeNode implements JottTree {
 
     @Override
     public String convertToJott() {
-        return type;
+        switch (type) {
+            case DOUBLE -> {return "Double";}
+            case INTEGER -> {return "Integer";}
+            case STRING -> {return "String";}
+            case BOOLEAN -> {return "Boolean";}
+        }
+        return "";
     }
 
     @Override
@@ -43,7 +58,20 @@ public class TypeNode implements JottTree {
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        // This node cannot be invalid. To be a TypeNode at all, it must
+        // have been properly tokenized as a type.
+        return;
+    }
+    public VariableType getType() {
+        return type;
+    }
+
+    public int getStartLine() {
+        return startLine;
+    }
+
+    public String getFilename() {
+        return filename;
     }
 }

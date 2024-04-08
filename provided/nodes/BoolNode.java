@@ -10,10 +10,12 @@ import provided.TokenType;
  * @author Lianna Pottgen, <lrp2755@rit.edu>
  */
 public class BoolNode implements JottTree, ExprNode{
+    private final int startLine;
     private final String trueOrFalse;
 
-    private BoolNode(String trueOrFalse) {
+    private BoolNode(int startLine, String trueOrFalse) {
         this.trueOrFalse = trueOrFalse;
+        this.startLine = startLine;
     }
 
     public static BoolNode parseBoolNode(TokenDeque tokens) throws NodeParseException {
@@ -25,7 +27,7 @@ public class BoolNode implements JottTree, ExprNode{
         //else if "FALSE", "false", or any combination
             //return "False"
         tokens.validateFirst("True", "False");
-        return new BoolNode(tokens.removeFirst().getToken());
+        return new BoolNode(tokens.getFirst().getLineNum(), tokens.removeFirst().getToken());
     }
 
     @Override
@@ -49,8 +51,13 @@ public class BoolNode implements JottTree, ExprNode{
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        return;
+    }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
     }
 }
 

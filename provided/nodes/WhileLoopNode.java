@@ -2,6 +2,7 @@ package provided.nodes;
 
 import provided.TokenDeque;
 import provided.TokenType;
+import provided.VariableTable;
 
 public class WhileLoopNode implements BodyStmtNode{
     private final ExprNode exprNode;
@@ -11,17 +12,17 @@ public class WhileLoopNode implements BodyStmtNode{
         this.bodyNode = bodyStmtNode;
     }
 
-    public static WhileLoopNode parseWhileLoopNode(TokenDeque tokens) throws NodeParseException {
+    public static WhileLoopNode parseWhileLoopNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
         tokens.validateFirst("While");
         tokens.removeFirst(); // Remove while
         tokens.validateFirst(TokenType.L_BRACKET);
         tokens.removeFirst(); // Remove left bracket
-        ExprNode exprNode = ExprNode.parseExprNode(tokens);
+        ExprNode exprNode = ExprNode.parseExprNode(tokens, variableTable);
         tokens.validateFirst(TokenType.R_BRACKET);
         tokens.removeFirst(); // Remove right bracket
         tokens.validateFirst(TokenType.L_BRACE);
         tokens.removeFirst(); // Remove left brace
-        BodyNode bodyNode = BodyNode.parseBodyNode(tokens);
+        BodyNode bodyNode = BodyNode.parseBodyNode(tokens, variableTable, functionName);
         tokens.validateFirst(TokenType.R_BRACE);
         tokens.removeFirst(); // Remove right brace
         return new WhileLoopNode(exprNode, bodyNode);
@@ -48,7 +49,8 @@ public class WhileLoopNode implements BodyStmtNode{
     }
 
     @Override
-    public boolean validateTree() {
-        return false;
+    public void validateTree() throws NodeValidateException {
+        exprNode.validateTree();
+        bodyNode.validateTree();
     }
 }

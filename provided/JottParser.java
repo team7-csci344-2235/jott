@@ -17,10 +17,13 @@ public class JottParser {
      * @param tokens the tokens to parse
      * @return the parsed Jott parse tree
      */
-    public static JottTree parse(ArrayList<Token> tokens) {
+    public static JottTree parse(ArrayList<Token> tokens, boolean validateMode) {
         try {
-            return ProgramNode.parseProgramNode(new TokenDeque(tokens));
-        } catch (JottTree.NodeParseException e) {
+            var prog = ProgramNode.parseProgramNode(new TokenDeque(tokens));
+            if (validateMode)
+                prog.validateTree();
+            return prog;
+        } catch (JottTree.NodeParseException | JottTree.NodeValidateException e) {
             System.err.println(e.getMessage());
             return null;
         }
