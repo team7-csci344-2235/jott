@@ -55,7 +55,14 @@ public class ParamsNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        if (expressions == null) return "";
+        return expressions.stream().map(ExprNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
+        /* 
+        if(expressions == null){
+            return "";
+        }
+        return expressions.stream().map(ExprNode::convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
+        */
     }
 
     @Override

@@ -41,7 +41,7 @@ public class AsmtNode implements BodyStmtNode{
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return idNode.convertToJava(className) + " = " + exprNode.convertToJava(className);
     }
 
     @Override

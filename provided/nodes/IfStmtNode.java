@@ -51,7 +51,7 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public String convertToJava(String className) {
-            return null;
+            return "else{" + this.body.convertToJava(className) + "}";
         }
 
         @Override
@@ -122,7 +122,8 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public String convertToJava(String className) {
-            return null;
+            return "else if(" + this.expr.convertToJava(className) + "){"
+                + this.body.convertToJava(className) + "}";
         }
 
         @Override
@@ -251,7 +252,23 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        StringBuilder sb = new StringBuilder("if(");
+        sb.append(this.expr.convertToJava(className));
+        sb.append("){");
+        sb.append("\n");
+        sb.append(this.body.convertToJava(className));
+        sb.append("        }");
+        sb.append("\n");
+        for (ElseIfNode ei : this.elseIfs) {
+            sb.append(" ");
+            sb.append(ei.convertToJava(className));
+        }
+        if (this.else_ != null) {
+            sb.append(" ");
+            sb.append(this.else_.convertToJava(className));
+        }
+
+        return sb.toString();
     }
 
     @Override

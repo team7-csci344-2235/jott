@@ -43,7 +43,12 @@ public class FBody implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        StringBuilder result = new StringBuilder();
+        while (!varDecNodes.isEmpty()) {
+            result.append(varDecNodes.getFirst().convertToJava(className));
+            varDecNodes.removeFirst();
+        }
+        return result + bodyNode.convertToJava(className);
     }
 
     @Override

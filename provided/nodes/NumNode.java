@@ -39,7 +39,7 @@ public class NumNode implements OperandNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return num;
     }
 
     @Override

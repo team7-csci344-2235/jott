@@ -64,7 +64,10 @@ public class ReturnStmtNode implements JottTree{
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        if (exprNode == null) {
+            return "";
+        }
+        return "return " + exprNode.convertToJava(className) + ";" + "\n";
     }
 
     @Override
