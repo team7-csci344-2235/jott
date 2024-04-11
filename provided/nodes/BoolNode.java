@@ -37,7 +37,13 @@ public class BoolNode implements JottTree, ExprNode{
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        if(trueOrFalse.toUpperCase().equals("TRUE")){
+            return "true";
+        }
+        else{
+            return "false";
+        }
+        
     }
 
     @Override

@@ -58,7 +58,23 @@ public class BodyNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        while (!bodyStmtNodes.isEmpty()) {
+            BodyStmtNode node = bodyStmtNodes.getFirst();
+            sb.append(node.convertToJava(className));
+
+            if (node instanceof AsmtNode || node instanceof FunctionCallNode) {
+                sb.append(";");
+            }
+            sb.append("\n");
+            bodyStmtNodes.removeFirst();
+        }
+
+        if(returnStmtNode != null){
+            sb.append(returnStmtNode.convertToJava(className));
+        }
+
+        return sb.toString();
     }
 
     @Override

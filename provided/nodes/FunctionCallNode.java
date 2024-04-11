@@ -50,7 +50,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return idNode.convertToJava(className) + "(" + parameters.convertToJava(className) + ")";
     }
 
     @Override
