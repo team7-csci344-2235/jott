@@ -62,20 +62,14 @@ public class ProgramNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        StringBuilder sb = new StringBuilder();
-        
-        sb.append("public class "+className+"{\n");
-
         if (functionDefNodes == null){
-            sb.append("}");
-            return sb.toString();
+            return "";
         }
 
+        StringBuilder sb = new StringBuilder();
         for(FunctionDefNode func : this.functionDefNodes) {
             sb.append(func.convertToJava(className));
         }
-
-        sb.append("\n}");
         return sb.toString();
     }
 
@@ -86,7 +80,15 @@ public class ProgramNode implements JottTree {
 
     @Override
     public String convertToPython(int tabNumber) {
-        return null;
+        if (functionDefNodes == null) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (FunctionDefNode func : this.functionDefNodes)
+            sb.append(func.convertToPython(tabNumber));
+
+        // Add call to main.
+        sb.append("main()");
+        return sb.toString();
     }
 
     @Override

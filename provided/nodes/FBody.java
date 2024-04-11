@@ -58,7 +58,12 @@ public class FBody implements JottTree {
 
     @Override
     public String convertToPython(int tabNumber) {
-        return null;
+        StringBuilder result = new StringBuilder();
+//        result.append(varDecNodes.stream().map(
+//                varDecNode ->
+//        ).toList());
+
+        return result.toString();
     }
 
     @Override
