@@ -71,7 +71,7 @@ public class ParamsNode implements JottTree {
     @Override
     public void validateTree() throws NodeValidateException {
         // At this point, we know the function is defined.
-        ArrayList<TypeNode.VariableType> requiredTypes = variableTable.getFunctionParams(functionName); // Placeholder
+        ArrayList<TypeNode.VariableType> requiredTypes = variableTable.getFunctionParams(functionName);
         if ((expressions == null ? 0 : expressions.size()) != (requiredTypes != null ? requiredTypes.size() : 0)) // Param length check
             throw new NodeValidateException("Invalid number of parameters in function call", filename, startLine);
         else if (expressions == null) return; // No expressions required, no need to validate further.
@@ -91,7 +91,7 @@ public class ParamsNode implements JottTree {
                 default -> throw new IllegalStateException("Unexpected value: " + expr); // Should never happen.
             };
 
-            if (evalType != requiredTypes.get(i))
+            if (requiredTypes.get(i) != TypeNode.VariableType.ANY && evalType != requiredTypes.get(i))
                 throw new NodeValidateException("Invalid parameter type in function call: '" + expr.convertToJott() + "'\nExpected: '" + requiredTypes.get(i) + "' but got type: '" + evalType + "' instead.", filename, expr.getStartLine());
         }
     }

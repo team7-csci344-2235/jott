@@ -11,31 +11,28 @@ public class ReturnStmtNode implements JottTree{
 
     private final ExprNode exprNode;
     private final String functionName;
-    private final SymbolTable symbolTable;
     private final VariableTable variableTable;
     private final String filename;
     private final int startLine;
-    private ReturnStmtNode(ExprNode exprNode, String functionName, SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
+    private ReturnStmtNode(ExprNode exprNode, String functionName, VariableTable variableTable, String filename, int startLine) {
         this.exprNode = exprNode;
         this.functionName = functionName;
-        this.symbolTable = symbolTable;
         this.variableTable = variableTable;
         this.filename = filename;
         this.startLine = startLine;
     }
 
-    private ReturnStmtNode(SymbolTable symbolTable, VariableTable variableTable, String filename, int startLine) {
+    private ReturnStmtNode(String functionName, VariableTable variableTable, String filename, int startLine) {
         this.exprNode = null;
-        this.functionName = null;
-        this.symbolTable = symbolTable;
+        this.functionName = functionName;
         this.variableTable = variableTable;
         this.filename = filename;
         this.startLine = startLine;
     }
 
-    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws JottTree.NodeParseException {
+    public static ReturnStmtNode parseReturnStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws JottTree.NodeParseException {
         if (tokens.isFirstOf(TokenType.R_BRACE)) // No expressions, empty params.
-            return new ReturnStmtNode(symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
+            return new ReturnStmtNode(functionName, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
 
         tokens.validateFirst("Return");
         tokens.removeFirst(); // Remove return
@@ -44,7 +41,17 @@ public class ReturnStmtNode implements JottTree{
 
         tokens.validateFirst(TokenType.SEMICOLON);
         tokens.removeFirst(); // Remove semicolon
-        return new ReturnStmtNode(exprNode, functionName, symbolTable, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
+        return new ReturnStmtNode(exprNode, functionName, variableTable, tokens.getLastRemoved().getFilename(), tokens.getLastRemoved().getLineNum());
+    }
+
+    /**
+     * ReturnStmtNode always "exists" even if the parent BodyNode doesn't have
+     * a return.
+     * This checks whether or not there is an actual return statement in
+     * this thing.
+     */
+    public boolean actuallyIsAReturn() {
+        return exprNode != null;
     }
 
     @Override
@@ -76,15 +83,23 @@ public class ReturnStmtNode implements JottTree{
             exprNode.validateTree();
         }
         if (exprNode instanceof IDNode) {
-            if (variableTable.hasVariable(((IDNode) exprNode).getIdStringValue())) {
+            if (!variableTable.hasVariable(((IDNode) exprNode).getIdStringValue())) {
                 throw new NodeValidateException("Returned variable is not declared.", filename, startLine);
             }
-            if (variableTable.isVariableInitialized(((IDNode) exprNode).getIdStringValue())) {
+            if (!variableTable.isVariableInitialized(((IDNode) exprNode).getIdStringValue())) {
                 throw new NodeValidateException("Returned variable is not initialized.", filename, startLine);
             }
 
         }
-        if (ExprNode.getExprType(exprNode, variableTable, filename) != symbolTable.getFunctionReturnType(functionName)) {
+
+        var exprType = ExprNode.getExprType(exprNode, variableTable, filename);
+        var funcReturnType = variableTable.getFunctionReturnType(functionName);
+        if (exprType != funcReturnType) {
+            if (exprType == null) {
+                // XXX: this message string is magic! See BodyNode.java.
+                throw new NodeValidateException("Function is missing return.",
+                        filename, startLine);
+            }
             throw new NodeValidateException("Return type does not match function return type.", filename, startLine);
         }
     }

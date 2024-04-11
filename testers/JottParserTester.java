@@ -50,6 +50,7 @@ public class JottParserTester {
         testCases.add(new TestCase("missingBrace (error)", "missingBrace.jott", true ));
         testCases.add(new TestCase("elseif without if (error)", "elseIfNoIf.jott", true ));
         testCases.add(new TestCase("missing return", "missingReturn.jott", false ));
+        testCases.add(new TestCase("missing return", "missingReturnIf.jott", false ));
         testCases.add(new TestCase("Void not valid param type (error)", "voidParam.jott", true ));
         testCases.add(new TestCase("function not defined", "funcNotDefined.jott", false ));
         testCases.add(new TestCase("mismatch return type", "mismatchedReturn.jott", false ));
@@ -64,7 +65,7 @@ public class JottParserTester {
         testCases.add(new TestCase("while is keyword, cannot be used as id", "whileKeyword.jott", false ));
         testCases.add(new TestCase("expr by itself (error)", "loneExpr.jott", true ));
         testCases.add(new TestCase("code after return (error)", "codeAfterReturn.jott", true ));
-        //testCases.add(new TestCase("lone minus (error)", "loneMinus.jott", true ));
+        testCases.add(new TestCase("lone minus (error)", "loneMinus.jott", true ));
         testCases.add(new TestCase("else without if (error)", "elseNoIf.jott", true ));
         testCases.add(new TestCase("missing closing } (error)", "missingClosing.jott", true ));
         testCases.add(new TestCase("valid if with return", "validIfReturn.jott", false));
@@ -82,7 +83,7 @@ public class JottParserTester {
             }
             System.out.println(tokenListString(tokens));
             ArrayList<Token> cpyTokens = new ArrayList<>(tokens);
-            JottTree root = JottParser.parse(tokens, false);
+            JottTree root = JottParser.parse(tokens, true);
 
             if (!test.error && root == null) {
                 System.err.println("\tFailed Test: " + test.testName);

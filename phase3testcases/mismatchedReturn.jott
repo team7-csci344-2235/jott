@@ -5,7 +5,7 @@ Def foo[y:Integer]:Double{
 	Return 3.3;
 }
 
-def main[]:Void{
+Def main[]:Void{
     Integer x;
     x = ::foo[5];
 	::print[x];

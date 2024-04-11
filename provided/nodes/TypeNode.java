@@ -11,9 +11,11 @@ import provided.TokenDeque;
  * @author Adrienne Ressy <amr3032@rit.edu>
  **/
 public class TypeNode implements JottTree {
-    public enum VariableType {
-        DOUBLE, INTEGER, STRING, BOOLEAN
-    }
+    /**
+     * Enum for the different types of variables. Any should only be used for special parameters such as print,
+     * which accepts any type.
+     */
+    public enum VariableType { DOUBLE, INTEGER, STRING, BOOLEAN, ANY }
     private final VariableType type;
     private final int startLine;
     private final String filename;
@@ -57,6 +59,8 @@ public class TypeNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
+        // This node cannot be invalid. To be a TypeNode at all, it must
+        // have been properly tokenized as a type.
         return;
     }
     public VariableType getType() {

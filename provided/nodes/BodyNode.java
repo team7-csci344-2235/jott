@@ -18,16 +18,20 @@ public class BodyNode implements JottTree {
         this.returnStmtNode = returnStmtNode;
     }
 
-    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
+    public static BodyNode parseBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
         ArrayList<BodyStmtNode> bodyStmtNodes = new ArrayList<>();
 
         // Parse body statements. Keep in mind that zero body statements is
         // acceptable.
         while (!tokens.isFirstOf("Return") && !tokens.isFirstOf(TokenType.R_BRACE)) {
-            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName,symbolTable));
+            bodyStmtNodes.add(BodyStmtNode.parseBodyStmtNode(tokens, variableTable, functionName));
         }
 
-        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName, symbolTable));
+        return new BodyNode(bodyStmtNodes, ReturnStmtNode.parseReturnStmtNode(tokens, variableTable, functionName));
+    }
+
+    public boolean hasReturn() {
+        return returnStmtNode.actuallyIsAReturn();
     }
 
     @Override
@@ -69,11 +73,47 @@ public class BodyNode implements JottTree {
 
     @Override
     public void validateTree() throws NodeValidateException {
-        for(BodyStmtNode node : bodyStmtNodes) {
+        for (BodyStmtNode node : bodyStmtNodes) {
             node.validateTree();
         }
-        if(returnStmtNode != null) {
+
+        // Normally, if a function body doesn't have a return statement at the
+        // end of it but the function is defined to return a type, then that's
+        // an error. However, if the last BodyStmtNode of the body is an
+        // IfStmtNode, then those returns will suffice.
+        //
+        // The internal consistency of the returns in the IfStmtNode are
+        // already validated in that node, and the ReturnStmtNodes in the
+        // IfStmtNode already validate that their return types are equal to
+        // the function return types -- so we don't need to check that here.
+        //
+        // We just need to capture a potential exception when validating *our*
+        // return statement node -- and if that indicates a lack of a return
+        // when this function returns, *and* the last BodyStmtNode is indeed an
+        // IfStmtNode, then ignore the NodeValidateException that we got --
+        // the lack of a return is actually okay!
+        //
+        // XXX: It is an absolute kludge-and-a-half that we're checking
+        // against a literal string value. If this message or the one in
+        // ReturnStmtNode is changed without coordinating the too, we're
+        // boned.
+
+        try {
             returnStmtNode.validateTree();
+        } catch (NodeValidateException ex) {
+            if (ex.getOriginalMessage().equals("Function is missing return.")) {
+                // This is the special path described above.
+                if (bodyStmtNodes.size() == 0) {
+                    throw ex;
+                }
+                BodyStmtNode last = bodyStmtNodes.get(bodyStmtNodes.size() - 1);
+                if (! (last instanceof IfStmtNode
+                        && ((IfStmtNode)last).returns()) ) {
+                    throw ex;
+                }
+            } else {
+                throw ex;
+            }
         }
     }
 }

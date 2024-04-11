@@ -93,8 +93,11 @@ public class ProgramNode implements JottTree {
 
         // Check for main function parameters
         if (symbolTable.getFunctionParams("main") != null)
-            throw new NodeValidateException("Main function should not have parameters", filename, 0);
+            throw new NodeValidateException("main function should not have parameters", filename, 0);
 
-
+        // Check that main returns Void.
+        if (symbolTable.getFunctionReturnType("main") != null) {
+            throw new NodeValidateException("main function must return Void", filename, 0);
+        }
     }
 }
