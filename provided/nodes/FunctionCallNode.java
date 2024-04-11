@@ -60,7 +60,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         if(idNode.convertToJava(className).equals("concat")){
             String temp = parameters.convertToJava(className);
             //might be space not comma
-            String[] array = temp.split(",");
+            String[] array = temp.split(", ");
             
             String returnVal = "";
             if(array.length != 0){
