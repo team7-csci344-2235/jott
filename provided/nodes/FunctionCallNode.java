@@ -50,6 +50,28 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
     @Override
     public String convertToJava(String className) {
+        if(idNode.convertToJava(className).equals("print")){
+            //might need to be quoted
+            return "System.out.println(" + parameters.convertToJava(className) + ")";
+        }
+        if(idNode.convertToJava(className).equals("length")){
+            return parameters.convertToJava(className)+".length()";
+        }
+        if(idNode.convertToJava(className).equals("concat")){
+            String temp = parameters.convertToJava(className);
+            //might be space not comma
+            String[] array = temp.split(",");
+            
+            String returnVal = "";
+            if(array.length != 0){
+                returnVal += array[0];
+            
+                for(int x=1; x<array.length; x++){
+                    returnVal += " + " + array[x];
+                }
+            }
+            return returnVal;
+        }
         return idNode.convertToJava(className) + "(" + parameters.convertToJava(className) + ")";
     }
 
