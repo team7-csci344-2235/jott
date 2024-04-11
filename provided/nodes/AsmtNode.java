@@ -50,7 +50,7 @@ public class AsmtNode implements BodyStmtNode{
     }
 
     @Override
-    public String convertToPython() {
+    public String convertToPython(int tabNumber) {
         return null;
     }
 

@@ -48,7 +48,7 @@ public class NumNode implements OperandNode {
     }
 
     @Override
-    public String convertToPython() {
+    public String convertToPython(int tabNumber) {
         return null;
     }
 

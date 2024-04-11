@@ -55,8 +55,10 @@ public class ParamsNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        if (expressions == null) return "";
-        return expressions.stream().map(ExprNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
+        if (expressions == null){
+            return "";
+        }
+        return this.expressions.stream().map(ignore -> convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
         /* 
         if(expressions == null){
             return "";
@@ -71,7 +73,7 @@ public class ParamsNode implements JottTree {
     }
 
     @Override
-    public String convertToPython() {
+    public String convertToPython(int tabNumber) {
         return null;
     }
 

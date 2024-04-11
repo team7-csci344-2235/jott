@@ -58,7 +58,7 @@ public class IfStmtNode implements BodyStmtNode {
         public String convertToC() { return null; }
 
         @Override
-        public String convertToPython() {
+        public String convertToPython(int tabNumber) {
             return null;
         }
 
@@ -132,7 +132,7 @@ public class IfStmtNode implements BodyStmtNode {
         }
 
         @Override
-        public String convertToPython() {
+        public String convertToPython(int tabNumber) {
             return null;
         }
 
@@ -277,7 +277,7 @@ public class IfStmtNode implements BodyStmtNode {
     }
 
     @Override
-    public String convertToPython() {
+    public String convertToPython(int tabNumber) {
         return null;
     }
 
