@@ -4,6 +4,7 @@ import provided.nodes.TypeNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Class for symbol table which allows for function tracking.
@@ -27,6 +28,15 @@ public class SymbolTable {
 
     public SymbolTable() {
         this.functionStuffMap = new HashMap<>();
+        ArrayList<TypeNode.VariableType> valforConcat = new ArrayList<>();
+        valforConcat.add(TypeNode.VariableType.STRING);
+        valforConcat.add(TypeNode.VariableType.STRING);
+        tryAddFunction("concat", valforConcat, TypeNode.VariableType.STRING);
+
+        ArrayList<TypeNode.VariableType> valsForLength = new ArrayList<>();
+        valsForLength.add(TypeNode.VariableType.STRING);
+        tryAddFunction("length", valsForLength, TypeNode.VariableType.INTEGER);
+        tryAddFunction("print", new ArrayList<>(List.of(TypeNode.VariableType.ANY)), null);
     }
 
     /**

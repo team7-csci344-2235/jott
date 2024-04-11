@@ -18,7 +18,7 @@ public class FBody implements JottTree {
         this.bodyNode = bodyNode;
     }
 
-    public static FBody parseFBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
+    public static FBody parseFBodyNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
         ArrayList<VarDecNode> varDecNodes = new ArrayList<>();
 
         // Check for variable declarations at the start of the function body.
@@ -28,7 +28,7 @@ public class FBody implements JottTree {
             varDecNodes.add(VarDecNode.parseVarDecNode(tokens, variableTable));
         }
 
-        return new FBody(varDecNodes, BodyNode.parseBodyNode(tokens, variableTable, functionName, symbolTable));
+        return new FBody(varDecNodes, BodyNode.parseBodyNode(tokens, variableTable, functionName));
     }
 
     @Override
@@ -62,9 +62,5 @@ public class FBody implements JottTree {
             varDecNode.validateTree();
 
         bodyNode.validateTree();
-    }
-
-    public BodyNode getBodyNode() {
-        return bodyNode;
     }
 }

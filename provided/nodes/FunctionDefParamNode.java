@@ -94,6 +94,10 @@ public class FunctionDefParamNode implements JottTree {
         }
     }
 
+    public IDNode getFirstParamId() {
+        return this.firstParamName;
+    }
+
     public TypeNode getFirstParamType() {
         return this.firstParamType;
     }

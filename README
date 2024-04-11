@@ -1,3 +1,16 @@
+Phase 3 information
+Our code is organized into the `provided` directory. The
+`testers/JottValidateTester.java` file has been modified to import our code and
+provided code correctly.
+
+From the main directory, build the `JottValidateTester` class with
+
+        javac testers/JottValidateTester.java
+
+Then from the root project directory, run
+
+        java testers.JottValidateTester
+
 Phase 2 information
 
 Our code is organized into the `provided` directory. The

@@ -9,13 +9,13 @@ import provided.*;
  */
 public interface BodyStmtNode extends JottTree {
 
-    static BodyStmtNode parseBodyStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName, SymbolTable symbolTable) throws NodeParseException {
+    static BodyStmtNode parseBodyStmtNode(TokenDeque tokens, VariableTable variableTable, String functionName) throws NodeParseException {
         // Ensure first is of one of the following tokens.
         tokens.validateFirst(TokenType.NUMBER, TokenType.FC_HEADER, TokenType.ID_KEYWORD);
         if (tokens.isFirstOf("If")) {
-            return IfStmtNode.parseIfStmtNode(tokens, variableTable, functionName, symbolTable);
+            return IfStmtNode.parseIfStmtNode(tokens, variableTable, functionName);
         } else if (tokens.isFirstOf("While")) {
-            return WhileLoopNode.parseWhileLoopNode(tokens, variableTable, functionName, symbolTable);
+            return WhileLoopNode.parseWhileLoopNode(tokens, variableTable, functionName);
         } else if (tokens.isFirstOf(TokenType.FC_HEADER)) {
             FunctionCallNode functionCallNode = FunctionCallNode.parseFunctionCallNode(tokens, variableTable);
             tokens.validateFirst(TokenType.SEMICOLON);
