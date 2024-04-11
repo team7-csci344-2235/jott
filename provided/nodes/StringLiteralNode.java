@@ -35,7 +35,7 @@ public class StringLiteralNode implements JottTree, ExprNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return "\""+stringValue+"\"";
     }
 
     @Override

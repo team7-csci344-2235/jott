@@ -57,7 +57,7 @@ public class MathOpNode implements JottTree, ExprNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return firstOp.convertToJava(className) + mathOpString + secondOp.convertToJava(className);
     }
 
     @Override

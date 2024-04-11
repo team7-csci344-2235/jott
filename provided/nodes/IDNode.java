@@ -30,7 +30,7 @@ public class IDNode implements OperandNode {
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return idStringValue;
     }
 
     @Override

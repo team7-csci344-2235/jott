@@ -5,7 +5,7 @@ import provided.nodes.*;
 import java.util.ArrayList;
 
 /**
- * This class is responsible for paring Jott Tokens
+ * This class is responsible for parsing Jott Tokens
  * into a Jott parse tree.
  *
  * @author Ethan Hartman <ehh4525@rit.edu>

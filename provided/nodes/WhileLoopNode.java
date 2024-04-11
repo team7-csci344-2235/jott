@@ -35,7 +35,7 @@ public class WhileLoopNode implements BodyStmtNode{
 
     @Override
     public String convertToJava(String className) {
-        return null;
+        return "while(" + exprNode.convertToJava(className) + "){" + bodyNode.convertToJava(className) + "}";
     }
 
     @Override
