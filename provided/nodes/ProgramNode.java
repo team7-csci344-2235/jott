@@ -79,12 +79,12 @@ public class ProgramNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         if (functionDefNodes == null) return "";
 
         StringBuilder sb = new StringBuilder();
         for (FunctionDefNode func : this.functionDefNodes)
-            sb.append(func.convertToPython(tabNumber));
+            sb.append(func.convertToPython());
 
         // Add call to main.
         sb.append("main()");

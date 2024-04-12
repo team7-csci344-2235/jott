@@ -44,14 +44,12 @@ public class StringLiteralNode implements JottTree, ExprNode {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         return null;
     }
 
     @Override
-    public void validateTree() throws NodeValidateException {
-        return;
-    }
+    public void validateTree() throws NodeValidateException {}
 
     @Override
     public int getStartLine() {

@@ -102,7 +102,7 @@ public class FunctionDefParamNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         String result = "";
 
         return result;

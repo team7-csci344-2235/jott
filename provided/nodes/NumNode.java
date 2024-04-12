@@ -48,14 +48,12 @@ public class NumNode implements OperandNode {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         return null;
     }
 
     @Override
-    public void validateTree() throws NodeValidateException {
-        return;
-    }
+    public void validateTree() throws NodeValidateException {}
 
     @Override
     public int getStartLine() {

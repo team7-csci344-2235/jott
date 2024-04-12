@@ -49,7 +49,7 @@ public class VarDecNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         return null;
     }
 

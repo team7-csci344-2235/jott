@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class for Body nodes
@@ -83,8 +84,9 @@ public class BodyNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        String body = (bodyStmtNodes.stream().map(bodyStmtNode -> convertToPython()).collect(Collectors.joining("\n")) + returnStmtNode.convertToPython()).replaceAll("\n", "\n\t");
+        return "\t" + (body.isEmpty() ? "pass" : body); // Python requires at least one statement in a block, pass can be used to suffice.
     }
 
     @Override

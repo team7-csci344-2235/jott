@@ -44,7 +44,7 @@ public class WhileLoopNode implements BodyStmtNode{
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
+    public String convertToPython() {
         return null;
     }
 
