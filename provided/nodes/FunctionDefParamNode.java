@@ -5,6 +5,7 @@ import provided.TokenDeque;
 import provided.TokenType;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
 
@@ -104,7 +105,12 @@ public class FunctionDefParamNode implements JottTree {
     @Override
     public String convertToPython() {
         String result = "";
-
+        result += firstParamName.convertToPython();
+        if (theRest != null) {
+            result += theRest.stream()
+                    .map(functionDefParamTNode -> convertToPython())
+                    .collect(Collectors.joining(", "));
+        }
         return result;
     }
 
