@@ -45,7 +45,7 @@ public class StringLiteralNode implements JottTree, ExprNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        return "\"" + stringValue + "\"";
     }
 
     @Override
