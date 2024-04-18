@@ -51,7 +51,7 @@ public class AsmtNode implements BodyStmtNode{
 
     @Override
     public String convertToPython() {
-        return idNode.convertToPython() + " = " + exprNode.convertToPython() + "\n";
+        return idNode.convertToPython() + " = " + exprNode.convertToPython();
     }
 
     @Override
