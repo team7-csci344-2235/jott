@@ -66,34 +66,16 @@ public class FunctionDefParamNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        /*if (this.firstParamName == null) {
-            return "";
-        }
-        if(theRest != null){
-            return this.firstParamName.convertToJott() + ": "
-                + this.firstParamType.convertToJott()
-                + this.theRest.stream().map(FunctionDefParamTNode::convertToJott).collect(JOTT_LIST_COLLECTOR);
-        }
-        else{
-            return this.firstParamName.convertToJott() + ": "
-            + this.firstParamType.convertToJott();
-        }
-        */
-        
-        
         if (this.firstParamName == null) {
             return "";
         }
         if(theRest != null){
             return this.firstParamType.convertToJava(className)+ " " + this.firstParamName.convertToJava(className)
-                + this.theRest.stream().map(ignore -> convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
+                + this.theRest.stream().map(ignore -> ignore.convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
         }
         else{
-            return this.firstParamName.convertToJott() + ": "
-            + this.firstParamType.convertToJott();
+            return this.firstParamType.convertToJava(className) +" "+ this.firstParamName.convertToJava(className);
         }
-        
-        
     }
 
     @Override
