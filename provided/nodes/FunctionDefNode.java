@@ -130,10 +130,13 @@ public class FunctionDefNode implements JottTree {
             //public String 
             sb.append(this.maybeReturnType.convertToJava(className)+ " ");
         }
-        //public String convertToJava(
+        
         sb.append(this.name.convertToJava(className)+ "(");
 
-        if (this.params != null) {
+        if(this.name.convertToJava(className).equals("main")){
+            sb.append("String args[]");
+        }
+        else if (this.params != null) {
             sb.append(this.params.convertToJava(className));
         }
         sb.append("){");
