@@ -85,7 +85,7 @@ public class BodyNode implements JottTree {
 
     @Override
     public String convertToPython() {
-        String body = (bodyStmtNodes.stream().map(JottTree::convertToPython).collect(Collectors.joining("\n")) + returnStmtNode.convertToPython()).replaceAll("\n", "\n\t");
+        String body = (bodyStmtNodes.stream().map(JottTree::convertToPython).collect(Collectors.joining("\n")) + "\n" + returnStmtNode.convertToPython()).replaceAll("\n", "\n\t");
         return "\t" + (body.isEmpty() ? "pass" : body) + "\n"; // Python requires at least one statement in a block, pass can be used to suffice.
     }
 
