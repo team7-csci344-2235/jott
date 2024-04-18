@@ -55,7 +55,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
             return "System.out.println(" + parameters.convertToJava(className) + ")";
         }
         if(idNode.convertToJava(className).equals("length")){
-            return parameters.convertToJava(className)+".length()";
+            return parameters.convertToJava(className)+".length";
         }
         if(idNode.convertToJava(className).equals("concat")){
             String temp = parameters.convertToJava(className);
@@ -81,7 +81,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     }
 
     @Override
-    public String convertToPython() {
+    public String convertToPython(int tabNumber) {
         return null;
     }
 
