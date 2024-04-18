@@ -59,7 +59,10 @@ public class FBody implements JottTree {
 
     @Override
     public String convertToPython() {
-        return varDecNodes.stream().map(varDecNode -> convertToPython()).collect(Collectors.joining("\n")).replaceAll("\n", "\n\t") + bodyNode.convertToPython();
+        String varDecStr = "";
+        if (!varDecNodes.isEmpty())
+            varDecStr = "\t" + varDecNodes.stream().map(VarDecNode::convertToPython).collect(Collectors.joining("\n")).replaceAll("\n", "\n\t") + "\n";
+        return varDecStr + bodyNode.convertToPython();
     }
 
     @Override

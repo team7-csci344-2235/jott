@@ -82,7 +82,11 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        return switch(idNode.getIdStringValue()){
+            case "length" -> "len(" + parameters.convertToPython() + ")";
+            case "concat" -> parameters.convertToPython().replace(", ", " + ");
+            default -> idNode.convertToPython() + "(" + parameters.convertToPython() + ")";
+        };
     }
 
     @Override

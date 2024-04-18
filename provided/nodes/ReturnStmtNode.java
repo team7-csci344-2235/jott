@@ -80,7 +80,7 @@ public class ReturnStmtNode implements JottTree{
         if (exprNode == null) {
             return "";
         }
-        return "return " + exprNode.convertToPython() + "\n";
+        return "return " + exprNode.convertToPython();
     }
 
     @Override

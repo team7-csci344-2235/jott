@@ -78,7 +78,7 @@ public class ParamsNode implements JottTree {
         if (expressions == null) {
             return "";
         }
-        return expressions.stream().map(exprNode -> convertToPython()).collect(Collectors.joining(", "));
+        return expressions.stream().map(JottTree::convertToPython).collect(Collectors.joining(", "));
     }
 
     @Override

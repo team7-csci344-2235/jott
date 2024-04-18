@@ -156,7 +156,7 @@ public class FunctionDefNode implements JottTree {
         if(params != null) {
             result += params.convertToPython();
         }
-        result += "):\n";
+        result += "):\n" + functionBody.convertToPython();
         return result;
     }
 
