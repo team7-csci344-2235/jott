@@ -151,7 +151,13 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public String convertToPython() {
-        return null;
+        String result = "";
+        result += "def " + name.convertToPython() + "(";
+        if(params != null) {
+            result += params.convertToPython();
+        }
+        result += "):\n" + functionBody.convertToPython();
+        return result;
     }
 
     @Override

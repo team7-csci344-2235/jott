@@ -5,6 +5,7 @@ import provided.TokenDeque;
 import provided.TokenType;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
 
@@ -66,7 +67,7 @@ public class FunctionDefParamNode implements JottTree {
 
     @Override
     public String convertToJava(String className) {
-        if (this.firstParamName == null) {
+        /*if (this.firstParamName == null) {
             return "";
         }
         if(theRest != null){
@@ -78,19 +79,22 @@ public class FunctionDefParamNode implements JottTree {
             return this.firstParamName.convertToJott() + ": "
             + this.firstParamType.convertToJott();
         }
-        /*
+        */
+        
+        
         if (this.firstParamName == null) {
             return "";
         }
         if(theRest != null){
             return this.firstParamType.convertToJava(className)+ " " + this.firstParamName.convertToJava(className)
-                + this.theRest.stream().map(FunctionDefParamTNode::convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
+                + this.theRest.stream().map(ignore -> convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
         }
         else{
             return this.firstParamName.convertToJott() + ": "
             + this.firstParamType.convertToJott();
         }
-        */
+        
+        
     }
 
     @Override
@@ -100,7 +104,14 @@ public class FunctionDefParamNode implements JottTree {
 
     @Override
     public String convertToPython() {
-        return null;
+        String result = "";
+        result += firstParamName.convertToPython();
+        if (theRest != null) {
+            result += theRest.stream()
+                    .map(functionDefParamTNode -> convertToPython())
+                    .collect(Collectors.joining(", "));
+        }
+        return result;
     }
 
     @Override

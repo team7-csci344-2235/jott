@@ -40,13 +40,11 @@ public class IDNode implements OperandNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        return idStringValue;
     }
 
     @Override
-    public void validateTree() throws NodeValidateException {
-        return;
-    }
+    public void validateTree() throws NodeValidateException {}
 
     @Override
     public int getStartLine() {

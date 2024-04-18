@@ -41,7 +41,7 @@ public class FunctionDefParamTNode implements JottTree {
 
     @Override
     public String convertToPython() {
-        return null;
+        return idNode.convertToPython();
     }
 
     @Override

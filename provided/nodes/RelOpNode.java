@@ -69,7 +69,7 @@ public class RelOpNode implements JottTree, ExprNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        return firstOpStr.convertToPython() + " " + relationalValue + " " + secondOpStr.convertToPython();
     }
 
     @Override

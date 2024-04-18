@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class for if statements.
@@ -59,7 +60,7 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public String convertToPython() {
-            return null;
+            return "else:\n" + this.body.convertToPython();
         }
 
         @Override
@@ -133,7 +134,7 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public String convertToPython() {
-            return null;
+            return "elif " + this.expr.convertToPython() + ":\n" + this.body.convertToPython();
         }
 
         @Override
@@ -278,7 +279,14 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        String result = "if " + this.expr.convertToPython() + ":\n" + this.body.convertToPython();
+        if (elseIfs != null) {
+            result += elseIfs.stream().map(elseIfNode -> convertToPython()).collect(Collectors.joining("\n"));
+        }
+        if (else_ != null) {
+            result += else_.convertToPython();
+        }
+        return result;
     }
 
     @Override

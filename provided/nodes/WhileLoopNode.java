@@ -45,7 +45,7 @@ public class WhileLoopNode implements BodyStmtNode{
 
     @Override
     public String convertToPython() {
-        return null;
+        return "while " + exprNode.convertToPython() + ":\n" + bodyNode.convertToPython();
     }
 
     @Override

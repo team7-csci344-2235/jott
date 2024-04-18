@@ -90,7 +90,7 @@ public interface JottTree {
      * Will output a string of this tree in Python
      * @return a string representing the Python code of this tree
      */
-    public String convertToPython();
+    String convertToPython();
 
     /**
      * This will validate that the tree follows the semantic rules of Jott
