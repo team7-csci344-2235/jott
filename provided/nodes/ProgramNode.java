@@ -63,6 +63,7 @@ public class ProgramNode implements JottTree {
     @Override
     public String convertToJava(String className) {
         StringBuilder sb = new StringBuilder();
+        className = className.substring(0, className.length()-5);
         
         sb.append("public class "+className+"{\n");
 
