@@ -74,8 +74,7 @@ public class FunctionDefParamNode implements JottTree {
                 + this.theRest.stream().map(ignore -> ignore.convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
         }
         else{
-            return this.firstParamName.convertToJott() + ": "
-            + this.firstParamType.convertToJott();
+            return this.firstParamType.convertToJava(className) +" "+ this.firstParamName.convertToJava(className);
         }
     }
 
