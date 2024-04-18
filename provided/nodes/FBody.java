@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Class for FBody nodes
@@ -58,7 +59,7 @@ public class FBody implements JottTree {
 
     @Override
     public String convertToPython() {
-        return null;
+        return varDecNodes.stream().map(varDecNode -> convertToPython()).collect(Collectors.joining("\n")).replaceAll("\n", "\n\t") + bodyNode.convertToPython();
     }
 
     @Override

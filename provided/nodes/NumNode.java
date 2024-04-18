@@ -49,7 +49,7 @@ public class NumNode implements OperandNode {
 
     @Override
     public String convertToPython() {
-        return null;
+        return num;
     }
 
     @Override
