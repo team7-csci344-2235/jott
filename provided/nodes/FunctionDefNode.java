@@ -122,7 +122,7 @@ public class FunctionDefNode implements JottTree {
     @Override
     public String convertToJava(String className) {
         //public 
-        StringBuilder sb = new StringBuilder("public static");
+        StringBuilder sb = new StringBuilder("public static ");
         if (this.maybeReturnType == null) {
             sb.append("void ");
         }
