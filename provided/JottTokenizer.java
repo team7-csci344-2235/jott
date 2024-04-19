@@ -418,16 +418,4 @@ public class JottTokenizer extends PushbackReader {
             return null;
         }
     }
-
-    /**
-     * Simple tokenization smoke test using this class.
-     */
-    public static void main(String[] args) {
-        var tokens = tokenize("test_stuff.txt");
-        if (tokens != null) {
-            System.out.println(String.join(" ",
-                tokens.stream().map(Token::getToken).toList())
-            );
-        }
-    }
 }
