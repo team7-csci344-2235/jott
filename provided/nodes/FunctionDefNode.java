@@ -149,7 +149,25 @@ public class FunctionDefNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        if (this.maybeReturnType == null) {
+            sb.append("void ");
+        }
+        else{
+            sb.append(this.maybeReturnType.convertToC()+ " ");
+        }
+
+        sb.append(this.name.convertToC()+ "(");
+
+        if (this.params != null) {
+            sb.append(this.params.convertToC());
+        }
+        sb.append("){");
+        sb.append("\n");
+        sb.append(this.functionBody.convertToC());
+        sb.append("}");
+        sb.append("\n");
+        return sb.toString();
     }
 
     @Override

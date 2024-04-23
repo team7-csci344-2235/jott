@@ -46,7 +46,7 @@ public class AsmtNode implements BodyStmtNode{
 
     @Override
     public String convertToC() {
-        return null;
+        return idNode.convertToC() + " = " + exprNode.convertToC();
     }
 
     @Override

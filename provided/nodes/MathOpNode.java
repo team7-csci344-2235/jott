@@ -62,7 +62,7 @@ public class MathOpNode implements JottTree, ExprNode {
 
     @Override
     public String convertToC() {
-        return null;
+        return  firstOp.convertToC() + mathOpString + secondOp.convertToC();
     }
 
     @Override

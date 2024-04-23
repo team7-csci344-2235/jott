@@ -59,19 +59,12 @@ public class ParamsNode implements JottTree {
             return "";
         }
         return this.expressions.stream().map(ignore -> ignore.convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
-        
-        
-        /* 
-        if(expressions == null){
-            return "";
-        }
-        return expressions.stream().map(ExprNode::convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
-        */
     }
 
     @Override
     public String convertToC() {
-        return null;
+        if (expressions == null) return "";
+        return expressions.stream().map(ExprNode::convertToC).collect(JOTT_LIST_COLLECTOR);
     }
 
     @Override

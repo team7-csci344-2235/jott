@@ -45,7 +45,7 @@ public class VarDecNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        return typeNode.convertToC() + " " + idNode.convertToC() + ";";
     }
 
     @Override

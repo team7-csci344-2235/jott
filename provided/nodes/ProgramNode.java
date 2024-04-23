@@ -82,7 +82,16 @@ public class ProgramNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        //need to check if main is lal the way at the bottom
+        StringBuilder sb = new StringBuilder();
+        sb.append("#include <stdlib.h>\n");
+        sb.append("#include <stdio.h>\n");
+
+        for(FunctionDefNode func : this.functionDefNodes) {
+            sb.append(func.convertToC());
+        }
+
+        return sb.toString();
     }
 
     @Override

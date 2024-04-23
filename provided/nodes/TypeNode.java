@@ -56,7 +56,13 @@ public class TypeNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        switch (type) {
+            case DOUBLE -> {return "float";}
+            case INTEGER -> {return "int";}
+            case STRING -> {return "char stringValue[]";}
+            case BOOLEAN -> {return "bool";}
+        }
+        return "";
     }
 
     @Override

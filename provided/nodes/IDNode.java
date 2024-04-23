@@ -35,7 +35,7 @@ public class IDNode implements OperandNode {
 
     @Override
     public String convertToC() {
-        return null;
+        return idStringValue;
     }
 
     @Override

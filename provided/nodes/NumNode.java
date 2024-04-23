@@ -44,7 +44,7 @@ public class NumNode implements OperandNode {
 
     @Override
     public String convertToC() {
-        return null;
+        return num;
     }
 
     @Override

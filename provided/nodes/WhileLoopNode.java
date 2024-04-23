@@ -40,7 +40,7 @@ public class WhileLoopNode implements BodyStmtNode{
 
     @Override
     public String convertToC() {
-        return null;
+        return "while(" + exprNode.convertToC() + "){" + bodyNode.convertToC() + "}";
     }
 
     @Override

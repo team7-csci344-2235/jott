@@ -80,7 +80,16 @@ public class FunctionDefParamNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        if (this.firstParamName == null) {
+            return "";
+        }
+        if(theRest != null){
+            return this.firstParamType.convertToC()+ " " + this.firstParamName.convertToC()
+                +this.theRest.stream().map(FunctionDefParamTNode::convertToC).collect(JOTT_LIST_COLLECTOR);
+        }
+        else{
+            return this.firstParamType.convertToC() +" "+ this.firstParamName.convertToC();
+        }
     }
 
     @Override

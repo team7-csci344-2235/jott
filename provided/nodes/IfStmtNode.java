@@ -55,7 +55,9 @@ public class IfStmtNode implements BodyStmtNode {
         }
 
         @Override
-        public String convertToC() { return null; }
+        public String convertToC() { 
+            return "else{" + this.body.convertToC() + "}";
+        }
 
         @Override
         public String convertToPython(int tabNumber) {
@@ -128,7 +130,8 @@ public class IfStmtNode implements BodyStmtNode {
 
         @Override
         public String convertToC() {
-            return null;
+            return "else if(" + this.expr.convertToC() + "){"
+                + this.body.convertToC() + "}";
         }
 
         @Override
@@ -273,7 +276,23 @@ public class IfStmtNode implements BodyStmtNode {
 
     @Override
     public String convertToC() {
-        return null;
+        StringBuilder sb = new StringBuilder("if(");
+        sb.append(this.expr.convertToC());
+        sb.append("){");
+        sb.append("\n");
+        sb.append(this.body.convertToC());
+        sb.append("        }");
+        sb.append("\n");
+        for (ElseIfNode ei : this.elseIfs) {
+            sb.append(" ");
+            sb.append(ei.convertToC());
+        }
+        if (this.else_ != null) {
+            sb.append(" ");
+            sb.append(this.else_.convertToC());
+        }
+
+        return sb.toString();
     }
 
     @Override

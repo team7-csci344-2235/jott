@@ -53,7 +53,12 @@ public class FBody implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        StringBuilder result = new StringBuilder();
+        while (!varDecNodes.isEmpty()) {
+            result.append(varDecNodes.getFirst().convertToC());
+            varDecNodes.removeFirst();
+        }
+        return result + bodyNode.convertToC();
     }
 
     @Override

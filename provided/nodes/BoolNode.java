@@ -48,7 +48,12 @@ public class BoolNode implements JottTree, ExprNode{
 
     @Override
     public String convertToC() {
-        return null;
+        if(trueOrFalse.toUpperCase().equals("TRUE")){
+            return "true";
+        }
+        else{
+            return "false";
+        }
     }
 
     @Override

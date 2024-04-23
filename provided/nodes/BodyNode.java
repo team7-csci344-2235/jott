@@ -79,7 +79,23 @@ public class BodyNode implements JottTree {
 
     @Override
     public String convertToC() {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        while (!bodyStmtNodes.isEmpty()) {
+            BodyStmtNode node = bodyStmtNodes.getFirst();
+            sb.append(node.convertToC());
+
+            if (node instanceof AsmtNode || node instanceof FunctionCallNode) {
+                sb.append(";");
+            }
+            sb.append("\n");
+            bodyStmtNodes.removeFirst();
+        }
+
+        if(returnStmtNode != null){
+            sb.append(returnStmtNode.convertToC());
+        }
+
+        return sb.toString();
     }
 
     @Override

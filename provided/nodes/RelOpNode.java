@@ -64,7 +64,7 @@ public class RelOpNode implements JottTree, ExprNode {
 
     @Override
     public String convertToC() {
-        return null;
+        return firstOpStr.convertToC() +relationalValue+ secondOpStr.convertToC();
     }
 
     @Override
