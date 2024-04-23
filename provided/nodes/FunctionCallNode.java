@@ -79,7 +79,7 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     public String convertToC() {
         if(idNode.convertToC().equals("print")){
             String ret = "printf(";
-            String params = parameters.convertToC();
+            parameters.convertToC();
 
             ////??????????????????
             ret += ")";

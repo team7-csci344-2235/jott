@@ -84,11 +84,14 @@ public class ProgramNode implements JottTree {
     public String convertToC() {
         //need to check if main is lal the way at the bottom
         StringBuilder sb = new StringBuilder();
+
         sb.append("#include <stdlib.h>\n");
         sb.append("#include <stdio.h>\n");
 
-        for(FunctionDefNode func : this.functionDefNodes) {
-            sb.append(func.convertToC());
+        if(functionDefNodes != null){
+            for(FunctionDefNode func : this.functionDefNodes) {
+                sb.append(func.convertToC());
+            }
         }
 
         return sb.toString();
