@@ -66,5 +66,4 @@ public class AsmtNode implements BodyStmtNode{
         }
         variableTable.assignVariable(idNode.getIdStringValue());
     }
-
 }
