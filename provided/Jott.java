@@ -47,7 +47,7 @@ public class Jott {
            out.write(switch (conversionLanguage.toLowerCase()) {
                case "java" -> parseTree.convertToJava(outputFile.getName());
                //NOTE HERE!!!!
-               case "python" -> parseTree.convertToPython(0);
+               case "python" -> parseTree.convertToPython();
                              case "c" -> parseTree.convertToC();
                case "jott" -> parseTree.convertToJott();
                default -> throw new IllegalStateException("Unexpected value: " + conversionLanguage.toLowerCase());

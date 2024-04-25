@@ -1,7 +1,8 @@
 #this will pass phase 3
 
-Def foo[x:Integer]:Void{
+Def foo[x:Integer, y:Double]:Void{
     ::print[x];
+    ::print[y];
 }
 
 Def baz[]:Void{
@@ -24,7 +25,7 @@ Def main[]:Void{
     
 
     While[x>0]{
-        ::foo[x];
+        ::foo[x, y];
         ::print[::bar[y]];
         x=x-1;
         y=y+1.1;
