@@ -122,7 +122,7 @@ public class FunctionDefNode implements JottTree {
     @Override
     public String convertToJava(String className) {
         //public 
-        StringBuilder sb = new StringBuilder("public ");
+        StringBuilder sb = new StringBuilder("public static ");
         if (this.maybeReturnType == null) {
             sb.append("void ");
         }
@@ -130,10 +130,13 @@ public class FunctionDefNode implements JottTree {
             //public String 
             sb.append(this.maybeReturnType.convertToJava(className)+ " ");
         }
-        //public String convertToJava(
+
         sb.append(this.name.convertToJava(className)+ "(");
 
-        if (this.params != null) {
+        if(this.name.convertToJava(className).equals("main")){
+            sb.append("String args[]");
+        }
+        else if (this.params != null) {
             sb.append(this.params.convertToJava(className));
         }
         sb.append("){");

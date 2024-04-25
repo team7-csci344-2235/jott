@@ -8,11 +8,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * This is the main class which will allow conversions from Jott to other programming languages.
- *
- * @author Ethan Hartman <ehh4525@rit.edu>
- */
 public class Jott {
     private static final HashSet<String> CONVERSION_LANGUAGES = new HashSet<>(List.of(new String[]{"jott", "java", "c", "python"}));
     public static void main(String[] args) throws JottTree.NodeValidateException {
@@ -51,8 +46,9 @@ public class Jott {
         try (FileWriter out = new FileWriter(outputFile.getAbsoluteFile())) {
            out.write(switch (conversionLanguage.toLowerCase()) {
                case "java" -> parseTree.convertToJava(outputFile.getName());
+               //NOTE HERE!!!!
                case "python" -> parseTree.convertToPython();
-               case "c" -> parseTree.convertToC();
+                             case "c" -> parseTree.convertToC();
                case "jott" -> parseTree.convertToJott();
                default -> throw new IllegalStateException("Unexpected value: " + conversionLanguage.toLowerCase());
            });

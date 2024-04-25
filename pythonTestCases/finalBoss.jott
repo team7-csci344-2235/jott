@@ -22,7 +22,6 @@ Def empty[]:Void{}
 
 Def emptyWhileIf[x:String]:Void{
     If[True]{}
-    While[False]{}
     ::print[x];
 }
 

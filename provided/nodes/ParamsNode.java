@@ -59,7 +59,9 @@ public class ParamsNode implements JottTree {
         if (expressions == null){
             return "";
         }
-        return this.expressions.stream().map(ignore -> convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
+        return this.expressions.stream().map(ignore -> ignore.convertToJava(className)).collect(JOTT_LIST_COLLECTOR);
+        
+        
         /* 
         if(expressions == null){
             return "";
