@@ -84,7 +84,7 @@ public class FunctionDefParamNode implements JottTree {
             return "";
         }
         if(theRest != null){
-            return this.firstParamType.convertToC()+ " " + this.firstParamName.convertToC()
+            return this.firstParamType.convertToC()+ " " + this.firstParamName.convertToC().
                 +this.theRest.stream().map(FunctionDefParamTNode::convertToC).collect(JOTT_LIST_COLLECTOR);
         }
         else{
