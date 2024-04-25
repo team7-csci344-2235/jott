@@ -44,14 +44,18 @@ public class Jott {
 
         // Write to output
         try (FileWriter out = new FileWriter(outputFile.getAbsoluteFile())) {
-            out.write(switch (conversionLanguage.toLowerCase()) {
+            String languageOutput = switch (conversionLanguage.toLowerCase()) {
                 case "java" -> parseTree.convertToJava(outputFile.getName());
                     //NOTE HERE!!!!
                 case "python" -> parseTree.convertToPython(0);
                 case "c" -> parseTree.convertToC();
                 case "jott" -> parseTree.convertToJott();
                     default -> throw new IllegalStateException("Unexpected value: " + conversionLanguage.toLowerCase());
-            });
+            };
+            if (languageOutput == null) {
+                System.err.println("languageOutput is null");
+            }
+            out.write(languageOutput);
         } catch (IOException e) {
             System.err.printf("The file '%s' could not be written to.", outputFile.getName());
         }
