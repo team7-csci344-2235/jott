@@ -3,6 +3,7 @@ package provided.nodes;
 import provided.*;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static provided.nodes.ProgramNode.JOTT_LIST_COLLECTOR;
 
@@ -68,8 +69,11 @@ public class ParamsNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        if (expressions == null) {
+            return "";
+        }
+        return expressions.stream().map(JottTree::convertToPython).collect(Collectors.joining(", "));
     }
 
     @Override

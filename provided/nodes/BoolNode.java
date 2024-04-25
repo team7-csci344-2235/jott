@@ -57,8 +57,8 @@ public class BoolNode implements JottTree, ExprNode{
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        return trueOrFalse;
     }
 
     @Override

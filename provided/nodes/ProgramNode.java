@@ -98,8 +98,16 @@ public class ProgramNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        if (functionDefNodes == null) return "";
+
+        StringBuilder sb = new StringBuilder();
+        for (FunctionDefNode func : functionDefNodes)
+            sb.append(func.convertToPython());
+
+        // Add call to main.
+        sb.append("main()\n\n"); // Python likes two lines of whitespace after.
+        return sb.toString();
     }
 
     @Override

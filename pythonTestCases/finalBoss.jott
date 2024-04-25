@@ -1,0 +1,30 @@
+#this will pass phase 3
+
+Def foo[]:Integer{
+    Integer x;
+    String bruh;
+    x = 5;
+    bruh = "four";
+    While[x == 5]{
+        If[x > 5]{
+            x = x - 1;
+            bruh = ::concat[bruh, bruh];
+            Return ::length[bruh];
+        }
+        Else{
+            Return x;
+        }
+    }
+    Return x;
+}
+
+Def empty[]:Void{}
+
+Def emptyWhileIf[x:String]:Void{
+    If[True]{}
+    ::print[x];
+}
+
+Def main[]:Void{
+    ::foo[];
+}

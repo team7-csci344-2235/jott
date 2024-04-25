@@ -66,15 +66,14 @@ public class TypeNode implements JottTree {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        return "";
     }
 
     @Override
     public void validateTree() throws NodeValidateException {
         // This node cannot be invalid. To be a TypeNode at all, it must
         // have been properly tokenized as a type.
-        return;
     }
     public VariableType getType() {
         return type;

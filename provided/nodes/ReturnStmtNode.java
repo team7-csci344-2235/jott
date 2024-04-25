@@ -80,8 +80,11 @@ public class ReturnStmtNode implements JottTree{
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        if (exprNode == null) {
+            return "";
+        }
+        return "return " + exprNode.convertToPython();
     }
 
     @Override

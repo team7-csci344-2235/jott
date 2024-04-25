@@ -66,8 +66,8 @@ public class MathOpNode implements JottTree, ExprNode {
     }
 
     @Override
-    public String convertToPython(int tabNumber) {
-        return null;
+    public String convertToPython() {
+        return firstOp.convertToPython() + " " + mathOpString+ " " + secondOp.convertToPython();
     }
 
     @Override
