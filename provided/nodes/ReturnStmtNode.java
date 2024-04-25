@@ -71,9 +71,9 @@ public class ReturnStmtNode implements JottTree{
     }
 
     @Override
-    public String convertToC() {
+    public String convertToC(){
         if (exprNode == null) {
-            return "";
+            return "return";
         }
         return "return " + exprNode.convertToC() + ";" + "\n";
     }
