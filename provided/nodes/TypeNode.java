@@ -59,7 +59,7 @@ public class TypeNode implements JottTree {
         switch (type) {
             case DOUBLE -> {return "float";}
             case INTEGER -> {return "int";}
-            case STRING -> {return "char stringValue[]";}
+            case STRING -> {return "char*";}
             case BOOLEAN -> {return "bool";}
         }
         return "";

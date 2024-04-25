@@ -40,7 +40,6 @@ public class StringLiteralNode implements JottTree, ExprNode {
 
     @Override
     public String convertToC() {
-        //questionable here
         return "\""+stringValue+"\"";
     }
 

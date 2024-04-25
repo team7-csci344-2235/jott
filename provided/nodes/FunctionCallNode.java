@@ -78,18 +78,19 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public String convertToC() {
         if(idNode.convertToC().equals("print")){
-            String ret = "printf(";
-            parameters.convertToC();
+            return "/* print not implemented in C yet */";
+            //String ret = "printf(";
+            //String params = parameters.convertToC();
 
-            ////??????????????????
-            ret += ")";
+            //////??????????????????
+            //ret += ")";
         }
 
         if(idNode.convertToC().equals("length")){
             return "strlen("+parameters.convertToC()+")";
         }
         if(idNode.convertToC().equals("concat")){
-            
+            return "/* concat not implemented in C yet */";
         }
         return idNode.convertToC() + "(" + parameters.convertToC() + ")";
     }

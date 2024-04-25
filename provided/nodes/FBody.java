@@ -58,7 +58,7 @@ public class FBody implements JottTree {
             result.append(varDecNodes.getFirst().convertToC());
             varDecNodes.removeFirst();
         }
-        return result + bodyNode.convertToC();
+        return result + "\n" + bodyNode.convertToC();
     }
 
     @Override
