@@ -28,6 +28,12 @@ public class ParamsNode implements JottTree {
     }
 
     /**
+     * Returns the expressions that make up this ParamsNode.
+     * @return constituent expressions
+     */
+    public ArrayList<ExprNode> getExpressions() { return this.expressions; }
+
+    /**
      * Parses a params node from the given tokens
      * @param tokens the tokens to parse
      * @return the parsed params node

@@ -80,13 +80,33 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public String convertToC() {
         if(idNode.convertToC().equals("print")){
-            return "/* TODO implement print ("
-                + parameters.convertToC() + ") */";
-            //String ret = "printf(";
-            //String params = parameters.convertToC();
+            ArrayList<ExprNode> expressions = parameters.getExpressions();
+            if (expressions.size() != 1) {
+                // This should result in a semantic error, see below. print
+                // only takes (exactly) one argment.
+                // XXX: not the most elegant, but keeps this check only in
+                // validateTree.
+                return "/* print expects only 1 argument */";
+            }
+            ExprNode expr = expressions.get(0);
 
-            //////??????????????????
-            //ret += ")";
+            TypeNode.VariableType exprType;
+            try {
+                exprType = ExprNode.getExprType(expr, variableTable, filename);
+            }
+            catch (NodeValidateException ex) {
+                // Will be caught in validateTree as well.
+                return "/* bad print expression */";
+            }
+
+            String formatModifier = switch (exprType) {
+                case DOUBLE -> "%lf";
+                case INTEGER, BOOLEAN -> "%d";
+                case STRING -> "%s";
+                case ANY -> "%%"; // shouldn't happen
+            };
+
+            return "printf(\"" + formatModifier + "\\n\", " + expr.convertToC() + ")";
         }
 
         if(idNode.convertToC().equals("length")){
