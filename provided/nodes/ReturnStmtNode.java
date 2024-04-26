@@ -75,7 +75,7 @@ public class ReturnStmtNode implements JottTree{
         if (this.actuallyIsAReturn()) {
             return "return " + exprNode.convertToC() + ";" + "\n";
         } else {
-            return "return;\n";
+            return "";
         }
     }
 
