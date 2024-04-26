@@ -87,7 +87,8 @@ public class ProgramNode implements JottTree {
 
         sb.append("#include <stdlib.h>\n");
         sb.append("#include <stdio.h>\n");
-        sb.append("#include <string.h>\n\n");
+        sb.append("#include <string.h>\n");
+        sb.append("#include <stdbool.h>\n\n");
 
         sb.append("/* Concatenates two strings, in accordance with the Jott spec.\n");
         sb.append(" * Unlike strcpy/strcat, this does *NOT* append to the memory locations\n");
