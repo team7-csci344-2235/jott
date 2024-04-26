@@ -12,7 +12,7 @@ public class Jott {
     private static final HashSet<String> CONVERSION_LANGUAGES = new HashSet<>(List.of(new String[]{"jott", "java", "c", "python"}));
     public static void main(String[] args) throws JottTree.NodeValidateException {
         if (args.length != 3) {
-            System.err.println("Invalid argument length. Usage: Jott <input_filename> <output_filename> <language>");
+            System.err.println("Invalid argument length. Usage: provided.Jott <input_filename> <output_filename> <language>");
             return;
         }
 
