@@ -1,3 +1,22 @@
+Phase 4 information
+
+Our code is organized in the `provided` directory.
+
+We expose a CLI interface in the `provided.Jott` class. To build the program,
+run:
+
+        javac provided/Jott.java
+
+The program can be then be invoked by running:
+
+        java provided.Jott
+
+By default this exits with a usage message as no arguments are provided. The
+program can be given arguments like so:
+
+        Usage: provided.Jott <input_filename> <output_filename> <language>
+
+
 Phase 3 information
 Our code is organized into the `provided` directory. The
 `testers/JottValidateTester.java` file has been modified to import our code and
