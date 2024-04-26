@@ -1,0 +1,24 @@
+# This is (mostly) copied from the project spec, with some corrections.
+
+Def foo[ x: Integer, y: Double]: String
+{
+        If [x > 5] {
+                Return "foo";
+        }
+        Elseif [y < 3.2] {
+                Return "bar";
+        }
+
+        Return "foobar";
+}
+
+Def bar[s: String]: Void { ::print[s]; }
+
+Def main[]: Void {
+        String x;
+        ::print[::foo[5, 10.0]];
+        ::print[::foo[1, 3.1]];
+        x = ::foo[11, 0.0];
+        ::print[x];
+        ::bar[::foo[5, 5.0]];
+}
