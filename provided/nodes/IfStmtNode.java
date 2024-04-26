@@ -300,8 +300,7 @@ public class IfStmtNode implements BodyStmtNode {
     public String convertToPython() {
         String result = "if " + this.expr.convertToPython() + ":\n" + this.body.convertToPython();
         if (elseIfs != null) {
-            result += elseIfs.stream().map(elseIfNode
-                    -> elseIfNode.convertToPython()).collect(Collectors.joining("\n"));
+            result += elseIfs.stream().map(ElseIfNode::convertToPython).collect(Collectors.joining("\n"));
         }
         if (else_ != null) {
             result += else_.convertToPython();

@@ -20,8 +20,14 @@ Def foo[]:Integer{
 
 Def empty[]:Void{}
 
-Def emptyWhileIf[x:String]:Void{
-    If[True]{}
+Def emptyWhileIf[x:String, y:String]:Void{
+    String yes;
+    yes = "Yes";
+    If[x==yes] {}
+    Elseif[y==yes] {}
+    Else{}
+
+    While[False]{}
     ::print[x];
 }
 
