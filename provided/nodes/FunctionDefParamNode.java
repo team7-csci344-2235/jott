@@ -89,8 +89,8 @@ public class FunctionDefParamNode implements JottTree {
         String result = "";
         result += firstParamName.convertToPython();
         if (theRest != null) {
-            result += theRest.stream()
-                    .map(functionDefParamTNode -> convertToPython())
+            result += ", " + theRest.stream()
+                    .map(FunctionDefParamTNode::convertToPython)
                     .collect(Collectors.joining(", "));
         }
         return result;
