@@ -1,5 +1,7 @@
 package provided.nodes;
 
+import java.util.ArrayList;
+
 import provided.TokenDeque;
 import provided.TokenType;
 import provided.VariableTable;
@@ -113,6 +115,21 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         if (!variableTable.hasFunction(idNode.getIdStringValue()))
             throw new NodeValidateException("Call to unknown function: '" + idNode.convertToJott() + "'", filename, startLine);
         parameters.validateTree();
+
+        // Validate argument amount for builtins
+        ArrayList<ExprNode> exprs = parameters.getExpressions();
+        if (idNode.getIdStringValue().equals("print")
+                && exprs.size() != 1) {
+            throw new NodeValidateException("`print` takes 1 argument", filename, startLine);
+        }
+        if (idNode.getIdStringValue().equals("concat")
+                && exprs.size() != 2) {
+            throw new NodeValidateException("`concat` takes 2 arguments", filename, startLine);
+        }
+        if (idNode.getIdStringValue().equals("length")
+                && exprs.size() != 1) {
+            throw new NodeValidateException("`length` takes 1 argument", filename, startLine);
+        }
     }
 
     @Override
