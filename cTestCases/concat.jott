@@ -1,0 +1,13 @@
+# This is from the project spec.
+
+Def main[]: Void {
+        String s;
+        String s1;
+        String s2;
+        s = ::concat["foo", "bar"];
+        ::print[s];
+        s1 = "foo";
+        s2 = ::concat["bar", s1];
+        ::print[s2];
+        ::print[::concat["foo", ::concat["bar", "baz"]]];
+}
