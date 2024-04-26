@@ -22,13 +22,15 @@ Def empty[]:Void{}
 
 Def emptyWhileIf[x:String, y:String]:Void{
     String yes;
+    Integer num;
+    num = 0;
     yes = "Yes";
     If[x==yes] {}
-    Elseif[y==yes] {}
+    Elseif[num==::foo[]] {}
     Else{}
 
     While[False]{}
-    ::print[x];
+    ::print[::concat[x, y]];
 }
 
 Def main[]:Void{

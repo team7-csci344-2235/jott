@@ -59,7 +59,14 @@ public class RelOpNode implements JottTree, ExprNode {
 
     @Override
     public String convertToJava(String className) {
-        return firstOpStr.convertToJava(className) +relationalValue+ secondOpStr.convertToJava(className);
+        try {
+            if(OperandNode.getOperandType(firstOpStr, variableTable, filename) == TypeNode.VariableType.STRING)
+                return firstOpStr.convertToJava(className) + ".equals(" + secondOpStr.convertToJava(className) + ")";
+        } catch (NodeValidateException e) {
+            System.err.println("Error: This should have already been validated... How did we get here");
+        }
+
+        return firstOpStr.convertToJava(className) + relationalValue + secondOpStr.convertToJava(className);
     }
 
     @Override
