@@ -87,6 +87,22 @@ public class ProgramNode implements JottTree {
 
         sb.append("#include <stdlib.h>\n");
         sb.append("#include <stdio.h>\n");
+        sb.append("#include <string.h>\n\n");
+
+        sb.append("/* Concatenates two strings, in accordance with the Jott spec.\n");
+        sb.append(" * Unlike strcpy/strcat, this does *NOT* append to the memory locations\n");
+        sb.append(" * provided. A new buffer is allocated and filled with the contents of\n");
+        sb.append(" * the provided strings. */\n");
+        sb.append("char *\n");
+        sb.append("concat(char *s1, char *s2)\n");
+        sb.append("{\n");
+        sb.append("    size_t s1_length = strlen(s1);\n");
+        sb.append("    size_t length = s1_length + strlen(s2);\n");
+        sb.append("    char *new = malloc((length + /* NUL */ 1) * sizeof(*new));\n");
+        sb.append("    strcpy(new, s1);\n");
+        sb.append("    strcpy(new + s1_length, s2);\n");
+        sb.append("    return new; /* Thanks for not requiring us to free, Professor J */\n");
+        sb.append("}\n\n");
 
         if(functionDefNodes != null){
             for(FunctionDefNode func : this.functionDefNodes) {

@@ -78,7 +78,8 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
     @Override
     public String convertToC() {
         if(idNode.convertToC().equals("print")){
-            return "/* print not implemented in C yet */";
+            return "/* TODO implement print ("
+                + parameters.convertToC() + ") */";
             //String ret = "printf(";
             //String params = parameters.convertToC();
 
@@ -89,9 +90,10 @@ public class FunctionCallNode implements OperandNode, BodyStmtNode {
         if(idNode.convertToC().equals("length")){
             return "strlen("+parameters.convertToC()+")";
         }
-        if(idNode.convertToC().equals("concat")){
-            return "/* concat not implemented in C yet */";
-        }
+
+        // `concat` is implemented as a function at the top of each C
+        // program we generate. See ProgramNode::convertToC for details.
+
         return idNode.convertToC() + "(" + parameters.convertToC() + ")";
     }
 
