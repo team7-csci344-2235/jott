@@ -21,4 +21,5 @@ Def main[]: Void {
         x = ::foo[11, 0.0];
         ::print[x];
         ::bar[::foo[5, 5.0]];
+        ::print["All done"];
 }
